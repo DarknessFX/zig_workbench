@@ -1,3 +1,9 @@
+/ NOTE: Change .vscode/Tasks.json replacing 
+//  FROM "run", "main.zig"
+//  TO   "run", "-lc", "-lSDL2", "-L lib/SDL2", "-I lib/SDL2/include", "main.zig"
+// REASON: Project depends of -lc (libc) and to inform Zig Run
+//         where to find the .H and .LIB
+
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -6,13 +12,8 @@ const win = struct {
 };
 const WINAPI = win.WINAPI;
 
-/ NOTE: Change Tasks.json replacing 
-//  FROM "run", "main.zig"
-//  TO   "run", "-Llib/SDL2", "-Ilib/SDL2/include", "-lSDL2", "-lc", "main.zig"
-// CAUSE: Project depends of -lc (libc) and apply inform zig where 
-//  to get the .h and .lib
 pub const sdl = @cImport({
-  // NOTE: Need full path to include
+  // NOTE: Need full path to SDL2/include
   @cInclude("SDL.h");
 });
 
