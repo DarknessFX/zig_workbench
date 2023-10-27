@@ -1,4 +1,4 @@
-/ NOTE: Change .vscode/Tasks.json replacing 
+// NOTE: Change .vscode/Tasks.json replacing 
 //  FROM "run", "main.zig"
 //  TO   "run", "-lc", "-lSDL2", "-L lib/SDL2", "-I lib/SDL2/include", "main.zig"
 // REASON: Project depends of -lc (libc) and to inform Zig Run
