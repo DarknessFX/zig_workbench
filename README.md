@@ -13,12 +13,12 @@
            DarknessFX @ https://dfx.lv | Twitter: @DrkFX
 
 ## About
-I'm studying and learning [Zig Language](https://ziglearn.org/chapter-0/) (started Nov/19/2023), sharing here my Zig projects, templates, libs and tools.
+I'm studying and learning [Zig Language](https://ziglearn.org/chapter-0/) (started Nov 19, 2023), sharing here my Zig projects, templates, libs and tools.
 
-Using Windows 10 Zig x86_64 Version : **_0.12.0-dev.1245+a07f288eb_**
+Using Windows 10, Zig x86_64 Version : **_0.12.0-dev.1245+a07f288eb_**
 
 > [!NOTE]
-> This is a student project, code will run and build without errors (mostly because I just throw away errors), it is not a reference of "*best coding practices*". Suggestions or commits changing the code to the "*right way and best practices*" are welcome.
+> This is a student project, code will run and build without errors (mostly because I just throw away errors), it is not a reference of "*best coding practices*". Suggestions or contributions changing the code to the "*right way and best practices*" are welcome.
 
 ## Templates
 
@@ -30,7 +30,10 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseWin** | Template for a Windows program (/Subsystem: Windows). |
 | **BaseSDL2** | Template for a Windows program with SDL2. |
 
-Usage:
+<details>
+ 
+  <summary><ins>Usage</ins></summary>
+ 
 | Steps | Path example |
 | ------------- | ------------- |
 | Duplicate the template folder | C:\zig_workbench\BaseWin Copy\ |
@@ -38,13 +41,15 @@ Usage:
 | Copy Tools folder | C:\zig_workbench\MyZigProgram\Tools\ |
 | Run *updateProjectName.bat* | C:\zig_workbench\MyZigProgram\Tools\updateProjectName.bat |
 | Open .vscode/YourProject.code-workspace | C:\zig_workbench\MyZigProgram\ .vscode\MyZigProgram.code-workspace |
-
+ 
+</details> 
+ 
 <details>
-  <summary>Note about SDL2</summary>
-&nbsp;&nbsp;I'm using SDL2 v2.28.4.<br/>
-&nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases PAge</a>.<br/>
-&nbsp;&nbsp;For Windows devs: <a href="https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip" target="_blank">SDL2-devel-2.28.4-VC.zip 2.57 MB</a>.<br/>
-&nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description of the folder structure and expected files path location.<br/>
+  <summary><ins>Note about SDL2</ins></summary>
+<pre>&nbsp;&nbsp;Using SDL2 v2.28.4.
+&nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases PAge</a>.
+&nbsp;&nbsp;For Windows devs: <a href="https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip" target="_blank">SDL2-devel-2.28.4-VC.zip 2.57 MB</a>.
+&nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description of the folder structure and expected files path location.</pre>
 </details>
 
 ## Libraries
@@ -54,30 +59,46 @@ Usage:
 | **dos_color.zig** | Helper to output colors to console (std.debug.print) or debug console (OutputDebugString). |
 | **string.zig** | Basic String Type. |
 
-<pre>
-Usage:
-  Create a /lib/ folder in your project folder.
-  Copy the library file to /lib/ .
-  Add <q>const libname = @Import("lib/lib_name.zig");</q> to your source code.
-</pre>
+<details>
+  <summary><ins>Libraries usage</ins></summary>
+<pre>&nbsp;&nbsp;Create a /lib/ folder in your project folder.
+&nbsp;&nbsp;Copy the library file to /lib/ .
+&nbsp;&nbsp;Add <q>const libname = @Import("lib/lib_name.zig");</q> to your source code.</pre>
+</details>
 
 ## Programs
 
 | Folder | Description |
 | ------------- | ------------- |
-| **zTime** | Similar to Linux TIME command, add zTime in front of your command to get a track of time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0). |
+| **zTime** | Similar to Linux TIME command, add zTime in front of your command to get a track of time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0). (console program) |
 
-<pre>
-zTime Usage:
-  Examples, run in your Command Prompt, Windows Terminal or Powershell: 
-    C:\>zTime zig build 
-    C:\>zTime dir
-    C:\>zTime bin\ReleaseFast\YourProject.exe
+<details>
+  <summary><ins>zTime Usage</ins></summary>
+<pre>&nbsp;&nbsp;Examples, run in your Command Prompt, Windows Terminal or Powershell:
+&nbsp;&nbsp;&nbsp;&nbsp;C:\>zTime zig build
+&nbsp;&nbsp;&nbsp;&nbsp;C:\>zTime dir
+&nbsp;&nbsp;&nbsp;&nbsp;C:\>zTime bin\ReleaseFast\YourProject.exe<br/>
+&nbsp;&nbsp;Suggestion:
+&nbsp;&nbsp;Copy zTime.exe to your Zig folder, this way the application will 
+&nbsp;&nbsp;share the Environment Path and can be executed from anywhere.</pre>
+</details>
 
-  Suggestion: 
-  Copy zTime.exe to your Zig folder, this way the application will 
-  share the Environment Path and can be executed from anywhere.
-</pre>
+## Projects
+
+| Folder | Description |
+| ------------- | ------------- |
+| **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program, SDL2)<br/>Two examples of GUI, minimal (gui_min.zig) and demo (gui.zig). |
+
+<details>
+  <summary><ins>Note about microui</ins></summary>
+<pre>microui.c and microui.h are inside the project folder.
+Normally I would recommend to download from the official repository 
+but sadly microui is outdated (last update 3 years ago) and I applied 
+<a href="https://github.com/rxi/microui/pulls" target="_blank">community pull requests</a> to the source code.
+It was necessary because the original code crashed with <i>runtime 
+error: member access within misaligned address</i> and without the 
+<a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
+</details>
 
 ## Tools
 > [!IMPORTANT]
@@ -95,15 +116,14 @@ zTime Usage:
 I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and using [Zig Language](https://marketplace.visualstudio.com/items?itemName=ziglang.vscode-zig) extension from [ZLS - Zig Language Server](https://github.com/zigtools/zls).
 
 <details>
-  <summary>Extensions that I use and recommend:</summary>
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank">C/C++</a> from Microsoft. (**essential to enable Debug mode**.)<br/>
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack" target="_blank">C/C++ Extension Pack</a> from Microsoft. (non-essential)<br/>
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-themes" target="_blank">C/C++ Themes</a>. (non-essential)<br/>
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.hexeditor" target="_blank">Hex Editor</a> from Microsoft. (**essential in Debug mode**)<br/>
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=DrMerfy.overtype" target="_blank">OverType</a> from DrMerfy. (non-essential? Add Insert key mode)<br/>
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme" target="_blank">Material Icon Theme</a> from Philipp Kief. (non-essential, but make VSCode looks better with icons, including for .zig files)<br/>
+  <summary><ins>Extensions that I use and recommend</ins></summary>
+<pre>&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools" target="_blank">C/C++</a> from Microsoft. (**essential to enable Debug mode**.)
+&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack" target="_blank">C/C++ Extension Pack</a> from Microsoft. (non-essential)
+&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-themes" target="_blank">C/C++ Themes</a>. (non-essential)
+&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.hexeditor" target="_blank">Hex Editor</a> from Microsoft. (**essential in Debug mode**)
+&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=DrMerfy.overtype" target="_blank">OverType</a> from DrMerfy. (non-essential? Add Insert key mode)
+&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme" target="_blank">Material Icon Theme</a> from Philipp Kief. (non-essential, but make VSCode looks better with icons, including for .zig files)</pre>
 </details>
-
 
 ### Ctrl+T, Enter is the new F5
 
@@ -111,16 +131,17 @@ I changed a few VSCode keybindings for better use, mostly because Zig offer mult
 
 The more important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last ask. 
 
-Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. So **CTRL+T, Enter** became my most used keyboard shortcut inside VSCode. (at least until they add a keybiding for "Run Last Task" so I can bind to CTRL+R).
+Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. So **CTRL+T, Enter** became my most used keyboard shortcut inside VSCode.<br/>
+<sub>(at least until they add a keybiding for "Run Last Task" so I can bind to CTRL+R<sup>un</sup>).</sub>
 
 <details>
-  <summary>Task menu screenshot</summary>
-<img src="/.git_img/vscode_tasks_menu.png" />
+  <summary><ins>Task menu screenshot</ins></summary>
+<img src="/.git_img/vscode_tasks_menu.png" width="480" />
 </details>
 
 
 <details>
-  <summary>VSCode Keybindings details</summary>
+  <summary><ins>VSCode Keybindings details</ins></summary>
 <br/>VSCode Keybindings file location at %APPDATA%\..\Roaming\Code\User\keybindings.json<br/><br/>
 
 CTRL+T : Removed showAllSymbols and added runTask.<br/>
