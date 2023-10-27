@@ -12,8 +12,11 @@
 
            DarknessFX @ https://dfx.lv | Twitter: @DrkFX
 
-# zig_workbench
+# About
 DarknessFX collection of Zig projects and templates.
+
+Zig Version : *0.12.0-dev.1245+a07f288eb*
+
 
 License
 MIT - Free for everyone and any use.
