@@ -204,7 +204,7 @@ When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run 
 
 I have a Love/Hate relationship with VSCode, I only used it to code for Arduino and ESP32 with [Platform.io](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and the hate is always when the editor try to be "smart and helpful". 
 
-Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of key types are wasted deleting things that VSCode put there to help me.
+Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me.
 
 ## License
 MIT - Free for everyone and any use.
