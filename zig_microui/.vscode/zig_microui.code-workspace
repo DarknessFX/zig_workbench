@@ -3,6 +3,7 @@
   "settings": {
     // Zig Workspace
     "files.exclude": {
+      "*.lnk": true,
       "**/.git": true,
       ".gitignore": true,
       "**/.svn": true,
