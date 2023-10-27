@@ -1,7 +1,0 @@
-~jamii/focus - https://git.sr.ht/~jamii/focus , used focus microui zig as reference when I couldn't find the right way to code (like [*c][*c] in mu_push_next_command and @memcopy in push_quad).
-
-Applied andreas-jonsson fix, from https://github.com/rxi/microui/issues/19#issuecomment-979063923 , for microui.c mu_push_command() .
-
-Applied other commits from https://github.com/rxi/microui/pulls
-
-zig translate-c /lib/microui/renderer.c , gui.zig is almost copy-paste from translated .c
