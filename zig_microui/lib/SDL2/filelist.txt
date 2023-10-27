@@ -1,3 +1,11 @@
+Using SDL2 v2.28.4
+
+Download SDL2 from:
+https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4
+
+For Windows devs: SDL2-devel-2.28.4-VC.zip 2.57 MB
+https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip
+
 lib/SDL2/
 |   SDL2.dll
 |   SDL2.lib
