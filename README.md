@@ -140,7 +140,7 @@ I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and
 &nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-themes" target="_blank">C/C++ Themes</a>. (non-essential)
 &nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.hexeditor" target="_blank">Hex Editor</a> from Microsoft. (**essential in Debug mode**)
 &nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=DrMerfy.overtype" target="_blank">OverType</a> from DrMerfy. (non-essential? Add Insert key mode)
-&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme" target="_blank">Material Icon Theme</a> from Philipp Kief. (non-essential, but make VSCode looks better with icons, including for .zig files)</pre>
+&nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme" target="_blank">Material Icon Theme</a> from Philipp Kief. (non-essential, but make VSCode looks better)</pre>
 </details>
 
 ### Ctrl+T, Enter is the new F5
