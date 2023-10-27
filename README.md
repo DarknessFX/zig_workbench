@@ -160,7 +160,7 @@ Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode 
 
 <details>
   <summary><ins>VSCode Keybindings details</ins></summary>
-<br/>VSCode Keybindings file location at %APPDATA%\..\Roaming\Code\User\keybindings.json<br/><br/>
+<br/>VSCode Keybindings file location at %APPDATA%\Code\User\keybindings.json<br/><br/>
 
 CTRL+T : Removed showAllSymbols and added runTask.<br/>
 Reason : Easy access to Tasks menu and repeatable action to run last action.<br/>
