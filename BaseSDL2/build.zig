@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
     .optimize = optimize,
   });
   exe.addWin32ResourceFile(.{
-    .file = .{ .path = "BaseWin.rc" },
+    .file = .{ .path = projectname ++ ".rc" },
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
   exe.linkLibC();
