@@ -114,6 +114,7 @@ error: member access within misaligned address</i> and without the
 | **zig.ico** | Zig logo Icon file (.ico). (Resolutions 64p, 32p, 16p) |
 | **zig_256p.ico** | Zig logo Icon file (.ico) with higher resolutions . (Resolutions 256p, 128p, 64p, 32p, 16p) |
 | **zig_icon.reg** | Associate an icon for .Zig files, add Build, Run, Test to Windows Explorer context menu. [Read more details](/tools/zig_icon.reg) in the file comments. |
+| **zig_icon_cascade.reg** | Alternative of zig_icon.reg, groups all options inside a Zig submenu. |
 
 <details>
   <summary><ins>zig_icon.reg - screenshot</ins></summary>
@@ -121,7 +122,13 @@ error: member access within misaligned address</i> and without the
 <pre>After run zig_icon.reg, Windows Explorer will look like:<br/>
 <img src="/.git_img/zig_icon_contextmenu.png" width="480" /></pre>
 </details>
+<details>
+  <summary><ins>zig_icon_cascade.reg - screenshot</ins></summary>
      
+<pre>After run zig_icon_cascade.reg, Windows Explorer will look like:<br/>
+<img src="/.git_img/zig_icon_cascade_contextmenu.png" width="480" /></pre>
+</details>
+
 ## About VSCode (Tips and Tricks)
 
 I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and using [Zig Language](https://marketplace.visualstudio.com/items?itemName=ziglang.vscode-zig) extension from [ZLS - Zig Language Server](https://github.com/zigtools/zls).
