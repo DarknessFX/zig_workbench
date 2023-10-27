@@ -24,19 +24,22 @@ REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
 SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-
-IF NOT EXIST %CD%\bin\ReleaseStrip MKDIR %CD%\bin\ReleaseStrip
-IF NOT EXIST %CD%\bin\ReleaseStrip\obj MKDIR %CD%\bin\ReleaseStrip\obj
+IF NOT EXIST %CD%\bin\ReleaseStrip (
+  MKDIR %CD%\bin\ReleaseStrip 
+)
+IF NOT EXIST %CD%\bin\ReleaseStrip\obj (
+  MKDIR %CD%\bin\ReleaseStrip\obj
+)
 
 REM GET CURRENT FOLDER NAME
 for %%* in (%CD%) do SET ProjectName=%%~n*
 
 SET rcmd=
-IF EXIST DIR /S Base*.rc (
+IF EXIST "Base*.rc" (
   MOVE Base*.rc %ProjectName%.rc > NUL
 )
 
-IF EXIST DIR /S *.rc (
+IF EXIST "*.rc" (
   SET rcmd=-rcflags /c65001 -- %CD%\%ProjectName%.rc
 )
 
