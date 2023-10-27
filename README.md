@@ -47,9 +47,10 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 <details>
   <summary><ins>Note about SDL2</ins></summary>
 <pre>&nbsp;&nbsp;Using SDL2 v2.28.4.
-&nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases PAge</a>.
+&nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases Page</a>.
 &nbsp;&nbsp;For Windows devs: <a href="https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip" target="_blank">SDL2-devel-2.28.4-VC.zip 2.57 MB</a>.
-&nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description of the folder structure and expected files path location.</pre>
+&nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a 
+&nbsp;&nbsp;description of the folder structure and expected files path location.</pre>
 </details>
 
 ## Libraries
