@@ -111,6 +111,7 @@ error: member access within misaligned address</i> and without the
 | **buildReleaseStrip.bat** | Call "zig build-exe" with additional options (ReleaseSmall, strip, single-thread), emit assembly (.s), llvm bitcode (.ll, .bc), C header, zig build report. |
 | **clean_zig-cache.bat** | Remove zig-cache from **all** sub folders. |
 | **updateProjectName.bat** | Read parent folder name as your ProjectName and replace template references to ProjectName. |
+| **zig_icon.reg** | Associate an icon for .Zig file in Windows Explorer and add Build, Run, Test to context menu.<br/>[Read more details](/tools/zig_icon.reg) in the file comments. |
 
 ## About VSCode (Tips and Tricks)
 
