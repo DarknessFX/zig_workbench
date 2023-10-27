@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) void {
   const rootfile = "main.zig";
 
   const exe = b.addExecutable(.{
-    .name = "microui",
+    .name = projectname,
     .root_source_file = .{ .path = rootfile },
     .target = target,
     .optimize = optimize,
