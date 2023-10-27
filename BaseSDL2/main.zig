@@ -1,9 +1,3 @@
-// NOTE: Change .vscode/Tasks.json replacing 
-//  FROM "run", "main.zig"
-//  TO   "run", "-lc", "-lSDL2", "-L lib/SDL2", "-I lib/SDL2/include", "main.zig"
-// REASON: Project depends of -lc (libc) and to inform Zig Run
-//         where to find the .H and .LIB
-
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
