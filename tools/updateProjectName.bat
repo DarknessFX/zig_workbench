@@ -27,10 +27,12 @@ IF "%ProjectName%" == "tools" (
 SET "replace=%ProjectName%"
 
 SET switchproject=Base
-IF EXIST DIR BaseWin.* ( 
-  SET switchproject=BaseWin 
+IF EXIST DIR "BaseWin.*" (
+  SET switchproject=BaseWin
 )
-
+IF EXIST "BaseSDL2.*" (
+  SET switchproject=BaseSDL2
+)
 
 REM MAIN
 CALL :Main %switchproject%
