@@ -113,7 +113,7 @@ error: member access within misaligned address</i> and without the
 | **updateProjectName.bat** | Read parent folder name as your ProjectName and replace template references to ProjectName. |
 | **zig.ico** | Zig logo Icon file (.ico). (Resolutions 64p, 32p, 16p) |
 | **zig_256p.ico** | Zig logo Icon file (.ico) with higher resolutions . (Resolutions 256p, 128p, 64p, 32p, 16p) |
-| **zig_icon.reg** | Associate an icon for .Zig files, add Build, Run, Test to Windows Explorer context menu.<br/>[Read more details](/tools/zig_icon.reg) in the file comments. |
+| **zig_icon.reg** | Associate an icon for .Zig files, add Build, Run, Test to Windows Explorer context menu. [Read more details](/tools/zig_icon.reg) in the file comments. |
 
 <details>
   <summary><ins>zig_icon.reg - screenshot</ins></summary>
