@@ -36,6 +36,7 @@ IF EXIST "BaseSDL2.*" (
 
 REM MAIN
 CALL :Main %switchproject%
+CALL :Shortcut %switchproject%
 GOTO :END
 
 
@@ -43,7 +44,7 @@ GOTO :END
 SET "search=%1"
 ECHO %_fBlue%***%_ResetColor% Replacing %search% to %_fGreen%%ProjectName%%_ResetColor% %_fBlue%***%_ResetColor%
 ECHO.
-ECHO Fixing VSCode workspace filename
+ECHO Fixing VSCode workspace filename.
 IF EXIST .vscode\%search%.code-workspace (
   MOVE .vscode\%search%.code-workspace .vscode\%ProjectName%.code-workspace > NUL
 )
@@ -58,7 +59,7 @@ IF EXIST %search%.rc (
   CALL :ReplaceInFile main.zig
 )
 
-ECHO Fixing buildReleaseStrip.bat
+ECHO Fixing buildReleaseStrip.bat .
 IF EXIST Tools\buildReleaseStrip.bat (
   CALL :ReplaceInFile Tools\buildReleaseStrip.bat
 )
@@ -68,7 +69,7 @@ IF EXIST %search%.* ( REN %search%.* %ProjectName%.* )
 IF EXIST .vscode\%search%.* ( REN .vscode\%search%.* %ProjectName%.* )
 IF EXIST .vscode\Base.* ( REN .vscode\Base.* %ProjectName%.* )
 
-REM FIX Tasks.json to add -lc when BaseWin
+REM FIX Tasks.json to add -lc when BaseWin or BaseSDL2
 IF EXIST *.rc (
   SET search=^"run^", ^"main.zig^"
   SET replace=^"run^", ^"-lc^", ^"main.zig^"
@@ -79,6 +80,34 @@ IF EXIST *.rc (
 )
 %_ExitSub%
 
+:Shortcut
+ECHO Creating shortcut to %ProjectName% VSCode workspace.
+FOR /F "DELIMS=" %%F IN ('"WHERE CODE"') DO SET "vscode=%%F" &GOTO :FoundVSCode
+:FoundVSCode
+
+IF EXIST "createShortcut.vbs" ( 
+  DEL createShortcut.vbs > NUL
+)
+
+IF EXIST "..\%ProjectName% VSCode Workspace.lnk" ( 
+  DEL ..\%ProjectName% VSCode Workspace.lnk > NUL
+)
+
+>"createShortcut.vbs" (
+  ECHO Set objShell = WScript.CreateObject("WScript.Shell"^)
+  ECHO Set lnk = objShell.CreateShortcut("%CD%\%ProjectName% VSCode Workspace.lnk"^)
+  ECHO lnk.TargetPath = "%CD%\.vscode\%ProjectName%.code-workspace"
+  ECHO lnk.Arguments = ""
+  ECHO lnk.Description = "%ProjectName% VSCode Workspace"
+  ECHO lnk.IconLocation = "%vscode:bin\code=%Code.exe"
+  ECHO lnk.WindowStyle = "1"
+  ECHO lnk.WorkingDirectory = "%CD%\.vscode"
+  ECHO lnk.Save
+  ECHO Set lnk = Nothing
+)
+START /WAIT wscript createShortcut.vbs
+DEL createShortcut.vbs > NUL
+%_ExitSub%
 
 :ReplaceInFile
 SET "textFile=%1"
