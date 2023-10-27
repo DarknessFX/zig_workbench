@@ -111,8 +111,17 @@ error: member access within misaligned address</i> and without the
 | **buildReleaseStrip.bat** | Call "zig build-exe" with additional options (ReleaseSmall, strip, single-thread), emit assembly (.s), llvm bitcode (.ll, .bc), C header, zig build report. |
 | **clean_zig-cache.bat** | Remove zig-cache from **all** sub folders. |
 | **updateProjectName.bat** | Read parent folder name as your ProjectName and replace template references to ProjectName. |
-| **zig_icon.reg** | Associate an icon for .Zig file in Windows Explorer and add Build, Run, Test to context menu.<br/>[Read more details](/tools/zig_icon.reg) in the file comments. |
+| **zig.ico** | Zig logo Icon file (.ico). (Resolutions 64p, 32p, 16p) |
+| **zig_256p.ico** | Zig logo Icon file (.ico) with higher resolutions . (Resolutions 256p, 128p, 64p, 32p, 16p) |
+| **zig_icon.reg** | Associate an icon for .Zig files, add Build, Run, Test to Windows Explorer context menu.<br/>[Read more details](/tools/zig_icon.reg) in the file comments. |
 
+<details>
+  <summary><ins>zig_icon.reg - screenshot</ins></summary>
+     
+<pre>After run zig_icon.reg, Windows Explorer will look like:<br/>
+<img src="/.git_img/zig_icon_contextmenu.png" width="480" /></pre>
+</details>
+     
 ## About VSCode (Tips and Tricks)
 
 I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and using [Zig Language](https://marketplace.visualstudio.com/items?itemName=ziglang.vscode-zig) extension from [ZLS - Zig Language Server](https://github.com/zigtools/zls).
