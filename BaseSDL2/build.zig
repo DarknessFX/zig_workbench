@@ -5,32 +5,24 @@ pub fn build(b: *std.Build) void {
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
+  const projectname = "BaseSDL2";
+  const rootfile = "main.zig";
+
   const exe = b.addExecutable(.{
-    .name = "BaseSDL2",
-    .root_source_file = .{ .path = "main.zig" },
+    .name = projectname,
+    .root_source_file = .{ .path = rootfile },
     .target = target,
-    .optimize = optimize,
+    .optimize = optimize
   });
-  exe.addWin32ResourceFile(.{
-    .file = .{ .path = projectname ++ ".rc" },
-    .flags = &.{"/c65001"}, // UTF-8 codepage
-  });
-  exe.linkLibC();
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
     .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
     .ReleaseFast =>  b.exe_dir = "bin/ReleaseFast",
-    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall",
+    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall"
     //else  =>  b.exe_dir = "bin/Else",
   }
   b.installArtifact(exe);
-
-  exe.addIncludePath( .{ .path = "lib/SDL2/include" }  );
-  exe.addLibraryPath( .{ .path = "lib/SDL2/" } );
-  exe.linkSystemLibrary("SDL2");
-  b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
-  exe.linkLibC();
 
   //Run
   const run_cmd = b.addRunArtifact(exe);
@@ -43,7 +35,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = "main.zig" },
+    .root_source_file = .{ .path = rootfile },
     .target = target,
    .optimize = optimize,
   });
