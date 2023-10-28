@@ -3,6 +3,7 @@ const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
+  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -21,7 +22,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     .cbWndExtra = 0,
     .hInstance = hInstance,
     .hIcon = null, 
-    .hCursor = null, 
+    .hCursor = LoadCursorW(null, IDC_ARROW),
     .hbrBackground = null, 
     .lpszMenuName = null,
     .lpszClassName = class_name,
@@ -119,6 +120,12 @@ pub extern "gdi32" fn TextOutW(
   lpString: win.LPCWSTR,
   c: win.INT
 ) callconv(WINAPI) win.BOOL;
+
+const IDC_ARROW: win.LONG = 32512;
+pub extern "user32" fn LoadCursorW(
+  hInstance: ?win.HINSTANCE,
+  lpCursorName: win.LONG,
+) callconv(WINAPI) win.HCURSOR;
 
 //   _ = win.MessageBoxA(null, "Sample text.", "Title", win.MB_OK);
 //  _ = OutputDebugStringA("\x1b[31mRed\x1b[0m");
