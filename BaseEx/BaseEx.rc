@@ -1,0 +1,32 @@
+#include "windows.h"
+
+IDI_ICON1 ICON  "BaseEx.ico"
+
+1 VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x1L
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "BaseEx"
+            VALUE "FileDescription", "BaseEx"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "BaseEx.exe"
+            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "OriginalFilename", "BaseEx.exe"
+            VALUE "ProductName", "BaseEx"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

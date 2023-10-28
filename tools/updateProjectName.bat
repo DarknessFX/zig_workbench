@@ -27,12 +27,11 @@ IF "%ProjectName%" == "tools" (
 SET "replace=%ProjectName%"
 
 SET switchproject=Base
-IF EXIST DIR "BaseWin.*" (
-  SET switchproject=BaseWin
-)
-IF EXIST "BaseSDL2.*" (
-  SET switchproject=BaseSDL2
-)
+FOR %%T IN (.vscode\Base*.*) DO SET "templatename=%%~nT" &GOTO :FoundTemplateName
+:FoundTemplateName
+IF /I NOT "%templatename%"=="%switchproject%" (
+  SET switchproject=%templatename%
+) ELSE ( ECHO Same name )
 
 REM MAIN
 CALL :Main %switchproject%
@@ -80,6 +79,7 @@ IF EXIST *.rc (
 )
 %_ExitSub%
 
+
 :Shortcut
 ECHO Creating shortcut to %ProjectName% VSCode workspace.
 FOR /F "DELIMS=" %%F IN ('"WHERE CODE"') DO SET "vscode=%%F" &GOTO :FoundVSCode
@@ -108,6 +108,7 @@ IF EXIST "..\%ProjectName% VSCode Workspace.lnk" (
 START /WAIT wscript createShortcut.vbs
 DEL createShortcut.vbs > NUL
 %_ExitSub%
+
 
 :ReplaceInFile
 SET "textFile=%1"

@@ -27,6 +27,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | Folder | Description |
 | ------------- | ------------- |
 | **Base** | Template for a console program (/Subsystem: Console). |
+| **BaseEx** | Template for a console program that hide the console window (/Subsystem: Console). |
 | **BaseWin** | Template for a Windows program (/Subsystem: Windows). |
 | **BaseSDL2** | Template for a Windows program with SDL2. |
 
