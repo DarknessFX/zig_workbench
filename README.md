@@ -88,7 +88,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 
 | Folder | Description |
 | ------------- | ------------- |
-| **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program, SDL2)<br/>Two examples of GUI, minimal (gui_min.zig) and demo (gui.zig). |
+| **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program)<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. |
 
 <details>
   <summary><ins>Note about microui</ins></summary>
