@@ -213,6 +213,14 @@ I have a Love/Hate relationship with VSCode, I only used it to code for Arduino 
 
 Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me.
 
+## Credits
+
+[Zig Language](https://ziglang.org/) from ZigLang.Org .
+[SDL2](https://libsdl.org/) from libSDL.org .
+[GLFW](https://www.glfw.org) from GLFW.org .
+[GLAD](https://github.com/Dav1dde/glad) from Dav1dde .
+[microui](https://github.com/rxi/microui) from rxi .
+
 ## License
 MIT - Free for everyone and any use.
 
