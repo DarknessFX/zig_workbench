@@ -15,6 +15,14 @@ pub fn build(b: *std.Build) void {
     .optimize = optimize
   });
 
+  exe.addIncludePath( .{ .path = "lib/SDL2/include" }  );
+  exe.addLibraryPath( .{ .path = "lib/SDL2/" } );
+  exe.linkSystemLibrary("SDL2");
+  exe.linkSystemLibrary("OpenGL32");
+  b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
+
+  exe.linkLibC();
+
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
     .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
