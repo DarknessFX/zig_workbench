@@ -24,13 +24,13 @@ Using Windows 10, Zig x86_64 Version : **_0.12.0-dev.1245+a07f288eb_**
 
 Zig have a useful built in feature: *zig init-exe* that create a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
 
-| Folder | Description |
-| ------------- | ------------- |
-| **Base** | Template for a console program (/Subsystem: Console). |
-| **BaseEx** | Template for a console program that hide the console window (/Subsystem: Console). |
-| **BaseWin** | Template for a Windows program (/Subsystem: Windows). |
-| **BaseSDL2** | Template with [SDL2](https://libsdl.org/) (/Subsystem: Windows). |
-| **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). (/Subsystem: Console) |
+| Folder | Description | /Subsystem |
+| ------------- | ------------- | ------------- |
+| **Base** | Template for a console program. | Console |
+| **BaseEx** | Template for a console program that hide the console window. | Console |
+| **BaseWin** | Template for a Windows program. | Windows |
+| **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
+| **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 
 <details>
    <summary><ins>Usage</ins></summary>
