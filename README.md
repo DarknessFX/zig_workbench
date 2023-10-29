@@ -215,11 +215,11 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 
 ## Credits
 
-[Zig Language](https://ziglang.org/) from ZigLang.Org .
-[SDL2](https://libsdl.org/) from libSDL.org .
-[GLFW](https://www.glfw.org) from GLFW.org .
-[GLAD](https://github.com/Dav1dde/glad) from Dav1dde .
-[microui](https://github.com/rxi/microui) from rxi .
+[Zig Language](https://ziglang.org/) from ZigLang.Org .<br/>
+[SDL2](https://libsdl.org/) from libSDL.org .<br/>
+[GLFW](https://www.glfw.org) from GLFW.org .<br/>
+[GLAD](https://github.com/Dav1dde/glad) from Dav1dde .<br/>
+[microui](https://github.com/rxi/microui) from rxi .<br/>
 
 ## License
 MIT - Free for everyone and any use.
