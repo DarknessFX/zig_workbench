@@ -5,3 +5,5 @@ Applied andreas-jonsson fix, from https://github.com/rxi/microui/issues/19#issue
 Applied other commits from https://github.com/rxi/microui/pulls
 
 zig translate-c /lib/microui/renderer.c , gui.zig is almost copy-paste from translated .c
+
+GDI version ported from nlapinski - https://github.com/nlapinski/microui/tree/master/demo/GDI

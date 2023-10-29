@@ -35,10 +35,6 @@ REM GET CURRENT FOLDER NAME
 for %%* in (%CD%) do SET ProjectName=%%~n*
 
 SET rcmd=
-IF EXIST "Base*.rc" (
-  MOVE Base*.rc %ProjectName%.rc > NUL
-)
-
 IF EXIST "*.rc" (
   SET rcmd=-rcflags /c65001 -- %CD%\%ProjectName%.rc
 )
@@ -52,7 +48,10 @@ REM OUTPUT TO ZIG_REPORT.EXE
 > bin/ReleaseStrip/obj/zig_report.txt (
   zig build-exe -O ReleaseSmall %rcmd% %libc% -fstrip -fsingle-threaded --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile% 
 ) 2>&1 
-MOVE %CD%\bin\ReleaseStrip\%ProjectName%.exe.obj %CD%\bin\ReleaseStrip\obj > NUL
+
+IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
+  MOVE %CD%\bin\ReleaseStrip\%ProjectName%.exe.obj %CD%\bin\ReleaseStrip\obj > NUL
+)
 
 ECHO.
 ECHO Done!
