@@ -30,19 +30,18 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseEx** | Template for a console program that hide the console window (/Subsystem: Console). |
 | **BaseWin** | Template for a Windows program (/Subsystem: Windows). |
 | **BaseSDL2** | Template for a Windows program with SDL2. |
+| **BaseGLFW** | [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/) with Zig. (console program) |
 
 <details>
- 
-  <summary><ins>Usage</ins></summary>
- 
-| Steps | Path example |
+   <summary><ins>Usage</ins></summary>
+ | Steps | Path example |
 | ------------- | ------------- |
 | Duplicate the template folder | C:\zig_workbench\BaseWin Copy\ |
 | Rename the copied folder to your project name  | C:\zig_workbench\MyZigProgram\ |
 | Copy Tools folder | C:\zig_workbench\MyZigProgram\Tools\ |
 | Run *updateProjectName.bat* | C:\zig_workbench\MyZigProgram\Tools\updateProjectName.bat |
 | Open .vscode/YourProject.code-workspace | C:\zig_workbench\MyZigProgram\ .vscode\MyZigProgram.code-workspace |
- 
+
 </details> 
  
 <details>
@@ -54,12 +53,18 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 &nbsp;&nbsp;of the folder structure and expected files path location.</pre>
 </details>
 
+<details>
+  <summary><ins>About GLFW and GLAD</ins></summary>
+<pre>GLFW 3.3.8 (Win64 Static).
+GLAD 2.0 (OpenGL 3.3 Compatibility).
+This project have the libraries ready to use.</pre>
+</details>
+
 ## Projects
 
 | Folder | Description |
 | ------------- | ------------- |
 | **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program)<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. |
-| **zig_glfw** | [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/) with Zig. (console program) |
 
 <details>
   <summary><ins>About microui</ins></summary>
@@ -71,14 +76,6 @@ It was necessary because the original code crashed with <i>runtime
 error: member access within misaligned address</i> and without the 
 <a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
-
-<details>
-  <summary><ins>About GLFW and GLAD</ins></summary>
-<pre>GLFW 3.3.8 (Win64 Static).
-GLAD 2.0 (OpenGL 3.3 Compatibility).
-This project have the libraries ready to use.</pre>
-</details>
-
 
 ## Libraries
 
