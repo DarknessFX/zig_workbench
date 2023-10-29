@@ -34,13 +34,18 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 
 <details>
    <summary><ins>Usage</ins></summary>
- | Steps | Path example |
+     
+| Steps | Path example |
 | ------------- | ------------- |
-| Duplicate the template folder | C:\zig_workbench\BaseWin Copy\ |
-| Rename the copied folder to your project name  | C:\zig_workbench\MyZigProgram\ |
-| Copy Tools folder | C:\zig_workbench\MyZigProgram\Tools\ |
-| Run *updateProjectName.bat* | C:\zig_workbench\MyZigProgram\Tools\updateProjectName.bat |
-| Open .vscode/YourProject.code-workspace | C:\zig_workbench\MyZigProgram\ .vscode\MyZigProgram.code-workspace |
+| Duplicate the template folder. | C:\zig_workbench\BaseWin Copy\ |
+| Rename copy folder to your project name.  | C:\zig_workbench\MyZigProgram\ |
+| Copy *tools/updateProjectName.bat* to your project Tools folder. | C:\zig_workbench\MyZigProgram\Tools\ |
+| Run *updateProjectName.bat*. | C:\zig_workbench\MyZigProgram\Tools\updateProjectName.bat |
+| Open *YourProject VSCode Workspace*. | C:\zig_workbench\MyZigProgram\MyZigProgram VSCode Workspace.lnk |
+
+> [!WARNING]  
+> In current Zig version **@cInclude** is not relative to project folder and will break builds.<br/>
+> After open your new project, remember to edit **.zig** files **@cInclude** including your full path and using / folder separator.
 
 </details> 
  
@@ -57,7 +62,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
   <summary><ins>About GLFW and GLAD</ins></summary>
 <pre>GLFW 3.3.8 (Win64 Static).
 GLAD 2.0 (OpenGL 3.3 Compatibility).
-This project have the libraries ready to use.</pre>
+This template have the libraries ready to use.</pre>
 </details>
 
 ## Projects
