@@ -55,6 +55,7 @@
     "debug.allowBreakpointsEverywhere": true,
     "debug.onTaskErrors": "abort",
     "explorer.confirmDragAndDrop": false,
+    "explorer.compactFolders": false,
     "explorer.confirmDelete": false,
     "terminal.integrated.profiles.windows": {
       "Windows Terminal": {

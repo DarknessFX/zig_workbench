@@ -45,6 +45,7 @@
     "editor.autoSurround": "never",
     "editor.autoClosingQuotes": "never",
     "editor.detectIndentation": false,
+    "editor.lightbulb.enabled": false,
     "workbench.editor.focusRecentEditorAfterClose": false,
     "workbench.panel.defaultLocation": "left",
     "workbench.panel.opensMaximized": "never",
@@ -99,7 +100,9 @@
     "zig.zls.checkForUpdate": false,
     "zig.zls.enableInlayHints": false,
     "zig.zls.preferAstCheckAsChildProcess": false,
-    "zig.initialSetupDone": true,
+    "files.associations": {
+      "stdlib.h": "c"
+    },
   },
   "extensions": {
     "recommendations": [

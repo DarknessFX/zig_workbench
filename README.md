@@ -46,13 +46,39 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 </details> 
  
 <details>
-  <summary><ins>Note about SDL2</ins></summary>
+  <summary><ins>About SDL2</ins></summary>
 <pre>&nbsp;&nbsp;Using SDL2 v2.28.4.
 &nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases Page</a>.
 &nbsp;&nbsp;For Windows devs: <a href="https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip" target="_blank">SDL2-devel-2.28.4-VC.zip 2.57 MB</a>.
 &nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description 
 &nbsp;&nbsp;of the folder structure and expected files path location.</pre>
 </details>
+
+## Projects
+
+| Folder | Description |
+| ------------- | ------------- |
+| **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program)<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. |
+| **zig_glfw** | [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/) with Zig. (console program) |
+
+<details>
+  <summary><ins>About microui</ins></summary>
+<pre>microui.c and microui.h are inside the project folder.
+Normally I would recommend to download from the official repository 
+but sadly microui is outdated (last update 3 years ago) and I applied 
+<a href="https://github.com/rxi/microui/pulls" target="_blank">community pull requests</a> to the source code.
+It was necessary because the original code crashed with <i>runtime 
+error: member access within misaligned address</i> and without the 
+<a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
+</details>
+
+<details>
+  <summary><ins>About glfw and glad</ins></summary>
+<pre>GLFW 3.3.8 (Win64 Static).<br>
+GLAD 2.0 (OpenGL 3.3 Compatibility).<br>
+This project have the libraries ready to use.</pre>
+</details>
+
 
 ## Libraries
 
@@ -83,23 +109,6 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 &nbsp;&nbsp;Suggestion:
 &nbsp;&nbsp;Copy zTime.exe to your Zig folder, this way the application will 
 &nbsp;&nbsp;share the Environment Path and can be executed from anywhere.</pre>
-</details>
-
-## Projects
-
-| Folder | Description |
-| ------------- | ------------- |
-| **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program)<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. |
-
-<details>
-  <summary><ins>Note about microui</ins></summary>
-<pre>microui.c and microui.h are inside the project folder.
-Normally I would recommend to download from the official repository 
-but sadly microui is outdated (last update 3 years ago) and I applied 
-<a href="https://github.com/rxi/microui/pulls" target="_blank">community pull requests</a> to the source code.
-It was necessary because the original code crashed with <i>runtime 
-error: member access within misaligned address</i> and without the 
-<a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
 
 ## Tools
