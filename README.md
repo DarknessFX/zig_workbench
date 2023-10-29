@@ -73,9 +73,9 @@ error: member access within misaligned address</i> and without the
 </details>
 
 <details>
-  <summary><ins>About glfw and glad</ins></summary>
-<pre>GLFW 3.3.8 (Win64 Static).<br>
-GLAD 2.0 (OpenGL 3.3 Compatibility).<br>
+  <summary><ins>About GLFW and GLAD</ins></summary>
+<pre>GLFW 3.3.8 (Win64 Static).
+GLAD 2.0 (OpenGL 3.3 Compatibility).
 This project have the libraries ready to use.</pre>
 </details>
 
