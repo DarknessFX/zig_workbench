@@ -29,8 +29,8 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **Base** | Template for a console program (/Subsystem: Console). |
 | **BaseEx** | Template for a console program that hide the console window (/Subsystem: Console). |
 | **BaseWin** | Template for a Windows program (/Subsystem: Windows). |
-| **BaseSDL2** | Template for a Windows program with SDL2. |
-| **BaseGLFW** | [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/) with Zig. (console program) |
+| **BaseSDL2** | Template with [SDL2](https://libsdl.org/) (/Subsystem: Windows). |
+| **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). (/Subsystem: Console) |
 
 <details>
    <summary><ins>Usage</ins></summary>
