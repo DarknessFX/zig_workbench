@@ -229,7 +229,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 
 ## Credits
 
-[Zig Language](https://ziglang.org/) from ZigLang.Org .<br/>
+[Zig Language](https://ziglang.org/) from ZigLang.org .<br/>
 [SDL2](https://libsdl.org/) from libSDL.org .<br/>
 [GLFW](https://www.glfw.org) from GLFW.org .<br/>
 [GLAD](https://github.com/Dav1dde/glad) from Dav1dde .<br/>
