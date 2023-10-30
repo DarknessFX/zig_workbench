@@ -29,8 +29,10 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **Base** | Template for a console program. | Console |
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
+| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) Docking <br/>via [Dear Bindings](https://github.com/dearimgui/dear_bindings). | Windows |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
+| **Basemicroui** | Template with [microui](https://github.com/rxi/).<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -44,11 +46,18 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | Open *YourProject VSCode Workspace*. | C:\zig_workbench\MyZigProgram\MyZigProgram VSCode Workspace.lnk |
 
 > [!WARNING]  
-> In current Zig version **@cInclude** is not relative to project folder and will break builds.<br/>
+> Current VSCode + ZLS extension do not accept **@cInclude** relative to project folder and will break builds.<br/>
 > After open your new project, remember to edit **.zig** files **@cInclude** including your full path and using / folder separator.
 
 </details> 
  
+ <details>
+  <summary><ins>About Dead ImGui</ins></summary>
+<pre>Using Dear ImGui Docking 1.90WIP and Dear Bindings (20231029)
+All necessary libraries are inside the template.
+</pre>
+</details>
+
 <details>
   <summary><ins>About SDL2</ins></summary>
 <pre>&nbsp;&nbsp;Using SDL2 v2.28.4.
@@ -62,14 +71,8 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
   <summary><ins>About GLFW and GLAD</ins></summary>
 <pre>GLFW 3.3.8 (Win64 Static).
 GLAD 2.0 (OpenGL 3.3 Compatibility).
-This template have the libraries ready to use.</pre>
+All necessary libraries are inside the template.</pre>
 </details>
-
-## Projects
-
-| Folder | Description |
-| ------------- | ------------- |
-| **zig_microui** | [microui](https://github.com/rxi/) in Zig. (windows program)<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. |
 
 <details>
   <summary><ins>About microui</ins></summary>
@@ -81,6 +84,12 @@ It was necessary because the original code crashed with <i>runtime
 error: member access within misaligned address</i> and without the 
 <a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
+
+## Projects
+
+| Folder | Description |
+| ------------- | ------------- |
+|  soon  |  soon |
 
 ## Libraries
 

@@ -81,6 +81,8 @@ fn CreateWindow(hInstance: win.HINSTANCE, nCmdShow: win.INT) void {
   var yCenter = @divFloor(GetSystemMetricsForDpi(SM_CYSCREEN, dpi), 2);
   wnd_size.left = xCenter - @divFloor(wnd_size.right, 2);
   wnd_size.top  = yCenter - @divFloor(wnd_size.bottom, 2);
+  wnd_size.right = wnd_size.left + @divFloor(g_width, 2);
+  wnd_size.bottom = wnd_size.top + @divFloor(g_height, 2);
   _ = SetWindowPos( wnd, null, wnd_size.left, wnd_size.top, wnd_size.right, wnd_size.bottom, SWP_NOCOPYBITS );
 
   wnd_dc = win.GetDC(wnd).?;
