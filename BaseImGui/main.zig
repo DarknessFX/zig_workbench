@@ -142,7 +142,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 
     im.ImGui_Render();
     gl.glViewport(0, 0, g_width, g_height);
-    gl.glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    gl.glClearColor(clear_color.x, clear_color.y, clear_color.w, clear_color.z);
     gl.glClear(gl.GL_COLOR_BUFFER_BIT);
     im.cImGui_ImplOpenGL3_RenderDrawData(im.ImGui_GetDrawData());
     if (io.ConfigFlags & im.ImGuiConfigFlags_ViewportsEnable != 0)
