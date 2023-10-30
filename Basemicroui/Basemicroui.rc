@@ -1,6 +1,6 @@
 #include "windows.h"
 
-IDI_ICON1 ICON  "zig_microui.ico"
+IDI_ICON1 ICON  "Basemicroui.ico"
 
 1 VERSIONINFO
  FILEVERSION 1,0,0,0
@@ -15,13 +15,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "zig_microui"
-            VALUE "FileDescription", "zig_microui"
+            VALUE "CompanyName", "Basemicroui"
+            VALUE "FileDescription", "Basemicroui"
             VALUE "FileVersion", "1.0.0.0"
-            VALUE "InternalName", "zig_microui.exe"
+            VALUE "InternalName", "Basemicroui.exe"
             VALUE "LegalCopyright", "Copyleft(c)"
-            VALUE "OriginalFilename", "zig_microui.exe"
-            VALUE "ProductName", "zig_microui"
+            VALUE "OriginalFilename", "Basemicroui.exe"
+            VALUE "ProductName", "Basemicroui"
             VALUE "ProductVersion", "1.0.0.0"
         END
     END
