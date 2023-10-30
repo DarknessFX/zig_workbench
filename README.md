@@ -29,10 +29,10 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **Base** | Template for a console program. | Console |
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
-| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) Docking <br/>via [Dear Bindings](https://github.com/dearimgui/dear_bindings). | Windows |
+| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) Docking via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Render: OpenGL3 | Windows |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
-| **Basemicroui** | Template with [microui](https://github.com/rxi/).<br/>Renderers: SDL2, Windows GDI.<br/>GUI examples: Minimal, Demo. | Windows |
+| **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. GUI examples: Minimal, Demo. | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -52,7 +52,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 </details> 
  
  <details>
-  <summary><ins>About Dead ImGui</ins></summary>
+  <summary><ins>About Dear ImGui</ins></summary>
 <pre>Using Dear ImGui Docking 1.90WIP and Dear Bindings (20231029)
 All necessary libraries are inside the template.
 </pre>
@@ -84,12 +84,6 @@ It was necessary because the original code crashed with <i>runtime
 error: member access within misaligned address</i> and without the 
 <a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
-
-## Projects
-
-| Folder | Description |
-| ------------- | ------------- |
-|  soon  |  soon |
 
 ## Libraries
 
@@ -227,6 +221,12 @@ I have a Love/Hate relationship with VSCode, I only used it to code for Arduino 
 
 Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me.
 
+## Projects
+
+| Folder | Description |
+| ------------- | ------------- |
+|  soon  |  soon |
+
 ## Credits
 
 [Zig Language](https://ziglang.org/) from ZigLang.Org .<br/>
@@ -234,6 +234,8 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [GLFW](https://www.glfw.org) from GLFW.org .<br/>
 [GLAD](https://github.com/Dav1dde/glad) from Dav1dde .<br/>
 [microui](https://github.com/rxi/microui) from rxi .<br/>
+[Dear ImGui](https://github.com/ocornut/imgui) from Omar Cornut .<br/>
+[Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
 
 ## License
 MIT - Free for everyone and any use.
