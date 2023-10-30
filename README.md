@@ -103,7 +103,7 @@ error: member access within misaligned address</i> and without the
 
 | Folder | Description |
 | ------------- | ------------- |
-| **zTime** | Similar to Linux TIME command, add zTime in front of your command to get a track of time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0). (console program) |
+| **zTime** | Similar to Linux TIME command, add zTime in front of your command to get the time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0). (console program) |
 
 <details>
   <summary><ins>zTime Usage</ins></summary>
