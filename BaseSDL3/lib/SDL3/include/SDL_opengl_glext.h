@@ -23,7 +23,7 @@ extern "C" {
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
 #endif
-#include <windows.h"
+#include <windows.h>
 #endif
 
 #ifndef APIENTRY
@@ -187,7 +187,7 @@ extern "C" {
 /*
  * Using <stdint.h"
  */
-#include <stdint.h"
+#include <stdint.h>
 typedef int32_t                 khronos_int32_t;
 typedef uint32_t                khronos_uint32_t;
 typedef int64_t                 khronos_int64_t;

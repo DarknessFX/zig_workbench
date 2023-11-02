@@ -117,7 +117,7 @@
 #ifndef NOMINMAX   /* don't define min() and max(). */
 #define NOMINMAX
 #endif
-#include <windows.h"
+#include <windows.h>
 #endif
 
 #ifndef GLAPI
