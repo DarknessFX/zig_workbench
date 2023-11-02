@@ -5,23 +5,53 @@ pub fn build(b: *std.Build) void {
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
-  const projectname = "BaseWinEx";
+  const projectname = "BaseImGui";
   const rootfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_source_file = .{ .path = rootfile },
     .target = target,
-    .optimize = optimize
+    .optimize = optimize,
+  });
+  exe.addWin32ResourceFile(.{
+    .file = .{ .path = projectname ++ ".rc" },
+    .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
-  exe.linkLibC();
-  
+  exe.linkSystemLibrary("gdi32");
+  exe.linkSystemLibrary("dwmapi");
+  exe.linkSystemLibrary("opengl32");
+
+  exe.addIncludePath( .{ .path = "lib/cimgui" }  );
+  exe.addIncludePath( .{ .path = "lib/cimgui/imgui" }  );
+
+  var c_srcs = .{
+    "lib/imgui/cimgui.cpp",
+    "lib/imgui/cimgui_impl_opengl3.cpp",
+    "lib/imgui/cimgui_impl_win32.cpp",
+    "lib/imgui/imgui.cpp",
+    "lib/imgui/imgui_widgets.cpp",
+    "lib/imgui/imgui_draw.cpp",
+    "lib/imgui/imgui_tables.cpp",
+    "lib/imgui/imgui_demo.cpp",
+    "lib/imgui/imgui_impl_win32.cpp",
+    "lib/imgui/imgui_impl_opengl3.cpp"
+  };
+  inline for (c_srcs) |c_cpp| {
+    exe.addCSourceFile(.{
+      .file = std.build.LazyPath.relative(c_cpp), 
+      .flags = &.{ }
+    });
+  }
+
+  exe.linkLibCpp();
+
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
     .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
     .ReleaseFast =>  b.exe_dir = "bin/ReleaseFast",
-    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall"
+    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall",
     //else  =>  b.exe_dir = "bin/Else",
   }
   b.installArtifact(exe);
