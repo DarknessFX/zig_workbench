@@ -32,7 +32,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Renderers: OpenGL3, SDL2 OpenGL2, SDL2_Renderer | Both |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. GUI examples: Minimal, Demo. | Windows |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
-| **BaseSDL2** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
+| **BaseSDL3** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 
