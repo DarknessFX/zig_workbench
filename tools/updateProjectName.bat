@@ -27,14 +27,19 @@ IF "%ProjectName%" == "tools" (
 SET "replace=%ProjectName%"
 
 SET switchproject=Base
-FOR %%T IN (.vscode\Base*.*) DO SET "templatename=%%~nT" &GOTO :FoundTemplateName
-:FoundTemplateName
-IF /I NOT "%templatename%"=="%switchproject%" (
-  SET switchproject=%templatename%
-) ELSE ( ECHO Same name )
+IF EXIST .vscode (
+  FOR %%T IN (.vscode\Base*.*) DO SET "templatename=%%~nT" &GOTO :FoundTemplateName
+  :FoundTemplateName
+  IF /I NOT "%templatename%"=="" (
+    IF /I NOT "%templatename%"=="%switchproject%" (
+      SET switchproject=%templatename%
+    ) ELSE ( ECHO Same name )
+  )
+)
 
 REM MAIN
 CALL :Main %switchproject%
+CALL :UpdateCImport
 CALL :Shortcut %switchproject%
 GOTO :END
 
@@ -49,7 +54,9 @@ IF EXIST .vscode\%search%.code-workspace (
 )
 
 ECHO Fixing build.zig project name.
-CALL :ReplaceInFile build.zig
+IF EXIST build.zig (
+  CALL :ReplaceInFile build.zig
+)
 
 IF EXIST %search%.rc (
   ECHO Fixing Windows Resource file %search%.rc
@@ -81,6 +88,7 @@ IF EXIST *.rc (
 
 
 :Shortcut
+IF NOT EXIST .vscode ( %_ExitSub% )
 ECHO Creating shortcut to %ProjectName% VSCode workspace.
 FOR /F "DELIMS=" %%F IN ('"WHERE CODE"') DO SET "vscode=%%F" &GOTO :FoundVSCode
 :FoundVSCode
@@ -111,18 +119,30 @@ DEL createShortcut.vbs > NUL
 
 
 :ReplaceInFile
-SET "textFile=%1"
+SET "tmp=%1"
+SET textFile=%tmp:"=%
 >"%textFile%.new" (
 SETLOCAL DISABLEDELAYEDEXPANSION
-FOR /F "tokens=1,* delims=]" %%A IN ('"type %textFile%|find /n /v """') DO (
+FOR /F "TOKENS=1,* DELIMS=]" %%A IN ('"TYPE ^^"%textFile%^^" | FIND /n /v """') DO (
   SET "line=%%B"
   IF DEFINED line (
-    CALL SET "line=echo.%%line:%search%=%replace%%%"
-    FOR /F "delims=" %%X IN ('"echo."%%line%%""') DO %%~X
-  ) ELSE echo.
+    CALL SET "line=ECHO.%%line:%search%=%replace%%%"
+    FOR /F "DELIMS=" %%X IN ('"ECHO."%%line%%""') DO %%~X
+  ) ELSE ECHO.
 )
 )
 MOVE /y "%textFile%.new" "%textFile%" >NUL
+%_ExitSub%
+
+
+:UpdateCImport
+ECHO Updating cImport Libs folder path.
+SET folder=%CD:\=/%/
+SET search=cInclude("
+SET replace=cInclude("%folder%
+FOR /R "%CD%" %%G IN (*.zig) DO (
+  CALL :ReplaceInFile "%%G"
+)
 %_ExitSub%
 
 
