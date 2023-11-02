@@ -29,7 +29,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **Base** | Template for a console program. | Console |
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
-| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Render: OpenGL3, SDL2_Renderer | Both |
+| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Renderers: OpenGL3, SDL2_Renderer | Both |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. GUI examples: Minimal, Demo. | Windows |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
@@ -55,10 +55,9 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
 <pre>Using Dear ImGui Docking 1.90WIP and Dear Bindings (20231029)
-All necessary libraries are inside the template.
+All necessary libraries are inside the template.<br/><br/>
 
-Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
-</pre>
+Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).</pre>
 </details>
 
 <details>
