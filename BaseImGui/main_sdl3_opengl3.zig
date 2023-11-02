@@ -12,14 +12,14 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/imgui/cimgui.h");
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/imgui/cimgui_impl_sdl3.h");
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/imgui/cimgui_impl_opengl3.h");
+  @cInclude("lib/imgui/cimgui.h");
+  @cInclude("lib/imgui/cimgui_impl_sdl3.h");
+  @cInclude("lib/imgui/cimgui_impl_opengl3.h");
 });
 
 const sdl = @cImport({
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/SDL3/include/SDL.h");
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/SDL3/include/SDL_opengl.h");
+  @cInclude("lib/SDL3/include/SDL.h");
+  @cInclude("lib/SDL3/include/SDL_opengl.h");
 });
 
 const ImVec4 = struct {
