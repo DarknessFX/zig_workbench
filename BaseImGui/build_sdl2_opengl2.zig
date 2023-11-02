@@ -24,6 +24,8 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("SDL2");
   exe.linkSystemLibrary("OpenGL32");
 
+  exe.addLibraryPath( .{ .path = "lib/SDL2" } );
+
   exe.addIncludePath( .{ .path = "lib/imgui" }  );
   exe.addIncludePath( .{ .path = "lib/SDL2/include" }  );
   exe.addIncludePath( .{ .path = "lib/opengl" }  );

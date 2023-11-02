@@ -23,6 +23,8 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("dwmapi");
   exe.linkSystemLibrary("SDL2");
 
+  exe.addLibraryPath( .{ .path = "lib/SDL2" } );
+
   exe.addIncludePath( .{ .path = "lib/imgui" }  );
   exe.addIncludePath( .{ .path = "lib/SDL2/include" }  );
 
