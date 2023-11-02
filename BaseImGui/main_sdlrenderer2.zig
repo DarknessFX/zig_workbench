@@ -49,8 +49,6 @@ pub fn main() void {
 
   im.ImGui_StyleColorsDark(null);
 
-  win.Sleep(2000);
-
   var cwindow = @as(?*im.SDL_Window , @ptrCast(window));
   var crenderer = @as(?*im.SDL_Renderer , @ptrCast(renderer));
   _ = im.cImGui_ImplSDL2_InitForSDLRenderer(cwindow, crenderer);
