@@ -1,8 +1,9 @@
 const std = @import("std");
 
+// NOTE: Need full path to lib/lvgl
 pub const lv = @cImport({
-  @cInclude("D:/workbench/Zig/BaseLVGL/lib/lvgl/lvgl.h");
-  @cInclude("D:/workbench/Zig/BaseLVGL/lib/lvgl_drv/win32drv.h");
+  @cInclude("lib/lvgl/lvgl.h");
+  @cInclude("lib/lvgl_drv/win32drv.h");
 });
 
 // NOTE: 
@@ -10,11 +11,11 @@ pub const lv = @cImport({
 // - Need to add all .C files for demos or examples to work.
 //
 // pub const lvexamples = @cImport({
-//   @cInclude("D:/workbench/Zig/BaseLVGL/lib/lvgl/examples/lv_examples.h");
+//   @cInclude("lib/lvgl/examples/lv_examples.h");
 // });
 
 // pub const lvdemos = @cImport({
-//   @cInclude("D:/workbench/Zig/BaseLVGL/lib/lvgl/demos/lv_demos.h");
+//   @cInclude("lib/lvgl/demos/lv_demos.h");
 // });
 
 
