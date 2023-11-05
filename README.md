@@ -58,7 +58,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
 <pre>Using Dear ImGui Docking 1.90WIP and Dear Bindings (20231029)
-All necessary libraries are inside the template.<br/><br/>
+All necessary libraries are inside the template.<br/>
 
 Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).</pre>
 </details>
@@ -79,7 +79,8 @@ error: member access within misaligned address</i> and without the
 <pre>Using <a href="https://github.com/lvgl/lvgl" target="_blank">LVGL from source</a> (20231105, 9.0 Preview).
 Used parts of code from <a href="https://github.com/lvgl/lv_port_pc_visual_studio" target="_blank">lv_port_pc_visual_studio</a> (lv_conf and main source).
 All necessary libraries are inside the template.
-Download Demos and Examples folders from the GitHub source (and don't forget to add all .C files necessary to build).</pre>
+Download Demos and Examples folders from the GitHub source<br/>
+(and don't forget to add all .C files necessary to build).</pre>
 </details>
 
 <details>
