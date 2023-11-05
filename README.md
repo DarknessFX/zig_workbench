@@ -32,6 +32,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseWinEx** | Template for a Windows program, Windows API as submodule. | Windows |
 | **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Renderers: OpenGL3, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
+| **BaseLVGL** | Template with [LVGL](https://lvgl.io/) . | Console |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **BaseSDL3** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
@@ -63,6 +64,25 @@ Note: When changing renderers, make sure to rename all files (Main.zig, Build.zi
 </details>
 
 <details>
+  <summary><ins>About microui</ins></summary>
+<pre>microui.c and microui.h are inside the project folder.
+Normally I would recommend to download from the official repository 
+but sadly microui is outdated (last update 3 years ago) and I applied 
+<a href="https://github.com/rxi/microui/pulls" target="_blank">community pull requests</a> to the source code.
+It was necessary because the original code crashed with <i>runtime 
+error: member access within misaligned address</i> and without the 
+<a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
+</details>
+
+ <details>
+  <summary><ins>About LVGL</ins></summary>
+<pre>Using <a href="https://github.com/lvgl/lvgl" target="_blank">LVGL from source</a> (20231105, 9.0 Preview).
+Used parts of code from <a href="https://github.com/lvgl/lv_port_pc_visual_studio" target="_blank">lv_port_pc_visual_studio</a> (lv_conf and main source).
+All necessary libraries are inside the template.
+Download Demos and Examples folders from the GitHub source (and don't forget to add all .C files necessary to build).</pre>
+</details>
+
+<details>
   <summary><ins>About SDL2</ins></summary>
 <pre>&nbsp;&nbsp;Using SDL2 v2.28.4.
 &nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases Page</a>.
@@ -81,17 +101,6 @@ Note: When changing renderers, make sure to rename all files (Main.zig, Build.zi
 <pre>GLFW 3.3.8 (Win64 Static).
 GLAD 2.0 (OpenGL 3.3 Compatibility).
 All necessary libraries are inside the template.</pre>
-</details>
-
-<details>
-  <summary><ins>About microui</ins></summary>
-<pre>microui.c and microui.h are inside the project folder.
-Normally I would recommend to download from the official repository 
-but sadly microui is outdated (last update 3 years ago) and I applied 
-<a href="https://github.com/rxi/microui/pulls" target="_blank">community pull requests</a> to the source code.
-It was necessary because the original code crashed with <i>runtime 
-error: member access within misaligned address</i> and without the 
-<a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
 
 ## Libraries
@@ -239,12 +248,14 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 ## Credits
 
 [Zig Language](https://ziglang.org/) from ZigLang.org .<br/>
-[SDL2](https://libsdl.org/) from libSDL.org .<br/>
+[SDL2, SDL3](https://libsdl.org/) from libSDL.org .<br/>
 [GLFW](https://www.glfw.org) from GLFW.org .<br/>
 [GLAD](https://github.com/Dav1dde/glad) from Dav1dde .<br/>
 [microui](https://github.com/rxi/microui) from rxi .<br/>
 [Dear ImGui](https://github.com/ocornut/imgui) from Omar Cornut .<br/>
 [Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
+[LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
+[lv_port_pc_visual_studio](https://github.com/lvgl/lv_port_pc_visual_studio) from MouriNaruto .<br/>
 
 ## License
 MIT - Free for everyone and any use.
