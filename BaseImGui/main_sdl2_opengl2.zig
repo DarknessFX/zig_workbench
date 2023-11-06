@@ -1,4 +1,3 @@
-// ImGui_impl_SDL2_OpenGL2
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -13,7 +12,7 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
-//   @cInclude("C:/zig_workbench/lib/SDL2/include/SDL.h"); 
+//   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   @cInclude("lib/imgui/cimgui.h");
   @cInclude("lib/imgui/cimgui_impl_sdl2.h");

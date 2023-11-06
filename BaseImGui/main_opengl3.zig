@@ -1,4 +1,3 @@
-// ImGui_impl_OpenGL3
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -11,7 +10,7 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
-//   @cInclude("C:/zig_workbench/lib/SDL2/include/SDL.h"); 
+//   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   @cInclude("lib/imgui/cimgui.h");
   @cInclude("lib/imgui/cimgui_impl_opengl3.h");
@@ -68,7 +67,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   io.ConfigFlags |= im.ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
   io.ConfigFlags |= im.ImGuiConfigFlags_NavEnableGamepad;    // Enable Gamepad Controls
   io.ConfigFlags |= im.ImGuiConfigFlags_DockingEnable;       // Enable Docking
-//  io.ConfigFlags |= im.ImGuiConfigFlags_ViewportsEnable;     // Enable Multi-Viewport / Platform Windows
+  io.ConfigFlags |= im.ImGuiConfigFlags_ViewportsEnable;     // Enable Multi-Viewport / Platform Windows
 
   im.ImGui_StyleColorsDark(null);
 
@@ -89,7 +88,6 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     platform_io.Renderer_SwapBuffers = Hook_Renderer_SwapBuffers;
     platform_io.Platform_RenderWindow = Hook_Platform_RenderWindow;
   }
-
 
   var show_demo_window = true;
   var show_another_window = false;
@@ -245,7 +243,7 @@ fn CreateWindow(hInstance: win.HINSTANCE) void {
 }
 
 fn CreateDeviceWGL(hWnd: win.HWND , data: *WGL_WindowData) bool {
-  const hDc = win.GetDC(wnd).?;
+  const hDc = win.GetDC(hWnd).?;
   var pfd: win.PIXELFORMATDESCRIPTOR = std.mem.zeroes(win.PIXELFORMATDESCRIPTOR);
   const pfd_size = @sizeOf(win.PIXELFORMATDESCRIPTOR);
   pfd.nSize = pfd_size;
@@ -264,7 +262,9 @@ fn CreateDeviceWGL(hWnd: win.HWND , data: *WGL_WindowData) bool {
   var glhwnd = @as(gl.HWND, @alignCast(@ptrCast(hWnd)));
   @setRuntimeSafety(true);
   data.hDC = gl.GetDC(glhwnd);
-  if (g_hRC == null) { g_hRC = gl.wglCreateContext(data.hDC); }
+  if (g_hRC == null) { 
+    g_hRC = gl.wglCreateContext(data.hDC); 
+  }
   return true;
 }
 
@@ -274,9 +274,6 @@ fn CleanupDeviceWGL(hWnd: win.HWND , data: *WGL_WindowData) void {
 
   _ = gl.wglMakeCurrent(null, null);
 }
-
-var g_viewport_hwnd: win.HWND = undefined;
-var g_viewport_dc: win.HDC = undefined;
 
 fn Hook_Renderer_CreateWindow(viewport: [*c]im.ImGuiViewport) callconv(.C) void {
   if (viewport.*.PlatformHandle != null and viewport.*.RendererUserData == null) {
@@ -309,7 +306,6 @@ fn Hook_Renderer_SwapBuffers(viewport: [*c]im.ImGuiViewport, pvoid: ?*anyopaque)
   if (viewport.*.RendererUserData != null) {
     var data = @as(*WGL_WindowData, @alignCast(@ptrCast(viewport.*.RendererUserData.?))); 
     _ = win.SwapBuffers(@as(win.HDC, @alignCast(@ptrCast(data.hDC))));
-
   }
 }
 

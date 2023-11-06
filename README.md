@@ -30,7 +30,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
 | **BaseWinEx** | Template for a Windows program, Windows API as submodule. | Windows |
-| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Renderers: OpenGL3, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
+| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **BaseLVGL** | Template with [LVGL](https://lvgl.io/) . | Console |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |

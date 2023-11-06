@@ -10,30 +10,32 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
-//   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
+//   @cInclude("C:/zig_workbench/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   @cInclude("lib/imgui/cimgui.h");
-  @cInclude("lib/imgui/cimgui_impl_opengl3.h");
+  @cInclude("lib/imgui/cimgui_impl_dx11.h");
   @cInclude("lib/imgui/cimgui_impl_win32.h");
 });
 
-const gl = @cImport({
-  @cInclude("lib/opengl/gl.h");
+const dx = @cImport({
+  @cInclude("lib/DX11/DX11.h");
 });
 
 var wnd: win.HWND = undefined;
 const wnd_title = L("BaseImGui");
-var wnd_size: win.RECT = .{ .left=0, .top=0, .right=1200, .bottom=800 };
+var wnd_size: win.RECT = .{ .left=0, .top=0, .right=1280, .bottom=720 };
 var wnd_dc: win.HDC = undefined;
 var wnd_dpi: win.UINT = 0;
 var wnd_hRC: win.HGLRC = undefined;
 
-const WGL_WindowData = struct  { hDC: gl.HDC };
-var gl_HWND: gl.HWND = undefined;
-var g_hRC: gl.HGLRC = undefined;
-var g_MainWindow: WGL_WindowData = std.mem.zeroes(WGL_WindowData);
-var g_width: i16 = 1200;
-var g_height: i16 = 800;
+var g_width: win.INT = 1280;
+var g_height: win.INT = 720;
+var g_ResizeWidth: win.UINT = 0;
+var g_ResizeHeight: win.UINT = 0;
+var g_pd3dDevice: ?*dx.ID3D11Device = null;
+var g_pd3dDeviceContext: ?*dx.ID3D11DeviceContext = null;
+var g_pSwapChain: ?*dx.IDXGISwapChain = null;
+var g_mainRenderTargetView: ?*dx.ID3D11RenderTargetView = null;
 
 const ImVec4 = struct {
   x: f32,
@@ -52,12 +54,10 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   defer _ = win.UnregisterClassW(wnd_title, hInstance);
   defer _ = win.DestroyWindow(wnd);
 
-  @setRuntimeSafety(false);
-  gl_HWND = @as(gl.HWND, @alignCast(@ptrCast(wnd)));
-  @setRuntimeSafety(true);
-  
-  _ = CreateDeviceWGL(wnd, &g_MainWindow);
-  _ = gl.wglMakeCurrent(g_MainWindow.hDC, g_hRC);
+    if (!CreateDeviceD3D(wnd)) {
+      CleanupDeviceD3D();
+      return 1;
+    }
 
   _ = win.ShowWindow(wnd, nCmdShow);
   _ = win.updateWindow(wnd) catch undefined;
@@ -77,19 +77,13 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     style.Colors[im.ImGuiCol_WindowBg].w = 1.0;
   }
 
-  _ = im.cImGui_ImplWin32_InitForOpenGL(wnd);
-  _ = im.cImGui_ImplOpenGL3_Init();
+  _ = im.cImGui_ImplWin32_Init(wnd);
+  _ = im.cImGui_ImplDX11_Init(
+    @as(?*im.ID3D11Device, @ptrCast(g_pd3dDevice)), 
+    @as(?*im.ID3D11DeviceContext, @ptrCast(g_pd3dDeviceContext))
+  );
 
-  if (io.ConfigFlags & im.ImGuiConfigFlags_ViewportsEnable != 0)
-  {
-    var platform_io: *im.struct_ImGuiPlatformIO_t = im.ImGui_GetPlatformIO();
-    platform_io.Renderer_CreateWindow = Hook_Renderer_CreateWindow;
-    platform_io.Renderer_DestroyWindow = Hook_Renderer_DestroyWindow;
-    platform_io.Renderer_SwapBuffers = Hook_Renderer_SwapBuffers;
-    platform_io.Platform_RenderWindow = Hook_Platform_RenderWindow;
-  }
-
-  var show_demo_window = true;
+   var show_demo_window = true;
   var show_another_window = false;
   var clear_color: ImVec4 = .{ .x=0.45, .y=0.55, .w=0.60, .z=1.00 };
   var f: f32 = 0.0;
@@ -106,7 +100,14 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     }
     if (done) break;
 
-    im.cImGui_ImplOpenGL3_NewFrame();
+    if (g_ResizeWidth != 0 and g_ResizeHeight != 0) {
+      CleanupRenderTarget();
+      _ = g_pSwapChain.?.lpVtbl.*.ResizeBuffers.?(g_pSwapChain, 0, g_ResizeWidth, g_ResizeHeight, dx.DXGI_FORMAT_UNKNOWN, 0);
+      g_ResizeWidth = 0; g_ResizeHeight = 0;
+      CreateRenderTarget();
+    }
+
+    im.cImGui_ImplDX11_NewFrame();
     im.cImGui_ImplWin32_NewFrame();
     im.ImGui_NewFrame();
 
@@ -142,28 +143,95 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     }
 
     im.ImGui_Render();
-    gl.glViewport(0, 0, g_width, g_height);
-    gl.glClearColor(clear_color.x, clear_color.y, clear_color.w, clear_color.z);
-    gl.glClear(gl.GL_COLOR_BUFFER_BIT);
-    im.cImGui_ImplOpenGL3_RenderDrawData(im.ImGui_GetDrawData());
+    g_pd3dDeviceContext.?.lpVtbl.*.OMSetRenderTargets.?(g_pd3dDeviceContext, 1, &g_mainRenderTargetView, null);
+    g_pd3dDeviceContext.?.lpVtbl.*.ClearRenderTargetView.?(g_pd3dDeviceContext, g_mainRenderTargetView, @as([*c]f32,  &clear_color.x));
+    im.cImGui_ImplDX11_RenderDrawData(im.ImGui_GetDrawData());
 
     if (io.ConfigFlags & im.ImGuiConfigFlags_ViewportsEnable != 0) {
       im.ImGui_UpdatePlatformWindows();
       im.ImGui_RenderPlatformWindowsDefault();
-      _ = gl.wglMakeCurrent(g_MainWindow.hDC, g_hRC);
     }
 
-    _ = gl.SwapBuffers(g_MainWindow.hDC);
+    _ = g_pSwapChain.?.lpVtbl.*.Present.?(g_pSwapChain, 1, 0);
   }
 
-  im.cImGui_ImplOpenGL3_Shutdown();
+  im.cImGui_ImplDX11_Shutdown();
   im.cImGui_ImplWin32_Shutdown();
   im.ImGui_DestroyContext(null);
 
-  CleanupDeviceWGL(wnd, &g_MainWindow);
-  _ = gl.wglDeleteContext(g_hRC);
+  CleanupDeviceD3D();
   return 0;
 }
+
+// DIRECTX 11
+fn CreateDeviceD3D(hWnd: win.HWND) bool { 
+  var sd = std.mem.zeroes(dx.DXGI_SWAP_CHAIN_DESC);
+  sd.BufferCount = 2;
+  sd.BufferDesc.Width = 0;
+  sd.BufferDesc.Height = 0;
+  sd.BufferDesc.Format = dx.DXGI_FORMAT_R8G8B8A8_UNORM;
+  sd.BufferDesc.RefreshRate.Numerator = 60;
+  sd.BufferDesc.RefreshRate.Denominator = 1;
+  sd.Flags = dx.DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+  sd.BufferUsage = dx.DXGI_USAGE_RENDER_TARGET_OUTPUT;
+  @setRuntimeSafety(false);
+  sd.OutputWindow = @as(dx.HWND, @alignCast(@ptrCast(hWnd)));
+  @setRuntimeSafety(true);
+  sd.SampleDesc.Count = 1;
+  sd.SampleDesc.Quality = 0;
+  sd.Windowed = dx.TRUE;
+  sd.SwapEffect = dx.DXGI_SWAP_EFFECT_DISCARD;
+
+  var createDeviceFlags: dx.UINT  = 0;
+  //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+  var featureLevel: dx.D3D_FEATURE_LEVEL = undefined;
+  const featureLevelArray = &[_]dx.D3D_FEATURE_LEVEL{
+    dx.D3D_FEATURE_LEVEL_11_0,
+    dx.D3D_FEATURE_LEVEL_10_0
+  };
+  var res: dx.HRESULT = dx.D3D11CreateDeviceAndSwapChain(null, dx.D3D_DRIVER_TYPE_HARDWARE, 
+    null, createDeviceFlags, featureLevelArray, 2, 
+    dx.D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice,
+    &featureLevel, &g_pd3dDeviceContext);
+
+  if (res == dx.DXGI_ERROR_UNSUPPORTED) { // Try high-performance WARP software driver if hardware is not available.
+    res = dx.D3D11CreateDeviceAndSwapChain(null, dx.D3D_DRIVER_TYPE_WARP, 
+      null, createDeviceFlags, featureLevelArray, 2, 
+      dx.D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, 
+      &featureLevel, &g_pd3dDeviceContext);
+  }
+  if (res != dx.S_OK)
+      return false;
+
+  CreateRenderTarget();
+  return true; 
+}
+
+fn CleanupDeviceD3D() void {
+  CleanupRenderTarget();
+  _ = g_pSwapChain.?.lpVtbl.*.Release.?(g_pSwapChain);
+  _ = g_pd3dDeviceContext.?.lpVtbl.*.Release.?(g_pd3dDeviceContext);
+  _ = g_pd3dDevice.?.lpVtbl.*.Release.?(g_pd3dDevice);
+  g_pSwapChain = null;
+  g_pd3dDeviceContext = null;
+  g_pd3dDevice = null;
+}
+
+fn CreateRenderTarget() void {
+  var pBackBuffer: ?*dx.ID3D11Texture2D = null;
+
+  _ = g_pSwapChain.?.lpVtbl.*.GetBuffer.?(g_pSwapChain, 0,  &dx.IID_ID3D11Texture2D, @as([*c]?*anyopaque, @ptrCast(&pBackBuffer)));
+  _ = g_pd3dDevice.?.lpVtbl.*.CreateRenderTargetView.?(g_pd3dDevice, @as([*c]dx.ID3D11Resource, @ptrCast(pBackBuffer.?)), null, &g_mainRenderTargetView);
+  _ = pBackBuffer.?.lpVtbl.*.Release.?(pBackBuffer);
+}
+
+fn CleanupRenderTarget() void {
+  if (g_mainRenderTargetView) |mRTV| {
+    _ = mRTV.lpVtbl.*.Release.?(g_mainRenderTargetView);
+    g_mainRenderTargetView = null;
+  }
+}
+
 
 pub extern fn cImGui_ImplWin32_WndProcHandler(
   hWnd: win.HWND,
@@ -187,8 +255,8 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
       _ = EndPaint(hWnd, &ps);
     },
     win.WM_SIZE => {
-      wnd_size.right = @as(i32, @intCast(LOWORD(lParam)));
-      wnd_size.bottom = @as(i32, @intCast(HIWORD(lParam)));
+      g_ResizeWidth = LOWORD(lParam);
+      g_ResizeHeight = HIWORD(lParam);
     },
 		win.WM_KEYDOWN,
 		win.WM_SYSKEYDOWN => {
@@ -202,12 +270,21 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
         else => {}
       }
     },
+    WM_DPICHANGED => {
+      if (im.ImGui_GetIO().*.ConfigFlags & im.ImGuiConfigFlags_DpiEnableScaleViewports != 0) {
+        //const int dpi = HIWORD(wParam);
+        //printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
+        const suggested_rect: *win.RECT  = @as(*win.RECT, @constCast(@ptrCast(&lParam)));
+        _ = SetWindowPos(hWnd, null, suggested_rect.left, suggested_rect.top, 
+          suggested_rect.right - suggested_rect.left, suggested_rect.bottom - suggested_rect.top,
+          SWP_NOZORDER | SWP_NOACTIVATE);
+      }
+    },
     else => _=.{},
   }
 
   return win.DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
-
 
 fn CreateWindow(hInstance: win.HINSTANCE) void {
   const wnd_class: win.WNDCLASSEXW = .{
@@ -242,74 +319,6 @@ fn CreateWindow(hInstance: win.HINSTANCE) void {
   _ = SetWindowPos( wnd, null, wnd_size.left, wnd_size.top, wnd_size.right, wnd_size.bottom, SWP_NOCOPYBITS );
 }
 
-fn CreateDeviceWGL(hWnd: win.HWND , data: *WGL_WindowData) bool {
-  const hDc = win.GetDC(hWnd).?;
-  var pfd: win.PIXELFORMATDESCRIPTOR = std.mem.zeroes(win.PIXELFORMATDESCRIPTOR);
-  const pfd_size = @sizeOf(win.PIXELFORMATDESCRIPTOR);
-  pfd.nSize = pfd_size;
-  pfd.nVersion = 1;
-  pfd.dwFlags = gl.PFD_DRAW_TO_WINDOW | gl.PFD_SUPPORT_OPENGL | gl.PFD_DOUBLEBUFFER;
-  pfd.iPixelType = gl.PFD_TYPE_RGBA;
-  pfd.cColorBits = 32;
-
-  const pf = win.ChoosePixelFormat(hDc, &pfd);
-  if (pf == 0) { return false; }
-  if (win.SetPixelFormat(hDc, pf, &pfd) == false) { return false; }
-
-  _ = win.ReleaseDC(hWnd, hDc);
-
-  @setRuntimeSafety(false);
-  var glhwnd = @as(gl.HWND, @alignCast(@ptrCast(hWnd)));
-  @setRuntimeSafety(true);
-  data.hDC = gl.GetDC(glhwnd);
-  if (g_hRC == null) { 
-    g_hRC = gl.wglCreateContext(data.hDC); 
-  }
-  return true;
-}
-
-fn CleanupDeviceWGL(hWnd: win.HWND , data: *WGL_WindowData) void {
-  _ = hWnd;
-  _ = data;
-
-  _ = gl.wglMakeCurrent(null, null);
-}
-
-fn Hook_Renderer_CreateWindow(viewport: [*c]im.ImGuiViewport) callconv(.C) void {
-  if (viewport.*.PlatformHandle != null and viewport.*.RendererUserData == null) {
-    var data: WGL_WindowData = std.mem.zeroes(WGL_WindowData);
-    _ = CreateDeviceWGL(@as(win.HWND, @ptrCast(viewport.*.PlatformHandle.?)), &data);
-    viewport.*.RendererUserData = &data;
-  }
-}
-
-fn Hook_Renderer_DestroyWindow(viewport: [*c]im.ImGuiViewport) callconv(.C) void {
-  if (viewport.*.RendererUserData != null) {
-    CleanupDeviceWGL(
-      @as(win.HWND, @ptrCast(viewport.*.PlatformHandle.?)),
-      @as(*WGL_WindowData, @alignCast(@ptrCast(viewport.*.RendererUserData.?)))
-    );
-    viewport.*.RendererUserData = null;
-  }
-}
-
-fn Hook_Platform_RenderWindow(viewport: [*c]im.ImGuiViewport, pvoid: ?*anyopaque) callconv(.C) void {
-  _ = pvoid;
-  if (viewport.*.RendererUserData != null) {
-    var data = @as(*WGL_WindowData, @alignCast(@ptrCast(viewport.*.RendererUserData.?))); 
-    _ = gl.wglMakeCurrent(data.hDC, g_hRC);
-  }
-}
-
-fn Hook_Renderer_SwapBuffers(viewport: [*c]im.ImGuiViewport, pvoid: ?*anyopaque) callconv(.C) void {
-  _ = pvoid;
-  if (viewport.*.RendererUserData != null) {
-    var data = @as(*WGL_WindowData, @alignCast(@ptrCast(viewport.*.RendererUserData.?))); 
-    _ = win.SwapBuffers(@as(win.HDC, @alignCast(@ptrCast(data.hDC))));
-  }
-}
-
-
 // Fix for libc linking error.
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
@@ -322,6 +331,9 @@ fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xF
 const VK_ESCAPE = 27;
 const VK_LSHIFT = 160;
 const COLOR_WINDOW = 5;
+const WM_DPICHANGED = 0x02E0;
+const SWP_NOZORDER = 0x0004;
+const SWP_NOACTIVATE = 0x0010;
 pub const HDC = *opaque{};
 pub const HBRUSH = *opaque{};
 pub const PAINTSTRUCT = extern struct {
