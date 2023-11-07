@@ -37,7 +37,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseSDL3** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
-| **BaseDX11** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Console |
+| **BaseDX11** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
