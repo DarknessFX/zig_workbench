@@ -264,7 +264,7 @@ MIT - Free for everyone and any use.
 DarknessFX @ https://dfx.lv | Twitter: @DrkFX<br/>
 https://github.com/DarknessFX/zig_workbench
 
-
+<p>
 [SEO helper
 Base is a Zig Windows console program template.
 BaseEx is a Zig Windows program that hide the console window template.
@@ -278,5 +278,4 @@ BaseSDL3 is a Zig SDL3 Windows program template.
 BaseOpenGL is a Zig OpenGL GL.h Windows program template.
 BaseGLFW is a Zig GLFW GLAD Windows program template.
 BaseDX11 is a Zig DirectX Direct3D 11 DX11 Windows program template.]: # 
-
-
+</p>
