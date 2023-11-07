@@ -63,7 +63,7 @@ All necessary libraries are inside the template.<br/>
 
 Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
 
-ImGui_Memory_Editor: Edited from Dear Bindings output. Usage and sample inside <a href="BaseImGui/lib/ImGui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
+ImGui_Memory_Editor: Edited from Dear Bindings output. Usage and sample inside <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
 </details>
 
 <details>
