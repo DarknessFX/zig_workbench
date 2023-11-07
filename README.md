@@ -105,6 +105,20 @@ GLAD 2.0 (OpenGL 3.3 Compatibility).
 All necessary libraries are inside the template.</pre>
 </details>
 
+<details>
+  <summary><sub>SEO Helper</sub></summary>
+<pre>Giving Google a little help pairing Zig + LIB words, because it find my twitters easier than this repo:
+BaseWinEx   = Zig Windows program template with Windows API as submodule.
+BaseImGui   = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer.
+Basemicroui = Zig microui Windows program template with renderers: SDL2, Windows GDI.
+BaseLVGL    = Zig LVGL Windows program template.
+BaseSDL2    = Zig SDL2 Windows program template.
+BaseSDL3    = Zig SDL3 Windows program template.
+BaseOpenGL  = Zig OpenGL GL.h Windows program template.
+BaseGLFW    = Zig GLFW GLAD Windows program template.
+BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.</pre>
+</details>
+
 ## Libraries
 
 | Folder | Description |
@@ -263,19 +277,3 @@ MIT - Free for everyone and any use.
 
 DarknessFX @ https://dfx.lv | Twitter: @DrkFX<br/>
 https://github.com/DarknessFX/zig_workbench
-
-<p>
-[SEO helper
-Base is a Zig Windows console program template.
-BaseEx is a Zig Windows program that hide the console window template.
-BaseWin is a Zig Windows program template.
-BaseWinEx is a Zig Windows program template with Windows API as submodule.
-BaseImGui is a Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer.
-Basemicroui is a Zig microui Windows program template with renderers: SDL2, Windows GDI.
-BaseLVGL is a Zig LVGL Windows program template.
-BaseSDL2 is a Zig SDL2 Windows program template.
-BaseSDL3 is a Zig SDL3 Windows program template.
-BaseOpenGL is a Zig OpenGL GL.h Windows program template.
-BaseGLFW is a Zig GLFW GLAD Windows program template.
-BaseDX11 is a Zig DirectX Direct3D 11 DX11 Windows program template.]: # 
-</p>
