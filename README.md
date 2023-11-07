@@ -257,7 +257,6 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Dear ImGui](https://github.com/ocornut/imgui) from Omar Cornut .<br/>
 [Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
-[lv_port_pc_visual_studio](https://github.com/lvgl/lv_port_pc_visual_studio) from MouriNaruto .<br/>
 
 ## License
 MIT - Free for everyone and any use.
