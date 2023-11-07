@@ -30,7 +30,7 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
 | **BaseWinEx** | Template for a Windows program, Windows API as submodule. | Windows |
-| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
+| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **BaseLVGL** | Template with [LVGL](https://lvgl.io/) . | Console |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
@@ -61,7 +61,9 @@ Zig have a useful built in feature: *zig init-exe* that create a basic project. 
 <pre>Using Dear ImGui Docking 1.90WIP and Dear Bindings (20231029)
 All necessary libraries are inside the template.<br/>
 
-Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).</pre>
+Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
+
+ImGui_Memory_Editor: Edited from Dear Bindings output. Usage and sample inside <a href="BaseImGui/lib/ImGui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
 </details>
 
 <details>
