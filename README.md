@@ -107,7 +107,7 @@ All necessary libraries are inside the template.</pre>
 
 <details>
   <summary><sub>SEO Helper</sub></summary>
-<pre>Giving Google a little help pairing Zig + LIB words, because it find my twitters easier than this repo:
+<pre>Giving Google a little help pairing Zig + LIB words, because it find my twitter posts easier than this repo:
 BaseWinEx   = Zig Windows program template with Windows API as submodule.
 BaseImGui   = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer.
 Basemicroui = Zig microui Windows program template with renderers: SDL2, Windows GDI.
