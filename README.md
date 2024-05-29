@@ -150,8 +150,9 @@ All necessary libraries are inside the template.</pre>
 | **clean_zig-cache.bat** | Remove zig-cache from **all** sub folders. |
 | **zig.ico** | Zig logo Icon file (.ico). (Resolutions 64p, 32p, 16p) |
 | **zig_256p.ico** | Zig logo Icon file (.ico) with higher resolutions . (Resolutions 256p, 128p, 64p, 32p, 16p) |
+| **zig_contextmenu.bat** | Launcher used by Windows Explorer context menu, copy to Zig folder PATH. |
 | **zig_icon.reg** | Associate an icon for .Zig files, add Build, Run, Test to Windows Explorer context menu. [Read more details](/tools/zig_icon.reg) in the file comments. |
-| **zig_icon_cascade.reg** | Alternative of zig_icon.reg, groups all options inside a Zig submenu. |
+| **zig_icon_cascade.reg** | Alternative of zig_icon.reg, groups all options inside a Zig submenu. [Read more details](/tools/zig_icon.reg) in the file comments. |
 
 <details>
   <summary><ins>zig_icon.reg - screenshot</ins></summary>
