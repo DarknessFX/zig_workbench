@@ -15,14 +15,14 @@
 ## About
 I'm studying and learning [Zig Language](https://ziglearn.org/chapter-0/) (started Nov 19, 2023), sharing here my Zig projects, templates, libs and tools.
 
-Using Windows 10, Zig x86_64 Version : **_0.12.0-dev.1245+a07f288eb_**
+Using Windows 10, Zig x86_64 Version : **_0.12.0**
 
 > [!NOTE]
 > This is a student project, code will run and build without errors (mostly because I just throw away errors), it is not a reference of "*best coding practices*". Suggestions or contributions changing the code to the "*right way and best practices*" are welcome.
 
 ## Templates
 
-Zig have a useful built in feature: *zig init-exe* that create a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
+Zig have a useful built in feature: *zig init-exe* that creates a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
 
 | Folder | Description | /Subsystem |
 | ------------- | ------------- | ------------- |
@@ -112,7 +112,7 @@ All necessary libraries are inside the template.</pre>
 | Folder | Description |
 | ------------- | ------------- |
 | **dos_color.zig** | Helper to output colors to console (std.debug.print) or debug console (OutputDebugString). |
-| **string.zig** | Basic String Type. |
+| **string.zig** | WIP String Type. |
 
 <details>
   <summary><ins>Libraries usage</ins></summary>
@@ -186,8 +186,7 @@ I changed a few VSCode keybindings for better use, mostly because Zig offer mult
 
 The more important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last ask. 
 
-Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. So **CTRL+T, Enter** became my most used keyboard shortcut inside VSCode.<br/>
-<sub>(at least until they add a keybiding for "Run Last Task" so I can bind to CTRL+R<sup>un</sup>).</sub>
+Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. **CTRL+T, Enter** became one of my most used keyboard shortcut inside VSCode and **CTRL+R** to repeat the last task.<br/>
 
 <details>
   <summary><ins>Task menu screenshot</ins></summary>
@@ -228,6 +227,14 @@ Reason: Because this key binding try to reload the current document or display a
   {
     "key": "ctrl+r",
     "command": "-workbench.action.openRecent"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.tasks.runTask"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "workbench.action.tasks.reRunTask"
   }
 ]
 </pre>

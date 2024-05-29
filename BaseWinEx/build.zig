@@ -14,7 +14,10 @@ pub fn build(b: *std.Build) void {
     .target = target,
     .optimize = optimize
   });
-
+  exe.addWin32ResourceFile(.{
+    .file = .{ .path = projectname ++ ".rc" },
+    .flags = &.{"/c65001"}, // UTF-8 codepage
+  });
   exe.linkLibC();
   
   switch (optimize) {

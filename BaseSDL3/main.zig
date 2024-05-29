@@ -1,13 +1,13 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
 };
 const WINAPI = win.WINAPI;
 
 pub const sdl = @cImport({
   // NOTE: Need full path to SDL3/include
+  // Remember to copy SDL3.dll to Zig.exe folder PATH
   @cInclude("lib/SDL3/include/SDL.h");
 });
 
@@ -19,7 +19,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = nCmdShow;
 
   _ = sdl.SDL_Init(sdl.SDL_INIT_EVERYTHING);
-  var window: *(sdl.SDL_Window) = sdl.SDL_CreateWindow("GAME", 1280, 720, 0).?;
+  const window: *(sdl.SDL_Window) = sdl.SDL_CreateWindow("GAME", 1280, 720, 0).?;
   defer sdl.SDL_DestroyWindow(window);
 
   win.Sleep(3000);

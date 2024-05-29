@@ -2,7 +2,6 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
 };
 const WINAPI = win.WINAPI;
@@ -224,10 +223,10 @@ pub fn r_clear(clr: mu.mu_Color) void {
 fn push_quad(dst: mu.mu_Rect, src: mu.mu_Rect, color: mu.mu_Color) void {
   if (buf_idx == BUFFER_SIZE) { flush(); }
 
-  var texvert_idx: usize  = @as(usize, @intCast(buf_idx * 8));
-  var color_idx: usize    = @as(usize, @intCast(buf_idx * 16));
-  var element_idx: c_uint = @as(c_uint, @intCast(buf_idx * 4));
-  var index_idx: usize    = @as(usize, @intCast(buf_idx * 6));
+  const texvert_idx: usize  = @as(usize, @intCast(buf_idx * 8));
+  const color_idx: usize    = @as(usize, @intCast(buf_idx * 16));
+  const element_idx: c_uint = @as(c_uint, @intCast(buf_idx * 4));
+  const index_idx: usize    = @as(usize, @intCast(buf_idx * 6));
   buf_idx += 1;
 
   const x: sdl.GLfloat = @as(sdl.GLfloat, @floatFromInt(src.x)) / @as(sdl.GLfloat, @floatFromInt(atlas.ATLAS_WIDTH));

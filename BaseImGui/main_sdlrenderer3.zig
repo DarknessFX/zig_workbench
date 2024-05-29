@@ -1,9 +1,7 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -35,9 +33,9 @@ pub fn main() void {
   _ = sdl.SDL_Init(sdl.SDL_INIT_VIDEO | sdl.SDL_INIT_TIMER | sdl.SDL_INIT_GAMEPAD);
   _ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
 
-  var window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_HIGH_PIXEL_DENSITY | sdl.SDL_WINDOW_HIDDEN;
-  var window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL3+SDL_Renderer example", 1280, 720, window_flags).?;
-  var renderer: *sdl.SDL_Renderer = sdl.SDL_CreateRenderer(window, null, sdl.SDL_RENDERER_PRESENTVSYNC | sdl.SDL_RENDERER_ACCELERATED).?;
+  const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_HIGH_PIXEL_DENSITY | sdl.SDL_WINDOW_HIDDEN;
+  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL3+SDL_Renderer example", 1280, 720, window_flags).?;
+  const renderer: *sdl.SDL_Renderer = sdl.SDL_CreateRenderer(window, null, sdl.SDL_RENDERER_PRESENTVSYNC | sdl.SDL_RENDERER_ACCELERATED).?;
   _ = sdl.SDL_SetWindowPosition(window, sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED);
   _ = sdl.SDL_ShowWindow(window);
 
@@ -49,8 +47,8 @@ pub fn main() void {
 
   im.ImGui_StyleColorsDark(null);
 
-  var cwindow = @as(?*im.SDL_Window , @ptrCast(window));
-  var crenderer = @as(?*im.SDL_Renderer , @ptrCast(renderer));
+  const cwindow = @as(?*im.SDL_Window , @ptrCast(window));
+  const crenderer = @as(?*im.SDL_Renderer , @ptrCast(renderer));
   _ = im.cImGui_ImplSDL3_InitForSDLRenderer(cwindow, crenderer);
   _ = im.cImGui_ImplSDLRenderer3_Init(crenderer);
 
@@ -61,7 +59,7 @@ pub fn main() void {
   var counter: u16 = 0;
 
   var event: sdl.SDL_Event = undefined;
-  var cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
+  const cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
   var done: bool = false;
   while (!done) {
     while (sdl.SDL_PollEvent(&event) == 1) {
@@ -139,15 +137,21 @@ fn HideConsole() void {
 
   _ = GetConsoleTitleA(&pszWindowTitle, BUF_TITLE);
   hwndFound=FindWindowA(null, &pszWindowTitle);
-  _ = win.ShowWindow(hwndFound, win.SW_HIDE);
+  _ = ShowWindow(hwndFound, SW_HIDE);
 }
 
-pub extern "kernel32" fn GetConsoleTitleA(
+extern "kernel32" fn GetConsoleTitleA(
     lpConsoleTitle: win.LPSTR,
     nSize: win.DWORD,
 ) callconv(win.WINAPI) win.DWORD;
 
-pub extern "kernel32" fn FindWindowA(
+extern "kernel32" fn FindWindowA(
     lpClassName: ?win.LPSTR,
     lpWindowName: ?win.LPSTR,
 ) callconv(win.WINAPI) win.HWND;
+
+const SW_HIDE = 0;
+extern "user32" fn ShowWindow(
+  hWnd: win.HWND,
+  nCmdShow: win.INT
+) callconv(WINAPI) void;

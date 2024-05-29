@@ -34,7 +34,7 @@ pub fn main() void {
   // //lv_demo_benchmark(LV_DEMO_BENCHMARK_MODE_RENDER_AND_DRIVER);
 
   while (!lv.lv_win32_quit_signal) {
-    var time_till_next: u32 = lv.lv_timer_handler();
+    const time_till_next: u32 = lv.lv_timer_handler();
     lv.Sleep(time_till_next);
   }
 

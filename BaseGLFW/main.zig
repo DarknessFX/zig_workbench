@@ -2,12 +2,10 @@ const std = @import("std");
 
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 
-
+// Remember to copy lib/GLFW/glfw3.dll to Zig.exe Folder PATH
 // Change @cInclude to full path
 const glfw = @cImport({
   @cInclude("lib/glad/include/glad.h");
@@ -23,12 +21,12 @@ pub fn main() void {
 
   _ = GetConsoleTitleA(&pszWindowTitle, BUF_TITLE);
   hwndFound=FindWindowA(null, &pszWindowTitle);
-  _ = win.ShowWindow(hwndFound, win.SW_HIDE);
+  _ = ShowWindow(hwndFound, SW_HIDE);
   // ===
   
 
   _ = glfw.glfwInit();
-  var window = glfw.glfwCreateWindow(800, 640, "GLFW3 Window", null, null);
+  const window = glfw.glfwCreateWindow(800, 640, "GLFW3 Window", null, null);
   while (glfw.glfwWindowShouldClose(window) == 0) {
     //render(window);
 
@@ -50,6 +48,8 @@ pub extern "kernel32" fn FindWindowA(
     lpWindowName: ?win.LPSTR,
 ) callconv(win.WINAPI) win.HWND;
 
+const SW_HIDE = 0;
+pub extern "user32" fn ShowWindow(hWnd: win.HWND, nCmdShow: i32) callconv(win.WINAPI) win.BOOL;
 
 //
 // Tests section

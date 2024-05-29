@@ -28,7 +28,7 @@ pub fn build(b: *std.Build) void {
   exe.addIncludePath( .{ .path = "lib/cimgui/imgui" } );
   exe.addIncludePath( .{ .path = "lib/DX11" } );
 
-  var c_srcs = .{
+  const c_srcs = .{
     "lib/imgui/cimgui.cpp",
     "lib/imgui/cimgui_impl_dx11.cpp",
     "lib/imgui/cimgui_impl_win32.cpp",

@@ -28,7 +28,7 @@ pub fn build(b: *std.Build) void {
   exe.addIncludePath( .{ .path = "lib/imgui" }  );
   exe.addIncludePath( .{ .path = "lib/SDL2/include" }  );
 
-  var c_srcs = .{
+  const c_srcs = .{
     "lib/imgui/cimgui.cpp",
     "lib/imgui/cimgui_impl_sdl2.cpp",
     "lib/imgui/cimgui_impl_sdlrenderer2.cpp",

@@ -14,13 +14,17 @@ pub fn build(b: *std.Build) void {
     .target = target,
     .optimize = optimize
   });
+  exe.addWin32ResourceFile(.{
+    .file = .{ .path = projectname ++ ".rc" },
+    .flags = &.{"/c65001"}, // UTF-8 codepage
+  });
 
   exe.addIncludePath( .{ .path = "lib/lvgl" }  );
   exe.addIncludePath( .{ .path = "lib/lvgl/src" }  );
   exe.addIncludePath( .{ .path = "lib/lvgl_drv/" } );
   exe.linkSystemLibrary("GDI32");
 
-  var c_srcs = .{
+  const c_srcs = .{
     "lib/lvgl/src/core/lv_group.c",
     "lib/lvgl/src/core/lv_obj_class.c",
     "lib/lvgl/src/core/lv_obj_draw.c",

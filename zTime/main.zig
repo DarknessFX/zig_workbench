@@ -83,8 +83,8 @@ pub fn main() !void {
     const cmdbase = "/C ";
     const command: []const u8 = try std.fmt.allocPrint(alloc, "{s} {s}", .{ cmdbase, argsz});
     const dwflags: win.DWORD = 0;
-    var appNameUnicode = W(alloc, appname) catch undefined;
-    var commandUnicode = W(alloc, command) catch undefined;
+    const appNameUnicode = W(alloc, appname) catch undefined;
+    const commandUnicode = W(alloc, command) catch undefined;
     defer {
       alloc.free(command);
       alloc.free(appNameUnicode);
@@ -111,17 +111,17 @@ pub fn main() !void {
 
   perf.since();
   print("\n", .{});
-  printColor(.{ .foreground = .BLUE_LIGHT, .background = .DARK_WHITE } );
+  printColor(.{ .foreground = .WHITE, .background = .BLACK_LIGHT } );
   print("Seconds :", .{});
   printColor(.{ .foreground = .WHITE, .text = .BOLD } );
   print("  {d:.5}", .{ perf.secs.since });
   printColorReset(); print("\n", .{});
-  printColor(.{ .foreground = .BLUE_LIGHT, .background = .DARK_WHITE } );
+  printColor(.{ .foreground = .WHITE, .background = .BLACK_LIGHT } );
   print("Nano    :", .{});
   printColor(.{ .foreground = .WHITE, .text = .BOLD } );
   print("  {d}", .{ perf.nano.since });
   printColorReset(); print("\n", .{});
-  printColor(.{ .foreground = .BLUE_LIGHT, .background = .DARK_WHITE } );
+  printColor(.{ .foreground = .WHITE, .background = .BLACK_LIGHT } );
   print("Ticks   :", .{});
   printColor(.{ .foreground = .WHITE, .text = .BOLD } );
   print("  {d}", .{ perf.tick.since });

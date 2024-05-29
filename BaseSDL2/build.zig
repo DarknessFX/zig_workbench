@@ -14,14 +14,17 @@ pub fn build(b: *std.Build) void {
     .target = target,
     .optimize = optimize
   });
+  exe.addWin32ResourceFile(.{
+    .file = .{ .path = projectname ++ ".rc" },
+    .flags = &.{"/c65001"}, // UTF-8 codepage
+  });
+  exe.linkLibC();
 
   exe.addIncludePath( .{ .path = "lib/SDL2/include" }  );
   exe.addLibraryPath( .{ .path = "lib/SDL2/" } );
   exe.linkSystemLibrary("SDL2");
   exe.linkSystemLibrary("OpenGL32");
   b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
-
-  exe.linkLibC();
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",

@@ -1,9 +1,7 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -12,14 +10,14 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/imgui/cimgui.h");
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/imgui/cimgui_impl_sdl3.h");
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/imgui/cimgui_impl_opengl3.h");
+  @cInclude("lib/imgui/cimgui.h");
+  @cInclude("lib/imgui/cimgui_impl_sdl3.h");
+  @cInclude("lib/imgui/cimgui_impl_opengl3.h");
 });
 
 const sdl = @cImport({
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/SDL3/include/SDL.h");
-  @cInclude("D:/workbench/Zig/BaseImGui/lib/SDL3/include/SDL_opengl.h");
+  @cInclude("lib/SDL3/include/SDL.h");
+  @cInclude("lib/SDL3/include/SDL_opengl.h");
 });
 
 const ImVec4 = struct {
@@ -46,12 +44,12 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DOUBLEBUFFER, 1);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DEPTH_SIZE, 24);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_STENCIL_SIZE, 8);
-  var window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_OPENGL | sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_HIDDEN;
-  var window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL3+OpenGL3 example", 1280, 720, window_flags).?;
+  const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_OPENGL | sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_HIDDEN;
+  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL3+OpenGL3 example", 1280, 720, window_flags).?;
   defer sdl.SDL_DestroyWindow(window);
 
   _ = sdl.SDL_SetWindowPosition(window, sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED);
-  var  gl_context: sdl.SDL_GLContext = sdl.SDL_GL_CreateContext(window);
+  const gl_context: sdl.SDL_GLContext = sdl.SDL_GL_CreateContext(window);
   _ = sdl.SDL_GL_MakeCurrent(window, gl_context);
   _ = sdl.SDL_GL_SetSwapInterval(1); // Enable vsync
   _ = sdl.SDL_ShowWindow(window);
@@ -73,7 +71,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
       style.Colors[im.ImGuiCol_WindowBg].w = 1.0;
   }
 
-  var cwindow = @as(?*im.SDL_Window , @ptrCast(window));
+  const cwindow = @as(?*im.SDL_Window , @ptrCast(window));
   _ = im.cImGui_ImplSDL3_InitForOpenGL(cwindow, gl_context);
   _ = im.cImGui_ImplOpenGL3_InitEx(glsl_version);
 
@@ -84,7 +82,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   var counter: u16 = 0;
 
   var event: sdl.SDL_Event = undefined;
-  var cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
+  const cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
   var done: bool = false;
   while (!done) {
     while (sdl.SDL_PollEvent(&event) == 1) {
@@ -138,8 +136,8 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     im.cImGui_ImplOpenGL3_RenderDrawData(im.ImGui_GetDrawData());
 
     if (io.ConfigFlags & im.ImGuiConfigFlags_ViewportsEnable != 0) {
-      var backup_current_window: *sdl.SDL_Window = sdl.SDL_GL_GetCurrentWindow().?;
-      var backup_current_context: sdl.SDL_GLContext = sdl.SDL_GL_GetCurrentContext().?;
+      const backup_current_window: *sdl.SDL_Window = sdl.SDL_GL_GetCurrentWindow().?;
+      const backup_current_context: sdl.SDL_GLContext = sdl.SDL_GL_GetCurrentContext().?;
       im.ImGui_UpdatePlatformWindows();
       im.ImGui_RenderPlatformWindowsDefault();
       _ = sdl.SDL_GL_MakeCurrent(backup_current_window, backup_current_context);

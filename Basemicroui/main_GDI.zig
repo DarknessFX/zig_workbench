@@ -4,9 +4,7 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -34,8 +32,8 @@ const gui = @import("gui.zig");
 //
 var wnd: win.HWND = undefined;
 var hFont: ?HFONT = undefined;
-var mHDC: HDC = undefined;
-var mBDC: HDC = undefined;
+var mHDC: win.HDC = undefined;
+var mBDC: win.HDC = undefined;
 var Client_Rect: win.RECT = undefined;
 var mPS: PAINTSTRUCT = undefined;
 var mBitmap: HBITMAP = undefined;
@@ -55,9 +53,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 
   const wnd_name = L("microui_GDI");
   const class_name = wnd_name;
-  const wnd_class: win.WNDCLASSEXW = .{
-    .cbSize = @sizeOf(win.WNDCLASSEXW),
-    .style = win.CS_CLASSDC | win.CS_HREDRAW | win.CS_VREDRAW,
+  const wnd_class: WNDCLASSEXW = .{
+    .cbSize = @sizeOf(WNDCLASSEXW),
+    .style = CS_CLASSDC | CS_HREDRAW | CS_VREDRAW,
     .lpfnWndProc = WindowProc,
     .cbClsExtra = 0, 
     .cbWndExtra = 0,
@@ -70,11 +68,11 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     .hIconSm = null,
   };
 
-  _ = win.RegisterClassExW(&wnd_class);
-  defer _ = win.UnregisterClassW(class_name, hInstance);
-  const hwnd = win.CreateWindowExW(
-    win.WS_EX_APPWINDOW, class_name, wnd_name, win.WS_OVERLAPPEDWINDOW | win.WS_VISIBLE,
-    win.CW_USEDEFAULT, win.CW_USEDEFAULT, win.CW_USEDEFAULT, win.CW_USEDEFAULT,
+  _ = RegisterClassExW(&wnd_class);
+  defer _ = UnregisterClassW(class_name, hInstance);
+  const hwnd = CreateWindowExW(
+    WS_EX_APPWINDOW, class_name, wnd_name, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
     null, null, hInstance, null) orelse undefined; 
 
   if (hwnd == undefined) {
@@ -82,7 +80,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     std.log.err("{}", .{ err });
     return @intFromEnum(err);
   }
-  defer _ = win.DestroyWindow(hwnd);
+  defer _ = DestroyWindow(hwnd);
   wnd = hwnd;
   hFont = GetStockObject(ANSI_VAR_FONT);
   
@@ -95,15 +93,15 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   ctx.text_width = text_width;
   ctx.text_height = text_height;
 
-  _ = win.ShowWindow(wnd, nCmdShow);
-  _ = win.updateWindow(wnd) catch undefined;
+  _ = ShowWindow(wnd, nCmdShow);
+  _ = UpdateWindow(wnd);
   _ = SetForegroundWindow(wnd);
   _ = SetCursor(LoadCursorW(null, IDC_ARROW)); // @constCast(L("IDC_ARROW"))));
 
-  var msg: win.MSG = std.mem.zeroes(win.MSG);
-  while (win.GetMessageW(&msg, null, 0, 0) != 0) {
-    _ = win.TranslateMessage(&msg);
-    _ = win.DispatchMessageW(&msg);
+  var msg: MSG = std.mem.zeroes(MSG);
+  while (GetMessageW(&msg, null, 0, 0) != 0) {
+    _ = TranslateMessage(&msg);
+    _ = DispatchMessageW(&msg);
 
     gui.present(ctx);
     r_begin();
@@ -125,21 +123,14 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   return 0;
 }
 
-//Fix when using subsystem Windows and linking Libc
-pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
-  return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
-}
-
 fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(WINAPI) win.LRESULT {
   switch (uMsg) {
-    win.WM_DESTROY => {
-      win.PostQuitMessage(0);
+    WM_DESTROY => {
+      PostQuitMessage(0);
       return 0;
     },
-    win.WM_PAINT => {
-      var ps: PAINTSTRUCT = undefined;
-      const hdc: HDC = BeginPaint(hWnd, &ps) orelse undefined;
+    WM_PAINT => {
+      const hdc: win.HDC = BeginPaint(hWnd, &ps) orelse undefined;
       _ = FillRect(hdc, &ps.rcPaint, @ptrFromInt(COLOR_WINDOW+1));
       _ = EndPaint(hWnd, &ps);
       mPS = ps;
@@ -147,10 +138,10 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
     //win.WM_SETCURSOR => { },
 
     //r_handle_input(ctx);
-    win.WM_KEYDOWN,
-    win.WM_KEYUP,
-    win.WM_SYSKEYDOWN,
-    win.WM_SYSKEYUP => {
+    WM_KEYDOWN,
+    WM_KEYUP,
+    WM_SYSKEYDOWN,
+    WM_SYSKEYUP => {
       switch (wParam) {
         VK_SHIFT,
         VK_LSHIFT,
@@ -180,36 +171,36 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
         else => _=.{},
       }
     },
-    win.WM_CHAR => {
+    WM_CHAR => {
       const result: [*c]const u8 = @as([*c]const u8, @ptrCast(&wParam));
       mu.mu_input_text(ctx, result);
     },
-    win.WM_MOUSEMOVE => {
-      mu.mu_input_mousemove(ctx, LOWORDI(lParam), HIWORDI(lParam));
+    WM_MOUSEMOVE => {
+      mu.mu_input_mousemove(ctx, LOWORD(lParam), HIWORD(lParam));
     },
-    win.WM_LBUTTONUP,
-    win.WM_LBUTTONDOWN,
-    win.WM_RBUTTONDOWN,
-    win.WM_RBUTTONUP => {
+    WM_LBUTTONUP,
+    WM_LBUTTONDOWN,
+    WM_RBUTTONDOWN,
+    WM_RBUTTONUP => {
       if (wParam == MK_LBUTTON)      {
-        mu.mu_input_mousedown(ctx, LOWORDI(lParam), HIWORDI(lParam), 1);
+        mu.mu_input_mousedown(ctx, LOWORD(lParam), HIWORD(lParam), 1);
         _ = SetCapture(wnd);
       } else {
-        mu.mu_input_mouseup(ctx, LOWORDI(lParam), HIWORDI(lParam), 1);
+        mu.mu_input_mouseup(ctx, LOWORD(lParam), HIWORD(lParam), 1);
         _ = ReleaseCapture();
       }
       if (wParam == MK_RBUTTON) {
-        mu.mu_input_mousedown(ctx, LOWORDI(lParam), HIWORDI(lParam), 2);
+        mu.mu_input_mousedown(ctx, LOWORD(lParam), HIWORD(lParam), 2);
         _ = SetCapture(wnd);           
       } else {
-        mu.mu_input_mouseup(ctx, LOWORDI(lParam), HIWORDI(lParam), 2);
+        mu.mu_input_mouseup(ctx, LOWORD(lParam), HIWORD(lParam), 2);
         _ = ReleaseCapture();
       }
     },
     else => _=.{},
   }
 
-  return win.DefWindowProcW(hWnd, uMsg, wParam, lParam);
+  return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
 //
@@ -240,10 +231,10 @@ pub fn r_clear(clr: mu.mu_Color) void {
 pub fn r_end() void {
   _ = BitBlt(mBDC, 0, 0, width, height, mHDC, 0, 0, SRCCOPY);
   _ = DeleteDC(mBDC);
-  const cBitmap: delObj = @as(delObj, @ptrCast(mBitmap));
+  const cBitmap: HGDIOBJ = @as(HGDIOBJ, @ptrCast(mBitmap));
   _ = DeleteObject(cBitmap);
   _ = EndPaint(wnd, &mPS);
-  const cPS: delObj = @as(delObj, @ptrCast(mPS.hdc));
+  const cPS: HGDIOBJ = @as(HGDIOBJ, @ptrCast(mPS.hdc));
   _ = DeleteObject(cPS);
 }
 
@@ -338,28 +329,89 @@ pub fn r_set_clip_rect(rect: mu.mu_Rect) void {
 //
 // WINAPI
 //
-pub extern "kernel32" fn OutputDebugStringA(
-  lpOutputString: win.LPCSTR
-) callconv(WINAPI) win.INT;
 
-fn LOWORDI(l: win.LONG_PTR) win.INT { return @as(i32, @intCast(l)) & 0xFFFF; }
-fn HIWORDI(l: win.LONG_PTR) win.INT { return (@as(i32, @intCast(l)) >> 16) & 0xFFFF; }
 
-fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
-fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
+// Fix for libc linking error.
+pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
+}
 
+fn LOWORD(l: win.LONG_PTR) win.INT { return @as(i32, @intCast(l)) & 0xFFFF; }
+fn HIWORD(l: win.LONG_PTR) win.INT { return (@as(i32, @intCast(l)) >> 16) & 0xFFFF; }
+
+const HFONT = win.HANDLE;
+
+const PM_REMOVE = 0x0001;
+const WM_QUIT = 0x0012;
+const IDC_ARROW: win.LONG = 32512;
+const CW_USEDEFAULT: i32 = @bitCast(@as(u32, 0x80000000));
+const CS_DBLCLKS = 0x0008;
+const CS_OWNDC = 0x0020;
+const CS_VREDRAW = 0x0001;
+const CS_HREDRAW = 0x0002;
+const CS_CLASSDC = 0x0040;
+const WS_OVERLAPPED = 0x00000000;
+const WS_POPUP = 0x80000000;
+const WS_CHILD = 0x40000000;
+const WS_MINIMIZE = 0x20000000;
+const WS_VISIBLE = 0x10000000;
+const WS_DISABLED = 0x08000000;
+const WS_CLIPSIBLINGS = 0x04000000;
+const WS_CLIPCHILDREN = 0x02000000;
+const WS_MAXIMIZE = 0x01000000;
+const WS_CAPTION = WS_BORDER | WS_DLGFRAME;
+const WS_BORDER = 0x00800000;
+const WS_DLGFRAME = 0x00400000;
+const WS_VSCROLL = 0x00200000;
+const WS_HSCROLL = 0x00100000;
+const WS_SYSMENU = 0x00080000;
+const WS_THICKFRAME = 0x00040000;
+const WS_GROUP = 0x00020000;
+const WS_TABSTOP = 0x00010000;
+const WS_MINIMIZEBOX = 0x00020000;
+const WS_MAXIMIZEBOX = 0x00010000;
+const WS_TILED = WS_OVERLAPPED;
+const WS_ICONIC = WS_MINIMIZE;
+const WS_SIZEBOX = WS_THICKFRAME;
+const WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW;
+const WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+const WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU;
+const WS_CHILDWINDOW = WS_CHILD;
+const COLOR_WINDOW = 5;
+const WM_DESTROY = 0x0002;
+const WM_CLOSE = 0x0010;
+const WM_PAINT = 0x000F;
+const WM_SIZE = 0x0005;
+const WM_KEYDOWN = 0x0100;
+const WM_SYSKEYDOWN = 0x0104;
+const WM_ACTIVATE = 0x0006;
+const WM_PALETTECHANGED = 0x0311;
+const WM_QUERYNEWPALETTE = 0x030F;
+const WM_KEYUP = 0x0101;
+const WM_SYSKEYUP = 0x0105;
+const WM_CHAR = 0x0102;
+const WM_MOUSEMOVE = 0x0200;
+const WM_LBUTTONDOWN = 0x0201;
+const WM_LBUTTONUP = 0x0202;
+const WM_LBUTTONDBLCLK = 0x0203;
+const WM_RBUTTONDOWN = 0x0204;
+const WM_RBUTTONUP = 0x0205;
+const WM_RBUTTONDBLCLK = 0x0206;
+const WM_MBUTTONDOWN = 0x0207;
+const WM_MBUTTONUP = 0x0208;
+const WM_MBUTTONDBLCLK = 0x0209;
+const WM_MOUSEWHEEL = 0x020A;
 const MK_LBUTTON = 1;
 const MK_RBUTTON = 2;
-
-const COLOR_WINDOW = 5;
+const WS_EX_APPWINDOW = 0x00040000;
 const ANSI_VAR_FONT = 12;
 
-pub const HGDIOBJ = *opaque{};
-pub const HFONT = *opaque{};
-pub const HDC = *opaque{};
+
 pub const HBRUSH = *opaque{};
+var ps: PAINTSTRUCT = undefined;
 pub const PAINTSTRUCT = extern struct {
-  hdc: HDC,
+  hdc: win.HDC,
   fErase: win.BOOL,
   rcPaint: win.RECT,
   fRestore: win.BOOL,
@@ -367,27 +419,54 @@ pub const PAINTSTRUCT = extern struct {
   rgbReserved: [32]win.BYTE
 };
 
-const IDC_ARROW: win.LONG = 32512; //[*:0]u16 = @constCast(L("32512"));
-pub extern "user32" fn LoadCursorW(
-  hInstance: ?win.HINSTANCE,
-  lpCursorName: win.LONG,
-) callconv(WINAPI) win.HCURSOR;
-
-pub extern "user32" fn SetCursor(
+const WNDCLASSEXW = extern struct {
+  cbSize: win.UINT = @sizeOf(WNDCLASSEXW),
+  style: win.UINT,
+  lpfnWndProc: WNDPROC,
+  cbClsExtra: i32 = 0,
+  cbWndExtra: i32 = 0,
+  hInstance: win.HINSTANCE,
+  hIcon: ?win.HICON,
   hCursor: ?win.HCURSOR,
-) callconv(WINAPI) win.HCURSOR;
+  hbrBackground: ?HBRUSH,
+  lpszMenuName: ?[*:0]const u16,
+  lpszClassName: [*:0]const u16,
+  hIconSm: ?win.HICON,
+};
 
-pub extern "user32" fn SetForegroundWindow(
-  hWnd: win.HWND,
-) callconv(WINAPI) win.BOOL;
+const WNDPROC = *const fn (
+  hwnd: win.HWND, 
+  uMsg: win.UINT, 
+  wParam: win.WPARAM, 
+  lParam: win.LPARAM
+) callconv(WINAPI) win.LRESULT;
+
+extern "user32" fn RegisterClassExW(
+  *const WNDCLASSEXW
+) callconv(WINAPI) win.ATOM;
+
+extern "user32" fn CreateWindowExW(
+  dwExStyle: win.DWORD,
+  lpClassName: [*:0]const u16,
+  lpWindowName: [*:0]const u16,
+  dwStyle: win.DWORD,
+  X: i32,
+  Y: i32,
+  nWidth: i32,
+  nHeight: i32,
+  hWindParent: ?win.HWND,
+  hMenu: ?win.HMENU,
+  hInstance: win.HINSTANCE,
+  lpParam: ?win.LPVOID
+) callconv(WINAPI) ?win.HWND;
 
 pub extern "user32" fn BeginPaint(
   hWnd: ?win.HWND,
   lpPaint: ?*PAINTSTRUCT,
-) callconv(WINAPI) ?HDC;
+) callconv(WINAPI) ?win.HDC;
 
 pub extern "user32" fn FillRect(
-  hDC: ?HDC,
+  hDC: ?win.HDC,
   lprc: ?*const win.RECT,
   hbr: ?HBRUSH
 ) callconv(WINAPI) win.INT;
@@ -397,12 +476,211 @@ pub extern "user32" fn EndPaint(
   lpPaint: *const PAINTSTRUCT
 ) callconv(WINAPI) win.BOOL;
 
-pub extern "user32" fn SetCapture(
-  hWnd: win.HWND
-) callconv(WINAPI) win.HWND;
-
-pub extern "user32" fn ReleaseCapture(
+pub extern "gdi32" fn TextOutW(
+  hDC: ?win.HDC,
+  x: win.INT,
+  y: win.INT,
+  lpString: win.LPCWSTR,
+  c: win.INT
 ) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn GetAsyncKeyState(
+  nKey: c_int
+) callconv(WINAPI) win.INT;
+
+pub extern "user32" fn LoadCursorW(
+  hInstance: ?win.HINSTANCE,
+  lpCursorName: win.LONG,
+) callconv(WINAPI) win.HCURSOR;
+
+//   _ = win.MessageBoxA(null, "Sample text.", "Title", win.MB_OK);
+//  _ = OutputDebugStringA("\x1b[31mRed\x1b[0m");
+pub extern "kernel32" fn OutputDebugStringA(
+  lpOutputString: win.LPCSTR
+) callconv(WINAPI) win.INT;
+
+pub extern "user32" fn GetWindowRect(
+  hWnd: win.HWND,
+  lpRect: *win.RECT
+) callconv(WINAPI) win.INT;
+
+pub const SM_CXSCREEN = 0;
+pub const SM_CYSCREEN = 1;
+pub extern "user32" fn GetSystemMetricsForDpi(
+  nIndex: win.INT,
+  dpi: win.UINT
+) callconv(WINAPI) win.INT;
+
+pub extern "user32" fn GetDpiForWindow(
+  hWnd: win.HWND,
+) callconv(WINAPI) win.UINT;
+
+pub const SWP_NOCOPYBITS = 0x0100;
+pub extern "user32" fn SetWindowPos(
+  hWnd: win.HWND,
+  hWndInsertAfter: ?win.HWND,
+  X: win.INT,
+  Y: win.INT,
+  cx: win.INT,
+  cy: win.INT,
+  uFlags: win.UINT,        
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn PostMessageW(
+  hWnd: ?win.HWND,
+  Msg: win.UINT,
+  wParam: win.WPARAM,
+  lParam: win.LPARAM
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn IsIconic(
+  hWnd: win.HWND,
+) callconv(WINAPI) win.BOOL;
+
+pub extern "gdi32" fn DescribePixelFormat(
+  hDC: win.HDC,
+  iPixelFormat: win.INT,
+  nBytes: win.UINT,
+  ppfd: *PIXELFORMATDESCRIPTOR,
+) callconv(WINAPI) win.INT;
+
+pub fn ToWinObj(comptime T: type, obj: anytype) T {
+  return @as(T, @ptrCast(obj.*));
+}
+pub const HGDIOBJ = *opaque{};
+pub const HPALETTE = *opaque{};
+pub extern "gdi32" fn DeleteObject(
+  ho: HGDIOBJ
+) callconv(WINAPI) win.BOOL;
+
+pub extern "gdi32" fn UnrealizeObject(
+  ho: HGDIOBJ
+) callconv(WINAPI) win.BOOL;
+
+pub extern "gdi32" fn RealizePalette(
+  hdc: win.HDC
+) callconv(WINAPI) win.UINT;
+
+pub extern "gdi32" fn SelectPalette(
+  hdc: win.HDC,
+  hPal: HPALETTE,
+  bForceBkgd: win.BOOL
+) callconv(WINAPI) HPALETTE;
+
+const PALETTEENTRY = struct {
+  peRed: win.BYTE,
+  peGreen: win.BYTE,
+  peBlue: win.BYTE,
+  peFlags: win.BYTE
+};
+const LOGPALETTE = struct {
+  palVersion: win.WORD,
+  palNumEntries : win.WORD,
+  palPalEntry: [4]PALETTEENTRY
+};
+
+extern "gdi32" fn CreatePalette(
+  plpal: *LOGPALETTE
+) callconv(WINAPI) ?HPALETTE;
+
+extern "user32" fn ShowWindow(
+  hWnd: win.HWND,
+  nCmdShow: win.INT
+) callconv(WINAPI) void;
+
+extern "user32" fn UpdateWindow(
+  hWnd: win.HWND
+) callconv(WINAPI) win.BOOL;
+
+const MSG = extern struct {
+  hWnd: ?win.HWND,
+  message: win.UINT,
+  wParam: win.WPARAM,
+  lParam: win.LPARAM,
+  time: win.DWORD,
+  pt: win.POINT,
+  lPrivate: win.DWORD,
+};
+
+extern "user32" fn PeekMessageW(
+  lpMsg: *MSG,
+  hWnd: ?win.HWND, 
+  wMsgFilterMin: win.UINT, 
+  wMsgFilterMax: win.UINT, 
+  wRemoveMsg: win.UINT
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn TranslateMessage(
+  lpMsg: *const MSG
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn DispatchMessageW(
+  lpMsg: *const MSG
+) callconv(WINAPI) win.LRESULT;
+
+extern "user32" fn UnregisterClassW(
+  lpClassName: [*:0]const u16, 
+  hInstance: win.HINSTANCE
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn DestroyWindow(
+  hWnd: win.HWND
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn GetDC(
+  hWnd: ?win.HWND
+) callconv(WINAPI) ?win.HDC;
+
+extern "user32" fn ReleaseDC(
+  hWnd: ?win.HWND, 
+  hDC: win.HDC
+) callconv(WINAPI) win.INT;
+
+pub const PIXELFORMATDESCRIPTOR = extern struct {
+    nSize: win.WORD = @sizeOf(PIXELFORMATDESCRIPTOR),
+    nVersion: win.WORD,
+    dwFlags: win.DWORD,
+    iPixelType: win.BYTE,
+    cColorBits: win.BYTE,
+    cRedBits: win.BYTE,
+    cRedShift: win.BYTE,
+    cGreenBits: win.BYTE,
+    cGreenShift: win.BYTE,
+    cBlueBits: win.BYTE,
+    cBlueShift: win.BYTE,
+    cAlphaBits: win.BYTE,
+    cAlphaShift: win.BYTE,
+    cAccumBits: win.BYTE,
+    cAccumRedBits: win.BYTE,
+    cAccumGreenBits: win.BYTE,
+    cAccumBlueBits: win.BYTE,
+    cAccumAlphaBits: win.BYTE,
+    cDepthBits: win.BYTE,
+    cStencilBits: win.BYTE,
+    cAuxBuffers: win.BYTE,
+    iLayerType: win.BYTE,
+    bReserved: win.BYTE,
+    dwLayerMask: win.DWORD,
+    dwVisibleMask: win.DWORD,
+    dwDamageMask: win.DWORD,
+};
+
+pub extern "gdi32" fn SetPixelFormat(
+    hdc: ?win.HDC,
+    format: win.INT,
+    ppfd: ?*const PIXELFORMATDESCRIPTOR,
+) callconv(WINAPI) bool;
+
+pub extern "gdi32" fn ChoosePixelFormat(
+    hdc: ?win.HDC,
+    ppfd: ?*const PIXELFORMATDESCRIPTOR,
+) callconv(WINAPI) win.INT;
+
+pub extern "gdi32" fn SwapBuffers(hdc: ?win.HDC) callconv(WINAPI) bool;
+pub extern "gdi32" fn wglCreateContext(hdc: ?win.HDC) callconv(WINAPI) ?win.HGLRC;
+pub extern "gdi32" fn wglMakeCurrent(hdc: ?win.HDC, hglrc: ?win.HGLRC) callconv(WINAPI) bool;
+pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(WINAPI) void;
+pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
 
 pub extern "gdi32" fn GetStockObject(
   i: win.INT,
@@ -419,19 +697,19 @@ pub extern "user32" fn SetRect(
 const COLORREF = win.DWORD;
 const LPCOLORREF = win.DWORD_PTR;
 pub extern "gdi32" fn SetBkColor(
-  hdc: HDC,
+  hdc: win.HDC,
   color: COLORREF
 ) callconv(WINAPI) COLORREF;
 
 pub extern "gdi32" fn SetBkMode(
-  hdc: HDC,
+  hdc: win.HDC,
   mode: win.INT
 ) callconv(WINAPI) win.INT;
 
 const TRANSPARENT = 1;
 const OPAQUE = 2;
 pub extern "gdi32" fn SetTextColor(
-  hdc: HDC,
+  hdc: win.HDC,
   mode: COLORREF
 ) callconv(WINAPI) COLORREF;
 
@@ -443,7 +721,7 @@ pub fn RGB(r: u8, g: u8, b: u8) COLORREF {
 
 const ETO_OPAQUE = 0x00000002;
 pub extern "gdi32" fn ExtTextOutA(
-  hdc: HDC,
+  hdc: win.HDC,
   x: win.INT,
   y: win.INT,
   options: win.UINT,
@@ -454,7 +732,7 @@ pub extern "gdi32" fn ExtTextOutA(
 ) callconv(WINAPI) win.BOOL;
 
 pub extern "gdi32" fn DeleteDC(
-  hdc: HDC
+  hdc: win.HDC
 ) callconv(WINAPI) win.BOOL;
 
 pub extern "user32" fn GetClientRect(
@@ -469,8 +747,8 @@ pub extern "user32" fn InvalidateRect(
 ) callconv(WINAPI) win.BOOL;
 
 pub extern "gdi32" fn CreateCompatibleDC(
-  hdc: HDC
-) callconv(WINAPI) HDC;
+  hdc: win.HDC
+) callconv(WINAPI) win.HDC;
 
 pub const BITMAP = extern struct {
   bmType: win.INT,
@@ -484,30 +762,26 @@ pub const BITMAP = extern struct {
 pub const HBITMAP = *BITMAP;
 
 pub extern "gdi32" fn CreateCompatibleBitmap(
-  hdc: HDC,
+  hdc: win.HDC,
   cx: win.INT,
   cy: win.INT
 ) callconv(WINAPI) HBITMAP;
 
 const selObj = *opaque{};
+const delObj = *opaque{};
 pub extern "gdi32" fn SelectObject(
-  hdc: HDC,
+  hdc: win.HDC,
   h: selObj
 ) callconv(WINAPI) HGDIOBJ;
 
-const delObj = *opaque{};
-pub extern "gdi32" fn DeleteObject(
-  ho: delObj,
-) callconv(WINAPI) win.BOOL;
-
 const SRCCOPY = 0xCC0020;
 pub extern "gdi32" fn BitBlt(
-  hdc: HDC,
+  hdc: win.HDC,
   x: win.INT,
   y: win.INT,
   cx: win.INT,
   cy: win.INT,
-  hdcSrc: HDC,
+  hdcSrc: win.HDC,
   x1: win.INT,
   y1: win.INT,
   rop: win.DWORD 
@@ -521,7 +795,7 @@ const PSIZE = *SIZE;
 const LPSIZE = *SIZE;
 
 pub extern "gdi32" fn GetTextExtentPoint32A(
-  hdc: HDC,
+  hdc: win.HDC,
   lpString: win.LPSTR,
   c: win.INT,
   psizl: LPSIZE
@@ -529,12 +803,12 @@ pub extern "gdi32" fn GetTextExtentPoint32A(
 
 const HRGN = ?*opaque{};
 pub extern "gdi32" fn SelectClipRgn(
-  hdc: HDC,
+  hdc: win.HDC,
   hrgn: HRGN
 ) callconv(WINAPI) win.INT;
 
  pub extern "gdi32" fn IntersectClipRect(
-  hdc: HDC,
+  hdc: win.HDC,
   left: win.INT,
   top: win.INT,
   right: win.INT,
@@ -542,14 +816,36 @@ pub extern "gdi32" fn SelectClipRgn(
 ) callconv(WINAPI) win.INT;
 
 pub extern "gdi32" fn TextOutA(
-  hDC: ?HDC,
+  hDC: ?win.HDC,
   x: win.INT,
   y: win.INT,
   lpString: win.LPCSTR,
   c: win.INT
 ) callconv(WINAPI) win.BOOL;
 
-//
+pub extern "user32" fn SetForegroundWindow(
+  hWnd: win.HWND,
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn SetCursor(
+  hCursor: ?win.HCURSOR,
+) callconv(WINAPI) win.HCURSOR;
+
+pub extern "user32" fn GetMessageW(
+  lpMsg: *MSG,
+  hWnd: ?win.HWND,
+  wMsgFilterMin: win.UINT,
+  wMsgFilterMax: win.UINT
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn SetCapture(
+  hWnd: win.HWND
+) callconv(WINAPI) win.HWND;
+
+pub extern "user32" fn ReleaseCapture(
+) callconv(WINAPI) win.BOOL;
+
+
 // VIRTUAL_KEYS
 // Copied from marlersoft zigwin32 
 // https://github.com/marlersoft/zigwin32/blob/main/win32/ui/input/keyboard_and_mouse.zig

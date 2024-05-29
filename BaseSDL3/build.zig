@@ -14,13 +14,16 @@ pub fn build(b: *std.Build) void {
     .target = target,
     .optimize = optimize
   });
+  exe.addWin32ResourceFile(.{
+    .file = .{ .path = projectname ++ ".rc" },
+    .flags = &.{"/c65001"}, // UTF-8 codepage
+  });
+  exe.linkLibC();
 
   exe.addIncludePath( .{ .path = "lib/SDL3/include" }  );
   exe.addLibraryPath( .{ .path = "lib/SDL3/" } );
   exe.linkSystemLibrary("SDL3");
   b.installBinFile("lib/SDL3/SDL3.dll", "SDL3.dll");
-
-  exe.linkLibC();
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",

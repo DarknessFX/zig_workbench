@@ -1,9 +1,7 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -45,27 +43,27 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = pCmdLine;
 
   CreateWindow(hInstance);
-  defer _ = win.ReleaseDC(wnd, wnd_dc);
-  defer _ = win.UnregisterClassW(wnd_title, hInstance);
-  defer _ = win.DestroyWindow(wnd);
+  defer _ = ReleaseDC(wnd, wnd_dc);
+  defer _ = UnregisterClassW(wnd_title, hInstance);
+  defer _ = DestroyWindow(wnd);
 
   if (!CreateDeviceD3D(wnd)) {
     CleanupDeviceD3D();
     return 1;
   }
 
-  _ = win.ShowWindow(wnd, nCmdShow);
-  _ = win.updateWindow(wnd) catch undefined;
+  _ = ShowWindow(wnd, nCmdShow);
+  _ = UpdateWindow(wnd);
 
   var clear_color = [_]f32{ 0.145, 0.145, 0.145, 1.0 };
   var done = false;
-  var msg: win.MSG = std.mem.zeroes(win.MSG);
+  var msg: MSG = std.mem.zeroes(MSG);
   while (!done)
   {
-    while (win.PeekMessageA(&msg, null, 0, 0, win.PM_REMOVE) != 0) {
-      _ = win.TranslateMessage(&msg);
-      _ = win.DispatchMessageW(&msg);
-      if (msg.message == win.WM_QUIT) { done = true;  }
+    while (PeekMessageA(&msg, null, 0, 0, PM_REMOVE) != 0) {
+      _ = TranslateMessage(&msg);
+      _ = DispatchMessageW(&msg);
+      if (msg.message == WM_QUIT) { done = true;  }
     }
     if (done) break;
 
@@ -84,8 +82,6 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     g_pd3dDeviceContext.?.lpVtbl.*.Draw.?( g_pd3dDeviceContext, 6, 0 );
 
     _ = g_pSwapChain.?.lpVtbl.*.Present.?(g_pSwapChain, 0, 0);
-
-
   }
 
   CleanupDeviceD3D();
@@ -97,8 +93,8 @@ fn CreateDeviceD3D(hWnd: win.HWND) bool {
 
   var rc: win.RECT = undefined;
   _ = GetClientRect( hWnd, &rc );
-  var width: win.UINT = @as(c_uint, @intCast(rc.right - rc.left));
-  var height: win.UINT = @as(c_uint, @intCast(rc.bottom - rc.top));
+  const width: win.UINT = @as(c_uint, @intCast(rc.right - rc.left));
+  const height: win.UINT = @as(c_uint, @intCast(rc.bottom - rc.top));
 
   var sd = std.mem.zeroes(dx.DXGI_SWAP_CHAIN_DESC);
   sd.BufferCount = 2;
@@ -117,7 +113,7 @@ fn CreateDeviceD3D(hWnd: win.HWND) bool {
   sd.Windowed = dx.TRUE;
   sd.SwapEffect = dx.DXGI_SWAP_EFFECT_DISCARD;
 
-  var createDeviceFlags: dx.UINT  = 0;
+  const createDeviceFlags: dx.UINT  = 0;
   //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
   var featureLevel: dx.D3D_FEATURE_LEVEL = undefined;
   const featureLevelArray = &[_]dx.D3D_FEATURE_LEVEL{
@@ -160,7 +156,7 @@ fn CreateDeviceD3D(hWnd: win.HWND) bool {
     .{ .SemanticName = "COLOR", .SemanticIndex = 0, .Format = dx.DXGI_FORMAT_R32G32B32A32_FLOAT, .InputSlot = 0,
     .AlignedByteOffset = 12, .InputSlotClass = dx.D3D11_INPUT_PER_VERTEX_DATA, .InstanceDataStepRate = 0 }
   };
-	var numElements: win.UINT = input_layout_desc.len;
+	const numElements: win.UINT = input_layout_desc.len;
 	_ = g_pd3dDevice.?.lpVtbl.*.CreateInputLayout.?( g_pd3dDevice, input_layout_desc, numElements,
     pVSBlob.*.lpVtbl.*.GetBufferPointer.?(pVSBlob), 
     pVSBlob.*.lpVtbl.*.GetBufferSize.?(pVSBlob), 
@@ -229,26 +225,26 @@ fn CleanupRenderTarget() void {
 
 fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(WINAPI) win.LRESULT {
   switch (uMsg) {
-    win.WM_DESTROY => {
-      win.PostQuitMessage(0);
+    WM_DESTROY => {
+      PostQuitMessage(0);
       return 0;
     },
-    win.WM_PAINT => {
+    WM_PAINT => {
       var ps: PAINTSTRUCT = undefined;
       const hdc: HDC = BeginPaint(hWnd, &ps) orelse undefined;
       _ = FillRect(hdc, &ps.rcPaint, @ptrFromInt(COLOR_WINDOW+1));
       _ = EndPaint(hWnd, &ps);
     },
-    win.WM_SIZE => {
+    WM_SIZE => {
       g_ResizeWidth = LOWORD(lParam);
       g_ResizeHeight = HIWORD(lParam);
     },
-		win.WM_KEYDOWN,
-		win.WM_SYSKEYDOWN => {
+		WM_KEYDOWN,
+		WM_SYSKEYDOWN => {
 			switch (wParam) {
 				VK_ESCAPE => { //SHIFT+ESC = EXIT
 					if (GetAsyncKeyState(VK_LSHIFT) & 0x01 == 1) {
-						win.PostQuitMessage(0);
+						PostQuitMessage(0);
 						return 0;
 					}
         },
@@ -258,13 +254,13 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
     else => _=.{},
   }
 
-  return win.DefWindowProcW(hWnd, uMsg, wParam, lParam);
+  return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
 fn CreateWindow(hInstance: win.HINSTANCE) void {
-  const wnd_class: win.WNDCLASSEXW = .{
-    .cbSize = @sizeOf(win.WNDCLASSEXW),
-    .style = win.CS_DBLCLKS | win.CS_OWNDC,
+  const wnd_class: WNDCLASSEXW = .{
+    .cbSize = @sizeOf(WNDCLASSEXW),
+    .style = CS_DBLCLKS | CS_OWNDC,
     .lpfnWndProc = WindowProc,
     .cbClsExtra = 0, 
     .cbWndExtra = 0,
@@ -276,17 +272,17 @@ fn CreateWindow(hInstance: win.HINSTANCE) void {
     .lpszClassName = wnd_title,
     .hIconSm = null,
   };
-  _ = win.RegisterClassExW(&wnd_class);
-  _ = win.AdjustWindowRectEx(&wnd_size, win.WS_OVERLAPPEDWINDOW, win.FALSE, win.WS_EX_APPWINDOW | win.WS_EX_WINDOWEDGE);
-  wnd = win.CreateWindowExW(
-    win.WS_EX_APPWINDOW | win.WS_EX_WINDOWEDGE, wnd_title, wnd_title, win.WS_OVERLAPPEDWINDOW | win.WS_VISIBLE,
-    win.CW_USEDEFAULT, win.CW_USEDEFAULT, 0, 0, 
+  _ = RegisterClassExW(&wnd_class);
+  _ = AdjustWindowRectEx(&wnd_size, WS_OVERLAPPEDWINDOW, win.FALSE, WS_EX_APPWINDOW | WS_EX_WINDOWEDGE);
+  wnd = CreateWindowExW(
+    WS_EX_APPWINDOW | WS_EX_WINDOWEDGE, wnd_title, wnd_title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+    CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, 
     null, null, hInstance, null).?;
 
-  wnd_dc = win.GetDC(wnd).?;
-  var dpi = GetDpiForWindow(wnd);
-  var xCenter = @divFloor(GetSystemMetricsForDpi(SM_CXSCREEN, dpi), 2);
-  var yCenter = @divFloor(GetSystemMetricsForDpi(SM_CYSCREEN, dpi), 2);
+  wnd_dc = GetDC(wnd).?;
+  const dpi = GetDpiForWindow(wnd);
+  const xCenter = @divFloor(GetSystemMetricsForDpi(SM_CXSCREEN, dpi), 2);
+  const yCenter = @divFloor(GetSystemMetricsForDpi(SM_CYSCREEN, dpi), 2);
   wnd_size.left = xCenter - @divFloor(g_width, 2);
   wnd_size.top  = yCenter - @divFloor(g_height, 2);
   wnd_size.right = wnd_size.left + @divFloor(g_width, 2);
@@ -303,9 +299,68 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
+const WM_QUIT = 0x0012;
+const WM_DESTROY = 0x0002;
+const WM_SIZE = 0x0005;
+const WM_PAINT = 0x000F;
+const WM_KEYDOWN = 0x0100;
+const WM_SYSKEYDOWN = 0x0104;
 const VK_ESCAPE = 27;
 const VK_LSHIFT = 160;
 const COLOR_WINDOW = 5;
+const CS_DBLCLKS = 0x0008;
+const CS_OWNDC = 0x0020;
+const CW_USEDEFAULT: i32 = @bitCast(@as(u32, 0x80000000));
+const WS_OVERLAPPED = 0x00000000;
+const WS_POPUP = 0x80000000;
+const WS_CHILD = 0x40000000;
+const WS_MINIMIZE = 0x20000000;
+const WS_VISIBLE = 0x10000000;
+const WS_DISABLED = 0x08000000;
+const WS_CLIPSIBLINGS = 0x04000000;
+const WS_CLIPCHILDREN = 0x02000000;
+const WS_MAXIMIZE = 0x01000000;
+const WS_CAPTION = WS_BORDER | WS_DLGFRAME;
+const WS_BORDER = 0x00800000;
+const WS_DLGFRAME = 0x00400000;
+const WS_VSCROLL = 0x00200000;
+const WS_HSCROLL = 0x00100000;
+const WS_SYSMENU = 0x00080000;
+const WS_THICKFRAME = 0x00040000;
+const WS_GROUP = 0x00020000;
+const WS_TABSTOP = 0x00010000;
+const WS_MINIMIZEBOX = 0x00020000;
+const WS_MAXIMIZEBOX = 0x00010000;
+const WS_TILED = WS_OVERLAPPED;
+const WS_ICONIC = WS_MINIMIZE;
+const WS_SIZEBOX = WS_THICKFRAME;
+const WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW;
+const WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+const WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU;
+const WS_CHILDWINDOW = WS_CHILD;
+const WS_EX_DLGMODALFRAME = 0x00000001;
+const WS_EX_NOPARENTNOTIFY = 0x00000004;
+const WS_EX_TOPMOST = 0x00000008;
+const WS_EX_ACCEPTFILES = 0x00000010;
+const WS_EX_TRANSPARENT = 0x00000020;
+const WS_EX_MDICHILD = 0x00000040;
+const WS_EX_TOOLWINDOW = 0x00000080;
+const WS_EX_WINDOWEDGE = 0x00000100;
+const WS_EX_CLIENTEDGE = 0x00000200;
+const WS_EX_CONTEXTHELP = 0x00000400;
+const WS_EX_RIGHT = 0x00001000;
+const WS_EX_LEFT = 0x00000000;
+const WS_EX_RTLREADING = 0x00002000;
+const WS_EX_LTRREADING = 0x00000000;
+const WS_EX_LEFTSCROLLBAR = 0x00004000;
+const WS_EX_RIGHTSCROLLBAR = 0x00000000;
+const WS_EX_CONTROLPARENT = 0x00010000;
+const WS_EX_STATICEDGE = 0x00020000;
+const WS_EX_APPWINDOW = 0x00040000;
+const WS_EX_LAYERED = 0x00080000;
+const WS_EX_OVERLAPPEDWINDOW = WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE;
+const WS_EX_PALETTEWINDOW = WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
+
 pub const HDC = *opaque{};
 pub const HBRUSH = *opaque{};
 pub const PAINTSTRUCT = extern struct {
@@ -315,6 +370,38 @@ pub const PAINTSTRUCT = extern struct {
   fRestore: win.BOOL,
   fIncUpdate: win.BOOL,
   rgbReserved: [32]win.BYTE
+};
+
+pub const WNDCLASSEXW = extern struct {
+  cbSize: win.UINT = @sizeOf(WNDCLASSEXW),
+  style: win.UINT,
+  lpfnWndProc: WNDPROC,
+  cbClsExtra: i32 = 0,
+  cbWndExtra: i32 = 0,
+  hInstance: win.HINSTANCE,
+  hIcon: ?win.HICON,
+  hCursor: ?win.HCURSOR,
+  hbrBackground: ?HBRUSH,
+  lpszMenuName: ?[*:0]const u16,
+  lpszClassName: [*:0]const u16,
+  hIconSm: ?win.HICON,
+};
+
+pub const WNDPROC = *const fn (
+  hwnd: win.HWND,
+  uMsg: win.UINT,
+  wParam: win.WPARAM,
+  lParam: win.LPARAM
+) callconv(WINAPI) win.LRESULT;
+
+pub const MSG = extern struct {
+  hWnd: ?win.HWND,
+  message: win.UINT,
+  wParam: win.WPARAM,
+  lParam: win.LPARAM,
+  time: win.DWORD,
+  pt: win.POINT,
+  lPrivate: win.DWORD,
 };
 
 pub extern "user32" fn BeginPaint(
@@ -388,3 +475,37 @@ pub extern "user32" fn GetClientRect(
   hWnd: win.HWND,
   lpRect: *win.RECT
 ) callconv(WINAPI) win.UINT;
+
+pub extern "user32" fn DestroyWindow(
+  hWnd: win.HWND
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn UnregisterClassW(
+  lpClassName: [*:0]const u16,
+  hInstance: win.HINSTANCE
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn ReleaseDC(
+  hWnd: ?win.HWND,
+  hDC: win.HDC
+) callconv(WINAPI) i32;
+
+pub extern "user32" fn ShowWindow(
+  hWnd: win.HWND,
+  nCmdShow: i32
+) callconv(WINAPI) win.BOOL;
+
+pub extern "user32" fn UpdateWindow(
+  hWnd: win.HWND
+) callconv(WINAPI) win.BOOL;
+
+pub const PM_REMOVE = 0x0001;
+pub extern "user32" fn PeekMessageA(lpMsg: *MSG, hWnd: ?win.HWND, wMsgFilterMin: win.UINT, wMsgFilterMax: win.UINT, wRemoveMsg: win.UINT) callconv(WINAPI) win.BOOL;
+pub extern "user32" fn TranslateMessage(lpMsg: *const MSG) callconv(WINAPI) win.BOOL;
+pub extern "user32" fn DispatchMessageW(lpMsg: *const MSG) callconv(WINAPI) win.LRESULT;
+pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(WINAPI) void;
+pub extern "user32" fn RegisterClassExW(*const WNDCLASSEXW) callconv(WINAPI) win.ATOM;
+pub extern "user32" fn AdjustWindowRectEx(lpRect: *win.RECT, dwStyle: win.DWORD, bMenu: win.BOOL, dwExStyle: win.DWORD) callconv(WINAPI) win.BOOL;
+pub extern "user32" fn CreateWindowExW(dwExStyle: win.DWORD, lpClassName: [*:0]const u16, lpWindowName: [*:0]const u16, dwStyle: win.DWORD, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWindParent: ?win.HWND, hMenu: ?win.HMENU, hInstance: win.HINSTANCE, lpParam: ?win.LPVOID) callconv(WINAPI) ?win.HWND;
+pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
+pub extern "user32" fn GetDC(hWnd: ?win.HWND) callconv(WINAPI) ?win.HDC;

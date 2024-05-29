@@ -6,9 +6,7 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -43,9 +41,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = pCmdLine;
 
   wnd = CreateWindowOpenGL(hInstance, 0, 0, g_width, g_height, gl_coloridx, gl_buffer).?;
-  defer _ = win.ReleaseDC(wnd, wnd_dc);
-  defer _ = win.DestroyWindow(wnd);
-  defer _ = win.UnregisterClassW(wnd_classname, hInstance);
+  defer _ = ReleaseDC(wnd, wnd_dc);
+  defer _ = DestroyWindow(wnd);
+  defer _ = UnregisterClassW(wnd_classname, hInstance);
 
   @setRuntimeSafety(false);
   gl_HWND = @as(gl.HWND, @alignCast(@ptrCast(wnd)));
@@ -57,16 +55,16 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = gl.wglMakeCurrent(gl_HDC, gl_RC);
   defer _ = gl.wglMakeCurrent(null, null);
 
-  _ = win.ShowWindow(wnd, nCmdShow);
-  _ = win.UpdateWindow(wnd);
+  _ = ShowWindow(wnd, nCmdShow);
+  _ = UpdateWindow(wnd);
 
   var done: bool = false;
-  var msg: win.MSG = std.mem.zeroes(win.MSG);
+  var msg: MSG = std.mem.zeroes(MSG);
   while (!done) {
-    while (win.PeekMessageW(&msg, null, 0, 0, win.PM_REMOVE) != 0) {
-      _ = win.TranslateMessage(&msg);
-      _ = win.DispatchMessageW(&msg);
-      if (msg.message == win.WM_QUIT) { done = true; }
+    while (PeekMessageW(&msg, null, 0, 0, PM_REMOVE) != 0) {
+      _ = TranslateMessage(&msg);
+      _ = DispatchMessageW(&msg);
+      if (msg.message == WM_QUIT) { done = true; }
     }
     if (done) break;
 
@@ -95,50 +93,50 @@ fn glDisplay() void {
   gl.glVertex2i(1, -1);
   gl.glEnd();
   gl.glFlush();
-  _ = win.SwapBuffers(wnd_dc);
+  _ = SwapBuffers(wnd_dc);
 }
 
 fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(WINAPI) win.LRESULT {
   switch (uMsg) {
-    win.WM_DESTROY,
-    win.WM_CLOSE => {
-      win.PostQuitMessage(0);
+    WM_DESTROY,
+    WM_CLOSE => {
+      PostQuitMessage(0);
       return 0;
     },
-    win.WM_PAINT => {
+    WM_PAINT => {
       glDisplay();
       _ = BeginPaint(hWnd, &ps).?;
       _ = EndPaint(hWnd, &ps);
       return 0;
     },
-    win.WM_SIZE => {
+    WM_SIZE => {
       g_width = @as(i32, @intCast(LOWORD(lParam)));
       g_height = @as(i32, @intCast(HIWORD(lParam)));
       gl.glViewport(0, 0, @as(gl.GLsizei , g_width), @as(gl.GLsizei , g_height));
-      _ = PostMessageW(hWnd, win.WM_PAINT, 0, 0);
+      _ = PostMessageW(hWnd, WM_PAINT, 0, 0);
       return 0;
     },
-		win.WM_KEYDOWN,
-		win.WM_SYSKEYDOWN => {
+		WM_KEYDOWN,
+		WM_SYSKEYDOWN => {
 			switch (wParam) {
 				VK_ESCAPE => { //SHIFT+ESC = EXIT
 					if (GetAsyncKeyState(VK_LSHIFT) & 0x01 == 1) {
-						win.PostQuitMessage(0);
+						PostQuitMessage(0);
 						return 0;
 					}
         },
         else => {}
       }
     },
-    win.WM_ACTIVATE => {
+    WM_ACTIVATE => {
       if (IsIconic(wnd) != 0) {
         gl_anim = gl.GL_FALSE;
       } else {
         gl_anim = gl.GL_TRUE;
       }
     },
-    win.WM_PALETTECHANGED,
-    win.WM_QUERYNEWPALETTE => {
+    WM_PALETTECHANGED,
+    WM_QUERYNEWPALETTE => {
       if (wnd_palette != undefined) {
         _ = UnrealizeObject(ToWinObj(HGDIOBJ, &wnd_palette));
         _ = SelectPalette(wnd_dc, ToWinObj(HPALETTE, &wnd_palette), win.FALSE);
@@ -150,16 +148,16 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
     else => {},
   }
 
-  return win.DefWindowProcW(hWnd, uMsg, wParam, lParam);
+  return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
 fn CreateWindowOpenGL(hInstance: win.HINSTANCE, x: c_int, y: c_int, 
   width: c_int, height: c_int, pxtype: c_int , flags: c_int
   ) ?win.HWND {
 
-  const wnd_class: win.WNDCLASSEXW = .{
-    .cbSize = @sizeOf(win.WNDCLASSEXW),
-    .style = win.CS_OWNDC,
+  const wnd_class: WNDCLASSEXW = .{
+    .cbSize = @sizeOf(WNDCLASSEXW),
+    .style = CS_OWNDC,
     .lpfnWndProc = WindowProc,
     .cbClsExtra = 0, 
     .cbWndExtra = 0,
@@ -171,26 +169,26 @@ fn CreateWindowOpenGL(hInstance: win.HINSTANCE, x: c_int, y: c_int,
     .lpszClassName = wnd_classname,
     .hIconSm = null,
   };
-  _ = win.RegisterClassExW(&wnd_class);
+  _ = RegisterClassExW(&wnd_class);
 
-  wnd = win.CreateWindowExW(
+  wnd = CreateWindowExW(
     0, wnd_classname, wnd_title,
-    win.WS_OVERLAPPEDWINDOW | win.WS_CLIPSIBLINGS | win.WS_CLIPCHILDREN, 
+    WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 
     x, y, width, height, null, null, hInstance, null).?;
 
-  wnd_dc = win.GetDC(wnd).?;
+  wnd_dc = GetDC(wnd).?;
 
-  var pfd: win.PIXELFORMATDESCRIPTOR = std.mem.zeroes(win.PIXELFORMATDESCRIPTOR);
-  const pfd_size = @sizeOf(win.PIXELFORMATDESCRIPTOR);
+  var pfd: PIXELFORMATDESCRIPTOR = std.mem.zeroes(PIXELFORMATDESCRIPTOR);
+  const pfd_size = @sizeOf(PIXELFORMATDESCRIPTOR);
   pfd.nSize = pfd_size;
   pfd.nVersion = 1;
   pfd.dwFlags = @as(u32, @intCast(gl.PFD_DRAW_TO_WINDOW | gl.PFD_SUPPORT_OPENGL | flags));
   pfd.iPixelType = @as(u8, @intCast(pxtype));
   pfd.cColorBits = 32;
 
-  const pf = win.ChoosePixelFormat(wnd_dc, &pfd);
+  const pf = ChoosePixelFormat(wnd_dc, &pfd);
   if (pf == 0) { return null; }
-  if (win.SetPixelFormat(wnd_dc, pf, &pfd) == false) { return null; }
+  if (SetPixelFormat(wnd_dc, pf, &pfd) == false) { return null; }
 
   _ = DescribePixelFormat(wnd_dc, pf, pfd_size, &pfd);
 
@@ -214,10 +212,10 @@ fn CreateWindowOpenGL(hInstance: win.HINSTANCE, x: c_int, y: c_int,
   lpPal.palPalEntry[3].peBlue = 255;
   lpPal.palPalEntry[3].peFlags = gl.PC_NOCOLLAPSE;
 
-  var new_palette = CreatePalette(&lpPal).?;
+  const new_palette = CreatePalette(&lpPal).?;
   wnd_palette = SelectPalette(wnd_dc, new_palette, win.FALSE);
   _ = RealizePalette(wnd_dc);
-  _ = win.ReleaseDC(wnd, wnd_dc);
+  _ = ReleaseDC(wnd, wnd_dc);
 
   return wnd;
 }
@@ -233,8 +231,53 @@ fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xF
 
 const VK_ESCAPE = 27;
 const VK_LSHIFT = 160;
-
+const PM_REMOVE = 0x0001;
+const WM_QUIT = 0x0012;
+const IDC_ARROW: win.LONG = 32512;
+const CW_USEDEFAULT: i32 = @bitCast(@as(u32, 0x80000000));
+const CS_DBLCLKS = 0x0008;
+const CS_OWNDC = 0x0020;
+const CS_VREDRAW = 0x0001;
+const CS_HREDRAW = 0x0002;
+const CS_CLASSDC = 0x0040;
+const WS_OVERLAPPED = 0x00000000;
+const WS_POPUP = 0x80000000;
+const WS_CHILD = 0x40000000;
+const WS_MINIMIZE = 0x20000000;
+const WS_VISIBLE = 0x10000000;
+const WS_DISABLED = 0x08000000;
+const WS_CLIPSIBLINGS = 0x04000000;
+const WS_CLIPCHILDREN = 0x02000000;
+const WS_MAXIMIZE = 0x01000000;
+const WS_CAPTION = WS_BORDER | WS_DLGFRAME;
+const WS_BORDER = 0x00800000;
+const WS_DLGFRAME = 0x00400000;
+const WS_VSCROLL = 0x00200000;
+const WS_HSCROLL = 0x00100000;
+const WS_SYSMENU = 0x00080000;
+const WS_THICKFRAME = 0x00040000;
+const WS_GROUP = 0x00020000;
+const WS_TABSTOP = 0x00010000;
+const WS_MINIMIZEBOX = 0x00020000;
+const WS_MAXIMIZEBOX = 0x00010000;
+const WS_TILED = WS_OVERLAPPED;
+const WS_ICONIC = WS_MINIMIZE;
+const WS_SIZEBOX = WS_THICKFRAME;
+const WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW;
+const WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+const WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU;
+const WS_CHILDWINDOW = WS_CHILD;
 const COLOR_WINDOW = 5;
+const WM_DESTROY = 0x0002;
+const WM_CLOSE = 0x0010;
+const WM_PAINT = 0x000F;
+const WM_SIZE = 0x0005;
+const WM_KEYDOWN = 0x0100;
+const WM_SYSKEYDOWN = 0x0104;
+const WM_ACTIVATE = 0x0006;
+const WM_PALETTECHANGED = 0x0311;
+const WM_QUERYNEWPALETTE = 0x030F;
+
 pub const HBRUSH = *opaque{};
 var ps: PAINTSTRUCT = undefined;
 pub const PAINTSTRUCT = extern struct {
@@ -245,6 +288,47 @@ pub const PAINTSTRUCT = extern struct {
   fIncUpdate: win.BOOL,
   rgbReserved: [32]win.BYTE
 };
+
+const WNDCLASSEXW = extern struct {
+  cbSize: win.UINT = @sizeOf(WNDCLASSEXW),
+  style: win.UINT,
+  lpfnWndProc: WNDPROC,
+  cbClsExtra: i32 = 0,
+  cbWndExtra: i32 = 0,
+  hInstance: win.HINSTANCE,
+  hIcon: ?win.HICON,
+  hCursor: ?win.HCURSOR,
+  hbrBackground: ?HBRUSH,
+  lpszMenuName: ?[*:0]const u16,
+  lpszClassName: [*:0]const u16,
+  hIconSm: ?win.HICON,
+};
+
+const WNDPROC = *const fn (
+  hwnd: win.HWND, 
+  uMsg: win.UINT, 
+  wParam: win.WPARAM, 
+  lParam: win.LPARAM
+) callconv(WINAPI) win.LRESULT;
+
+extern "user32" fn RegisterClassExW(
+  *const WNDCLASSEXW
+) callconv(WINAPI) win.ATOM;
+
+extern "user32" fn CreateWindowExW(
+  dwExStyle: win.DWORD,
+  lpClassName: [*:0]const u16,
+  lpWindowName: [*:0]const u16,
+  dwStyle: win.DWORD,
+  X: i32,
+  Y: i32,
+  nWidth: i32,
+  nHeight: i32,
+  hWindParent: ?win.HWND,
+  hMenu: ?win.HMENU,
+  hInstance: win.HINSTANCE,
+  lpParam: ?win.LPVOID
+) callconv(WINAPI) ?win.HWND;
 
 pub extern "user32" fn BeginPaint(
   hWnd: ?win.HWND,
@@ -274,7 +358,6 @@ pub extern "user32" fn GetAsyncKeyState(
   nKey: c_int
 ) callconv(WINAPI) win.INT;
 
-const IDC_ARROW: win.LONG = 32512;
 pub extern "user32" fn LoadCursorW(
   hInstance: ?win.HINSTANCE,
   lpCursorName: win.LONG,
@@ -328,7 +411,7 @@ pub extern "gdi32" fn DescribePixelFormat(
   hDC: win.HDC,
   iPixelFormat: win.INT,
   nBytes: win.UINT,
-  ppfd: *win.PIXELFORMATDESCRIPTOR,
+  ppfd: *PIXELFORMATDESCRIPTOR,
 ) callconv(WINAPI) win.INT;
 
 pub fn ToWinObj(comptime T: type, obj: anytype) T {
@@ -366,6 +449,105 @@ const LOGPALETTE = struct {
   palPalEntry: [4]PALETTEENTRY
 };
 
-pub extern "gdi32" fn CreatePalette(
+extern "gdi32" fn CreatePalette(
   plpal: *LOGPALETTE
 ) callconv(WINAPI) ?HPALETTE;
+
+extern "user32" fn ShowWindow(
+  hWnd: win.HWND,
+  nCmdShow: win.INT
+) callconv(WINAPI) void;
+
+extern "user32" fn UpdateWindow(
+  hWnd: win.HWND
+) callconv(WINAPI) win.BOOL;
+
+const MSG = extern struct {
+  hWnd: ?win.HWND,
+  message: win.UINT,
+  wParam: win.WPARAM,
+  lParam: win.LPARAM,
+  time: win.DWORD,
+  pt: win.POINT,
+  lPrivate: win.DWORD,
+};
+
+extern "user32" fn PeekMessageW(
+  lpMsg: *MSG,
+  hWnd: ?win.HWND, 
+  wMsgFilterMin: win.UINT, 
+  wMsgFilterMax: win.UINT, 
+  wRemoveMsg: win.UINT
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn TranslateMessage(
+  lpMsg: *const MSG
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn DispatchMessageW(
+  lpMsg: *const MSG
+) callconv(WINAPI) win.LRESULT;
+
+extern "user32" fn UnregisterClassW(
+  lpClassName: [*:0]const u16, 
+  hInstance: win.HINSTANCE
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn DestroyWindow(
+  hWnd: win.HWND
+) callconv(WINAPI) win.BOOL;
+
+extern "user32" fn GetDC(
+  hWnd: ?win.HWND
+) callconv(WINAPI) ?win.HDC;
+
+extern "user32" fn ReleaseDC(
+  hWnd: ?win.HWND, 
+  hDC: win.HDC
+) callconv(WINAPI) win.INT;
+
+pub const PIXELFORMATDESCRIPTOR = extern struct {
+    nSize: win.WORD = @sizeOf(PIXELFORMATDESCRIPTOR),
+    nVersion: win.WORD,
+    dwFlags: win.DWORD,
+    iPixelType: win.BYTE,
+    cColorBits: win.BYTE,
+    cRedBits: win.BYTE,
+    cRedShift: win.BYTE,
+    cGreenBits: win.BYTE,
+    cGreenShift: win.BYTE,
+    cBlueBits: win.BYTE,
+    cBlueShift: win.BYTE,
+    cAlphaBits: win.BYTE,
+    cAlphaShift: win.BYTE,
+    cAccumBits: win.BYTE,
+    cAccumRedBits: win.BYTE,
+    cAccumGreenBits: win.BYTE,
+    cAccumBlueBits: win.BYTE,
+    cAccumAlphaBits: win.BYTE,
+    cDepthBits: win.BYTE,
+    cStencilBits: win.BYTE,
+    cAuxBuffers: win.BYTE,
+    iLayerType: win.BYTE,
+    bReserved: win.BYTE,
+    dwLayerMask: win.DWORD,
+    dwVisibleMask: win.DWORD,
+    dwDamageMask: win.DWORD,
+};
+
+pub extern "gdi32" fn SetPixelFormat(
+    hdc: ?win.HDC,
+    format: win.INT,
+    ppfd: ?*const PIXELFORMATDESCRIPTOR,
+) callconv(WINAPI) bool;
+
+pub extern "gdi32" fn ChoosePixelFormat(
+    hdc: ?win.HDC,
+    ppfd: ?*const PIXELFORMATDESCRIPTOR,
+) callconv(WINAPI) win.INT;
+
+pub extern "gdi32" fn SwapBuffers(hdc: ?win.HDC) callconv(WINAPI) bool;
+pub extern "gdi32" fn wglCreateContext(hdc: ?win.HDC) callconv(WINAPI) ?win.HGLRC;
+pub extern "gdi32" fn wglMakeCurrent(hdc: ?win.HDC, hglrc: ?win.HGLRC) callconv(WINAPI) bool;
+pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(WINAPI) void;
+pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;

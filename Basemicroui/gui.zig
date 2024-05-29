@@ -46,7 +46,7 @@ fn style_window(ctx: *mu.mu_Context) void {
     const clow: c_int = @as(c_int, 0);
     const chigh: c_int = @as(c_int, 255);
     //mu.mu_layout_row(ctx, 6, lrow, 0);
-    var sw: c_int = @as(c_int, @intFromFloat(@as(f64, @floatFromInt(mu.mu_get_current_container(ctx).*.body.w)) * 0.14));
+    const sw: c_int = @as(c_int, @intFromFloat(@as(f64, @floatFromInt(mu.mu_get_current_container(ctx).*.body.w)) * 0.14));
     mu.mu_layout_row(ctx, @as(c_int, 6), @as([*c]c_int, @constCast(@ptrCast(@alignCast(&([6]c_int{
         80, sw, sw, sw, sw, -@as(c_int, 1), }))))), @as(c_int, 0));
     for (colors, 0..) |sc, i| {
@@ -62,14 +62,14 @@ fn style_window(ctx: *mu.mu_Context) void {
 }
 
 pub fn slider(arg_ctx: [*c]mu.mu_Context, arg_value: [*c]u8, arg_low: c_int, arg_high: c_int) callconv(.C) c_int {
-  var ctx = arg_ctx;
+  const ctx = arg_ctx;
   var value = arg_value;
-  var low = arg_low;
-  var high = arg_high;
+  const low = arg_low;
+  const high = arg_high;
   const tmp = struct { var static: f32 = @import("std").mem.zeroes(f32); };
   mu.mu_push_id(ctx, @as(?*const anyopaque, @ptrCast(&value)), @as(c_int, @bitCast(@as(c_uint, @truncate(@sizeOf([*c]u8))))));
   tmp.static = @as(f32, @floatFromInt(value.*));
-  var res: c_int = mu.mu_slider_ex(ctx, &tmp.static, @as(mu.mu_Real, @floatFromInt(low)), @as(mu.mu_Real, 
+  const res: c_int = mu.mu_slider_ex(ctx, &tmp.static, @as(mu.mu_Real, @floatFromInt(low)), @as(mu.mu_Real, 
     @floatFromInt(high)), @as(mu.mu_Real, @floatFromInt(@as(c_int, 0))), "%.0f", mu.MU_OPT_ALIGNCENTER);
   value.* = @as(u8, @intFromFloat(tmp.static));
   mu.mu_pop_id(ctx);
@@ -77,13 +77,13 @@ pub fn slider(arg_ctx: [*c]mu.mu_Context, arg_value: [*c]u8, arg_low: c_int, arg
 }
 
 pub fn log_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
-  var ctx = arg_ctx;
+  const ctx = arg_ctx;
   if (mu.mu_begin_window_ex(ctx, "Log Window", mu.mu_rect(@as(c_int, 350), @as(c_int, 40), @as(c_int, 300), @as(c_int, 200)), @as(c_int, 0)) != 0) {
     mu.mu_layout_row(ctx, @as(c_int, 1), @as([*c]c_int, @constCast(@ptrCast(@alignCast(&([1]c_int{
       -@as(c_int, 1),
     }))))), -@as(c_int, 25));
     mu.mu_begin_panel_ex(ctx, "Log Output", @as(c_int, 0));
-    var panel: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);
+    const panel: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);
     mu.mu_layout_row(ctx, @as(c_int, 1), @as([*c]c_int, @constCast(@ptrCast(@alignCast(&([1]c_int{
       -@as(c_int, 1),
     }))))), -@as(c_int, 1));
@@ -117,7 +117,7 @@ pub fn log_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
 }
 
 pub fn write_log(arg_text: [*c]const u8) callconv(.C) void {
-    var text = arg_text;
+    const text = arg_text;
     if (logbuf[@as(c_uint, @intCast(@as(c_int, 0)))] != 0) {
         _ = strcat(@as([*c]u8, @ptrCast(@alignCast(&logbuf))), "\n");
     }
@@ -126,13 +126,13 @@ pub fn write_log(arg_text: [*c]const u8) callconv(.C) void {
 }
 
 pub fn test_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
-    var ctx = arg_ctx;
+    const ctx = arg_ctx;
     if (mu.mu_begin_window_ex(ctx, "Demo Window", mu.mu_rect(@as(c_int, 40), @as(c_int, 40), @as(c_int, 300), @as(c_int, 450)), @as(c_int, 0)) != 0) {
-        var win: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);
+        const win: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);
         win.*.rect.w = if (win.*.rect.w > @as(c_int, 240)) win.*.rect.w else @as(c_int, 240);
         win.*.rect.h = if (win.*.rect.h > @as(c_int, 300)) win.*.rect.h else @as(c_int, 300);
         if (mu.mu_header_ex(ctx, "Window Info", @as(c_int, 0)) != 0) {
-            var win_1: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);
+            const win_1: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);
             var buf: [64]u8 = undefined;
             mu.mu_layout_row(ctx, @as(c_int, 2), @as([*c]c_int, @constCast(@ptrCast(@alignCast(&([2]c_int{
                 54,
@@ -251,7 +251,7 @@ pub fn test_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
             mu.mu_label(ctx, "Blue:");
             _ = mu.mu_slider_ex(ctx, &bg[@as(c_uint, @intCast(@as(c_int, 2)))], @as(mu.mu_Real, @floatFromInt(@as(c_int, 0))), @as(mu.mu_Real, @floatFromInt(@as(c_int, 255))), @as(mu.mu_Real, @floatFromInt(@as(c_int, 0))), "%.2f", mu.MU_OPT_ALIGNCENTER);
             mu.mu_layout_end_column(ctx);
-            var r: mu.mu_Rect = mu.mu_layout_next(ctx);
+            const r: mu.mu_Rect = mu.mu_layout_next(ctx);
             mu.mu_draw_rect(ctx, r, mu.mu_color(@as(c_int, @intFromFloat(bg[@as(c_uint, @intCast(@as(c_int, 0)))])), @as(c_int, @intFromFloat(bg[@as(c_uint, @intCast(@as(c_int, 1)))])), @as(c_int, @intFromFloat(bg[@as(c_uint, @intCast(@as(c_int, 2)))])), @as(c_int, 255)));
             var buf: [32]u8 = undefined;
             _ = sprintf(@as([*c]u8, @ptrCast(@alignCast(&buf))), "#%02X%02X%02X", @as(c_int, @intFromFloat(bg[@as(c_uint, @intCast(@as(c_int, 0)))])), @as(c_int, @intFromFloat(bg[@as(c_uint, @intCast(@as(c_int, 1)))])), @as(c_int, @intFromFloat(bg[@as(c_uint, @intCast(@as(c_int, 2)))])));

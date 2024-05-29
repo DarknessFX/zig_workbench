@@ -28,7 +28,7 @@ pub fn build(b: *std.Build) void {
   exe.addIncludePath( .{ .path = "lib/opengl" }  );
   exe.addIncludePath( .{ .path = "lib/SDL3/include" }  );
 
-  var c_srcs = .{
+  const c_srcs = .{
     "lib/imgui/cimgui.cpp",
     "lib/imgui/cimgui_impl_sdl3.cpp",
     "lib/imgui/cimgui_impl_opengl3.cpp",

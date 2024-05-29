@@ -1,9 +1,7 @@
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
-  usingnamespace std.os.windows.user32;
   usingnamespace std.os.windows.kernel32;
-  usingnamespace std.os.windows.gdi32;
 };
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
@@ -42,9 +40,9 @@ pub fn main() void {
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_STENCIL_SIZE, 8);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MINOR_VERSION, 2);
-  var window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_OPENGL | sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_ALLOW_HIGHDPI;
-  var window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags).?;
-  var gl_context: sdl.SDL_GLContext = sdl.SDL_GL_CreateContext(window);
+  const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_OPENGL | sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_ALLOW_HIGHDPI;
+  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags).?;
+  const gl_context: sdl.SDL_GLContext = sdl.SDL_GL_CreateContext(window);
   _ = sdl.SDL_GL_MakeCurrent(window, gl_context);
   _ = sdl.SDL_GL_SetSwapInterval(1); // Enable vsync
 
@@ -65,7 +63,7 @@ pub fn main() void {
       style.Colors[im.ImGuiCol_WindowBg].w = 1.0;
   }
 
-  var cwindow = @as(?*im.SDL_Window , @ptrCast(window));
+  const cwindow = @as(?*im.SDL_Window , @ptrCast(window));
   _ = im.cImGui_ImplSDL2_InitForOpenGL(cwindow, gl_context);
   _ = im.cImGui_ImplOpenGL2_Init();
   
@@ -76,7 +74,7 @@ pub fn main() void {
   var counter: u16 = 0;
 
   var event: sdl.SDL_Event = undefined;
-  var cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
+  const cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
   var done: bool = false;
   while (!done) {
     while (sdl.SDL_PollEvent(&event) == 1) {
@@ -131,8 +129,8 @@ pub fn main() void {
     im.cImGui_ImplOpenGL2_RenderDrawData(im.ImGui_GetDrawData());
 
     if (io.ConfigFlags & im.ImGuiConfigFlags_ViewportsEnable != 0) {
-      var backup_current_window: *sdl.SDL_Window = sdl.SDL_GL_GetCurrentWindow().?;
-      var backup_current_context: sdl.SDL_GLContext = sdl.SDL_GL_GetCurrentContext().?;
+      const backup_current_window: *sdl.SDL_Window = sdl.SDL_GL_GetCurrentWindow().?;
+      const backup_current_context: sdl.SDL_GLContext = sdl.SDL_GL_GetCurrentContext().?;
       im.ImGui_UpdatePlatformWindows();
       im.ImGui_RenderPlatformWindowsDefault();
       _ = sdl.SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
@@ -167,15 +165,21 @@ fn HideConsole() void {
 
   _ = GetConsoleTitleA(&pszWindowTitle, BUF_TITLE);
   hwndFound=FindWindowA(null, &pszWindowTitle);
-  _ = win.ShowWindow(hwndFound, win.SW_HIDE);
+  _ = ShowWindow(hwndFound, SW_HIDE);
 }
 
-pub extern "kernel32" fn GetConsoleTitleA(
+extern "kernel32" fn GetConsoleTitleA(
     lpConsoleTitle: win.LPSTR,
     nSize: win.DWORD,
 ) callconv(win.WINAPI) win.DWORD;
 
-pub extern "kernel32" fn FindWindowA(
+extern "kernel32" fn FindWindowA(
     lpClassName: ?win.LPSTR,
     lpWindowName: ?win.LPSTR,
 ) callconv(win.WINAPI) win.HWND;
+
+const SW_HIDE = 0;
+extern "user32" fn ShowWindow(
+  hWnd: win.HWND,
+  nCmdShow: win.INT
+) callconv(WINAPI) void;
