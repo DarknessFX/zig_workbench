@@ -58,7 +58,7 @@ Zig have a useful built in feature: *zig init-exe* that creates a basic project.
  
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
-<pre>Using Dear ImGui Docking 1.90WIP and Dear Bindings (20231029)
+<pre>Using Dear ImGui Docking 1.90.7 and Dear Bindings (20240605)
 All necessary libraries are inside the template.<br/>
 
 Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
