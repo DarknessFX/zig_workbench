@@ -6,18 +6,20 @@ const win = struct {
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
+//NOTE Rename .vscode/Tasks_SDL2_OpenGL2.json to .vscode/Tasks.json before use this renderer.
+
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   @cInclude("lib/imgui/cimgui.h");
-  @cInclude("lib/imgui/cimgui_impl_sdl3.h");
-  @cInclude("lib/imgui/cimgui_impl_opengl3.h");
+  @cInclude("lib/imgui/cimgui_impl_sdl2.h");
+  @cInclude("lib/imgui/cimgui_impl_opengl2.h");
 });
 
 const sdl = @cImport({
-  @cInclude("lib/SDL3/include/SDL.h");
-  @cInclude("lib/SDL3/include/SDL_opengl.h");
+  @cInclude("lib/SDL2/include/SDL.h");
+  @cInclude("lib/SDL2/include/SDL_opengl.h");
 });
 
 const ImVec4 = struct {
@@ -27,32 +29,22 @@ const ImVec4 = struct {
   w: f32
 };
 
-pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
-  _ = hInstance;
-  _ = hPrevInstance;
-  _ = pCmdLine;
-  _ = nCmdShow;
+pub fn main() void {
+  HideConsole();
 
-  const glsl_version = "#version 150";
-  _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_FLAGS, sdl.SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
-  _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_PROFILE_MASK, sdl.SDL_GL_CONTEXT_PROFILE_CORE);
-  _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  _ = sdl.SDL_Init(sdl.SDL_INIT_VIDEO | sdl.SDL_INIT_TIMER | sdl.SDL_INIT_GAMECONTROLLER);
   _ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
 
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DOUBLEBUFFER, 1);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DEPTH_SIZE, 24);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_STENCIL_SIZE, 8);
-  const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_OPENGL | sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_HIDDEN;
-  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL3+OpenGL3 example", 1280, 720, window_flags).?;
-  defer sdl.SDL_DestroyWindow(window);
-
-  _ = sdl.SDL_SetWindowPosition(window, sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED);
+  _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+  _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MINOR_VERSION, 2);
+  const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_OPENGL | sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_ALLOW_HIGHDPI;
+  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags).?;
   const gl_context: sdl.SDL_GLContext = sdl.SDL_GL_CreateContext(window);
   _ = sdl.SDL_GL_MakeCurrent(window, gl_context);
   _ = sdl.SDL_GL_SetSwapInterval(1); // Enable vsync
-  _ = sdl.SDL_ShowWindow(window);
 
   _ = im.ImGui_CreateContext(null);
   var io: *im.struct_ImGuiIO_t = im.ImGui_GetIO();
@@ -72,9 +64,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   }
 
   const cwindow = @as(?*im.SDL_Window , @ptrCast(window));
-  _ = im.cImGui_ImplSDL3_InitForOpenGL(cwindow, gl_context);
-  _ = im.cImGui_ImplOpenGL3_InitEx(glsl_version);
-
+  _ = im.cImGui_ImplSDL2_InitForOpenGL(cwindow, gl_context);
+  _ = im.cImGui_ImplOpenGL2_Init();
+  
   var show_demo_window: bool = true;
   var show_another_window: bool = false;
   var clear_color: ImVec4 = ImVec4{.x=0.45, .y=0.55, .z=0.60, .w=1.00};
@@ -86,16 +78,17 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   var done: bool = false;
   while (!done) {
     while (sdl.SDL_PollEvent(&event) == 1) {
-      _ = im.cImGui_ImplSDL3_ProcessEvent(cevent);
-      if (event.type == sdl.SDL_EVENT_QUIT) {
+      _ = im.cImGui_ImplSDL2_ProcessEvent(cevent);
+      if (event.type == sdl.SDL_QUIT) {
         done = true; }
-      if (event.type == sdl.SDL_EVENT_WINDOW_CLOSE_REQUESTED  and 
+      if (event.type == sdl.SDL_WINDOWEVENT and 
+        event.window.event == sdl.SDL_WINDOWEVENT_CLOSE and
         event.window.windowID == sdl.SDL_GetWindowID(window)) {
         done = true; }
     }
 
-    im.cImGui_ImplOpenGL3_NewFrame();
-    im.cImGui_ImplSDL3_NewFrame();
+    im.cImGui_ImplOpenGL2_NewFrame();
+    im.cImGui_ImplSDL2_NewFrame();
     im.ImGui_NewFrame();
 
     _ = im.ImGui_DockSpaceOverViewport();
@@ -133,7 +126,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     sdl.glViewport(0, 0, toCInt(io.DisplaySize.x), toCInt(io.DisplaySize.y));
     sdl.glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     sdl.glClear(sdl.GL_COLOR_BUFFER_BIT);
-    im.cImGui_ImplOpenGL3_RenderDrawData(im.ImGui_GetDrawData());
+    im.cImGui_ImplOpenGL2_RenderDrawData(im.ImGui_GetDrawData());
 
     if (io.ConfigFlags & im.ImGuiConfigFlags_ViewportsEnable != 0) {
       const backup_current_window: *sdl.SDL_Window = sdl.SDL_GL_GetCurrentWindow().?;
@@ -143,26 +136,50 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
       _ = sdl.SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
     }
 
-    _ = sdl.SDL_GL_SwapWindow(window);
+    sdl.SDL_GL_SwapWindow(window);
   }
 
-  im.cImGui_ImplOpenGL3_Shutdown();
-  im.cImGui_ImplSDL3_Shutdown();
+  im.cImGui_ImplOpenGL2_Shutdown();
+  im.cImGui_ImplSDL2_Shutdown();
   im.ImGui_DestroyContext(null);
 
-  _ = sdl.SDL_GL_DeleteContext(gl_context);
+  sdl.SDL_GL_DeleteContext(gl_context);
   sdl.SDL_DestroyWindow(window);
   sdl.SDL_Quit();
 
-  return 0;
+  return;
 }
 
-// Fix for libc linking error.
-pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
-  return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
+fn toU8(value: f32) u8 {
+  return @as(u8, @intFromFloat(value));
 }
 
 fn toCInt(value: f32) c_int {
   return @as(c_int, @intFromFloat(value));
 }
+
+fn HideConsole() void {
+  const BUF_TITLE = 1024;
+  var hwndFound: win.HWND = undefined;
+  var pszWindowTitle: [BUF_TITLE:0]win.CHAR = std.mem.zeroes([BUF_TITLE:0]win.CHAR); 
+
+  _ = GetConsoleTitleA(&pszWindowTitle, BUF_TITLE);
+  hwndFound=FindWindowA(null, &pszWindowTitle);
+  _ = ShowWindow(hwndFound, SW_HIDE);
+}
+
+extern "kernel32" fn GetConsoleTitleA(
+    lpConsoleTitle: win.LPSTR,
+    nSize: win.DWORD,
+) callconv(win.WINAPI) win.DWORD;
+
+extern "kernel32" fn FindWindowA(
+    lpClassName: ?win.LPSTR,
+    lpWindowName: ?win.LPSTR,
+) callconv(win.WINAPI) win.HWND;
+
+const SW_HIDE = 0;
+extern "user32" fn ShowWindow(
+  hWnd: win.HWND,
+  nCmdShow: win.INT
+) callconv(WINAPI) void;

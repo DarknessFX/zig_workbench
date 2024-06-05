@@ -33,13 +33,13 @@ extern "C"
 #endif
 #ifndef IMGUI_DISABLE
 #include "cimgui.h"
-#include "../SDL2/include/SDL.h"
+typedef struct SDL_Renderer SDL_Renderer;
 typedef struct ImDrawData_t ImDrawData;
 
 CIMGUI_IMPL_API bool cImGui_ImplSDLRenderer2_Init(SDL_Renderer* renderer);
 CIMGUI_IMPL_API void cImGui_ImplSDLRenderer2_Shutdown(void);
 CIMGUI_IMPL_API void cImGui_ImplSDLRenderer2_NewFrame(void);
-CIMGUI_IMPL_API void cImGui_ImplSDLRenderer2_RenderDrawData(ImDrawData* draw_data);
+CIMGUI_IMPL_API void cImGui_ImplSDLRenderer2_RenderDrawData(ImDrawData* draw_data, SDL_Renderer* renderer);
 
 // Called by Init/NewFrame/Shutdown
 CIMGUI_IMPL_API bool cImGui_ImplSDLRenderer2_CreateFontsTexture(void);

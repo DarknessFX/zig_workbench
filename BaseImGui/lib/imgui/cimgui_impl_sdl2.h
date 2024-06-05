@@ -13,8 +13,9 @@
 //  [X] Platform: Gamepad support. Enabled with 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad'.
 //  [X] Platform: Mouse cursor shape and visibility. Disable with 'io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange'.
 //  [X] Platform: Multi-viewport support (multiple windows). Enable with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
-// Missing features:
-//  [ ] Platform: Multi-viewport + Minimized windows seems to break mouse wheel events (at least under Windows).
+// Issues:
+//  [ ] Platform: Multi-viewport: Minimized windows seems to break mouse wheel events (at least under Windows).
+//  [ ] Platform: Multi-viewport: ParentViewportID not honored, and so io.ConfigViewportsNoDefaultParent has no effect (minor).
 //  [x] Platform: Basic IME support. App needs to call 'SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");' before SDL_CreateWindow()!.
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
@@ -46,10 +47,7 @@ CIMGUI_IMPL_API void cImGui_ImplSDL2_Shutdown(void);
 CIMGUI_IMPL_API void cImGui_ImplSDL2_NewFrame(void);
 CIMGUI_IMPL_API bool cImGui_ImplSDL2_ProcessEvent(const SDL_Event* event);
 
-#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-//CIMGUI_IMPL_API void cImGui_ImplSDL2_NewFrameSDL_WindowPtr(SDL_Window*); // 1.84: removed unnecessary parameter
-#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-#endif// #ifndef IMGUI_DISABLE
+#endif // #ifndef IMGUI_DISABLE
 #ifdef __cplusplus
 } // End of extern "C" block
 #endif

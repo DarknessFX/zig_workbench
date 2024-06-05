@@ -111,7 +111,7 @@ pub fn main() void {
       toU8(clear_color.x * 255), toU8(clear_color.y * 255),
       toU8(clear_color.z * 255), toU8(clear_color.w * 255));
     _ = sdl.SDL_RenderClear(renderer);
-    im.cImGui_ImplSDLRenderer3_RenderDrawData(im.ImGui_GetDrawData());
+    im.cImGui_ImplSDLRenderer3_RenderDrawData(im.ImGui_GetDrawData(), crenderer);
     _ = sdl.SDL_RenderPresent(renderer);
   }
 
