@@ -8,7 +8,7 @@ const WINAPI = win.WINAPI;
 pub const sdl = @cImport({
   // NOTE: Need full path to SDL3/include
   // Remember to copy SDL3.dll to Zig.exe folder PATH
-  @cInclude("lib/SDL3/include/SDL.h");
+  @cInclude("SDL.h");
 });
 
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 

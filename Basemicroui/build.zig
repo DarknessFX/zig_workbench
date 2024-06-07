@@ -4,33 +4,33 @@ pub fn build(b: *std.Build) void {
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
-  const projectname = "zig_microui";
+  const projectname = "Basemicroui";
   const rootfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
     .optimize = optimize,
   });
   exe.addWin32ResourceFile(.{
-    .file = .{ .path = projectname ++ ".rc" },
+    .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"} // UTF-8 codepage
   });
 
   //SDL2
-  exe.addIncludePath( .{ .path = "lib/SDL2/include" } );
-  exe.addLibraryPath( .{ .path = "lib/SDL2/" } );
+  exe.addIncludePath( b.path("lib/SDL2/include") );
+  exe.addLibraryPath( b.path("lib/SDL2/") );
   exe.linkSystemLibrary("SDL2");
   exe.linkSystemLibrary("OpenGL32");
   b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
 
   // microui
   exe.addCSourceFile(.{
-    .file = std.build.LazyPath.relative("lib/microui/microui.c"), 
+    .file = b.path("lib/microui/microui.c"), 
     .flags = &.{ }
   });
-  exe.addIncludePath( .{ .path = "lib/microui" } );
+  exe.addIncludePath( b.path("lib/microui") );
 
   exe.linkLibC();
 
@@ -53,7 +53,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
    .optimize = optimize,
   });

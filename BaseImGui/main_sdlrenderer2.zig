@@ -15,7 +15,7 @@ const im = @cImport({
   @cInclude("lib/imgui/cimgui.h");
   @cInclude("lib/imgui/cimgui_impl_sdl2.h");
   @cInclude("lib/imgui/cimgui_impl_sdlrenderer2.h");
-  //@cInclude("lib/imgui/cimgui_impl_win32.h");
+  @cInclude("lib/imgui/cimgui_memory_editor.h");
 });
 
 const sdl = @cImport({
@@ -36,7 +36,7 @@ pub fn main() void {
   _ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
 
   const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_ALLOW_HIGHDPI;
-  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags).?;
+  const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL2_SDLRenderer example", sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags).?;
   const renderer: *sdl.SDL_Renderer = sdl.SDL_CreateRenderer(window, -1, sdl.SDL_RENDERER_PRESENTVSYNC | sdl.SDL_RENDERER_ACCELERATED).?;
 
   _ = im.ImGui_CreateContext(null);
@@ -54,6 +54,28 @@ pub fn main() void {
 
   var show_demo_window: bool = true;
   var show_another_window: bool = false;
+  const show_memedit_window = true;
+  var mem_edit = im.MemoryEditor {
+    // Settings
+    .Open = true,
+    .ReadOnly = false,
+    .Cols = 16,
+    .OptShowOptions = true,
+    .OptShowDataPreview = false,
+    .OptShowHexII = false,
+    .OptShowAscii = true,
+    .OptGreyOutZeroes = true,
+    .OptUpperCaseHex = true,
+    .OptMidColsCount = 8,
+    .OptAddrDigitsCount = 0,
+    .OptFooterExtraHeight = 0.0,
+    .HighlightColor = im.IM_COL32(255, 255, 255, 50),
+    .ReadFn = null,
+    .WriteFn = null,
+    .HighlightFn = null,
+  };
+  var mem_data: [1000]c_char = std.mem.zeroes([1000]c_char);
+
   var clear_color: ImVec4 = ImVec4{.x=0.45, .y=0.55, .z=0.60, .w=1.00};
   var f: f32 = 0.0;
   var counter: u16 = 0;
@@ -105,6 +127,10 @@ pub fn main() void {
       if (im.ImGui_Button("Close Me"))
         show_another_window = false;
       im.ImGui_End();
+    }
+
+    if (show_memedit_window) {
+      im.MemoryEditor_DrawWindow(&mem_edit, "Memory Editor", &mem_data, mem_data.len);
     }
 
     im.ImGui_Render();

@@ -37,7 +37,7 @@ extern "C"
 #include "cimgui.h"
 #include "../SDL3/include/SDL.h"
 #ifndef IMGUI_DISABLE
-
+typedef struct ImDrawData_t ImDrawData;
 
 CIMGUI_IMPL_API bool cImGui_ImplSDL3_InitForOpenGL(SDL_Window* window, void* sdl_gl_context);
 CIMGUI_IMPL_API bool cImGui_ImplSDL3_InitForVulkan(SDL_Window* window);
@@ -49,16 +49,6 @@ CIMGUI_IMPL_API void cImGui_ImplSDL3_Shutdown(void);
 CIMGUI_IMPL_API void cImGui_ImplSDL3_NewFrame(void);
 CIMGUI_IMPL_API bool cImGui_ImplSDL3_ProcessEvent(const SDL_Event* event);
 
-// Gamepad selection automatically starts in AutoFirst mode, picking first available SDL_Gamepad. You may override this.
-// When using manual mode, caller is responsible for opening/closing gamepad.
-typedef enum
-{
-    ImGui_ImplSDL3_GamepadMode_AutoFirst,
-    ImGui_ImplSDL3_GamepadMode_AutoAll,
-    ImGui_ImplSDL3_GamepadMode_Manual,
-} ImGui_ImplSDL3_GamepadMode;
-CIMGUI_IMPL_API void cImGui_ImplSDL3_SetGamepadMode(ImGui_ImplSDL3_GamepadMode mode); // Implied manual_gamepads_array = NULL, manual_gamepads_count = -1
-CIMGUI_IMPL_API void cImGui_ImplSDL3_SetGamepadModeEx(ImGui_ImplSDL3_GamepadMode mode, SDL_Gamepad** manual_gamepads_array /* = NULL */, int manual_gamepads_count /* = -1 */);
 #endif// #ifndef IMGUI_DISABLE
 #ifdef __cplusplus
 } // End of extern "C" block

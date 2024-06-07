@@ -13,6 +13,7 @@ const im = @cImport({
   @cInclude("lib/imgui/cimgui.h");
   @cInclude("lib/imgui/cimgui_impl_opengl3.h");
   @cInclude("lib/imgui/cimgui_impl_win32.h");
+  @cInclude("lib/imgui/cimgui_memory_editor.h");
 });
 
 const gl = @cImport({
@@ -20,7 +21,7 @@ const gl = @cImport({
 });
 
 var wnd: win.HWND = undefined;
-const wnd_title = L("BaseImGui");
+const wnd_title = L("BaseImGui OpenGL3");
 var wnd_size: win.RECT = .{ .left=0, .top=0, .right=1200, .bottom=800 };
 var wnd_dc: win.HDC = undefined;
 var wnd_dpi: win.UINT = 0;
@@ -89,6 +90,28 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 
   var show_demo_window = true;
   var show_another_window = false;
+  const show_memedit_window = true;
+  var mem_edit = im.MemoryEditor {
+    // Settings
+    .Open = true,
+    .ReadOnly = false,
+    .Cols = 16,
+    .OptShowOptions = true,
+    .OptShowDataPreview = false,
+    .OptShowHexII = false,
+    .OptShowAscii = true,
+    .OptGreyOutZeroes = true,
+    .OptUpperCaseHex = true,
+    .OptMidColsCount = 8,
+    .OptAddrDigitsCount = 0,
+    .OptFooterExtraHeight = 0.0,
+    .HighlightColor = im.IM_COL32(255, 255, 255, 50),
+    .ReadFn = null,
+    .WriteFn = null,
+    .HighlightFn = null,
+  };
+  var mem_data: [1000]c_char = std.mem.zeroes([1000]c_char);
+
   var clear_color: ImVec4 = .{ .x=0.45, .y=0.55, .w=0.60, .z=1.00 };
   var f: f32 = 0.0;
   var counter: u16 = 0;
@@ -137,6 +160,10 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
       if (im.ImGui_Button("Close Me"))
         show_another_window = false;
       im.ImGui_End();
+    }
+
+    if (show_memedit_window) {
+      im.MemoryEditor_DrawWindow(&mem_edit, "Memory Editor", &mem_data, mem_data.len);
     }
 
     im.ImGui_Render();

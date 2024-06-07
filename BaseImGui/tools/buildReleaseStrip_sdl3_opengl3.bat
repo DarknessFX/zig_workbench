@@ -19,7 +19,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lgdi32 -ldwmapi -lopengl32
+SET extra_args=-lgdi32 -ldwmapi -lopengl32 -lsdl3 -L lib/SDL3 -I lib/SDL3/include
 
 
 REM AddCSource
@@ -28,7 +28,8 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-SET addCSourceFile=lib/imgui/cimgui.cpp lib/imgui/cimgui_impl_opengl3.cpp lib/imgui/cimgui_impl_win32.cpp lib/imgui/cimgui_memory_editor.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_win32.cpp lib/imgui/imgui_impl_opengl3.cpp 
+SET addCSourceFile=lib/imgui/cimgui.cpp lib/imgui/cimgui_impl_sdl3.cpp lib/imgui/cimgui_impl_opengl3.cpp lib/imgui/cimgui_memory_editor.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_sdl3.cpp lib/imgui/imgui_impl_opengl3.cpp
+
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
   MKDIR %CD%\bin\ReleaseStrip 

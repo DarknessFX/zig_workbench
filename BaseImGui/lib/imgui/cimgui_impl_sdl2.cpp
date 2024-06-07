@@ -61,8 +61,8 @@ CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL2_NewFrame(void)
 
 CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_ProcessEvent(const SDL_Event* event)
 {
+  return ::ImGui_ImplSDL2_ProcessEvent(reinterpret_cast<const ::SDL_Event*>(event));
     //return ::ImGui_ImplSDL2_ProcessEvent(event);
-    return ::ImGui_ImplSDL2_ProcessEvent(reinterpret_cast<const ::SDL_Event*>(event));
 }
 
 #endif // #ifndef IMGUI_DISABLE

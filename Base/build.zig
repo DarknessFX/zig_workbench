@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
     .optimize = optimize
   });
@@ -35,7 +35,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
    .optimize = optimize,
   });

@@ -10,18 +10,18 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
     .optimize = optimize
   });
   exe.addWin32ResourceFile(.{
-    .file = .{ .path = projectname ++ ".rc" },
+    .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
   exe.linkLibC();
 
-  exe.addIncludePath( .{ .path = "lib/SDL3/include" }  );
-  exe.addLibraryPath( .{ .path = "lib/SDL3/" } );
+  exe.addIncludePath( b.path("lib/SDL3/include") );
+  exe.addLibraryPath( b.path("lib/SDL3") );
   exe.linkSystemLibrary("SDL3");
   b.installBinFile("lib/SDL3/SDL3.dll", "SDL3.dll");
 
@@ -45,7 +45,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
    .optimize = optimize,
   });

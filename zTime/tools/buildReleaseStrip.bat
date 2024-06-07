@@ -1,4 +1,5 @@
 @ECHO OFF
+
 REM Check if Tools folder, then go up to parent folder
 SET FolderName=
 FOR %%* IN (%CD%) DO SET FolderName=%%~n*
@@ -19,7 +20,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lgdi32 -ldwmapi -lopengl32
+SET extra_args=-lgdi32 -ldwmapi -ld3d11 -ld3dcompiler_47 -I "%CD%\lib\DX11"
 
 
 REM AddCSource
@@ -28,7 +29,7 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-SET addCSourceFile=lib/imgui/cimgui.cpp lib/imgui/cimgui_impl_opengl3.cpp lib/imgui/cimgui_impl_win32.cpp lib/imgui/cimgui_memory_editor.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_win32.cpp lib/imgui/imgui_impl_opengl3.cpp 
+SET addCSourceFile=
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
   MKDIR %CD%\bin\ReleaseStrip 
@@ -38,7 +39,7 @@ IF NOT EXIST %CD%\bin\ReleaseStrip\obj (
 )
 
 REM GET CURRENT FOLDER NAME
-for %%* in (%CD%) do SET ProjectName=%%~n*
+SET ProjectName=%FolderName%
 
 SET rcmd=
 IF EXIST "*.rc" (

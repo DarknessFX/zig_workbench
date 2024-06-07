@@ -1,5 +1,11 @@
 @ECHO OFF
-CD ..
+REM Check if Tools folder, then go up to parent folder
+SET FolderName=
+FOR %%* IN (%CD%) DO SET FolderName=%%~n*
+IF /I "%FolderName%" == "tools" (
+  FOR %%* IN (%CD%\..) DO SET FolderName=%%~n*
+  CD ..
+)
 
 REM EXTRA ARGS SHORTCUT
 REM ===================
@@ -13,7 +19,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lgdi32 -ldwmapi -lopengl32 -lsdl3 -L lib/SDL3 -I lib/SDL3/include
+SET extra_args=-lgdi32 -ldwmapi -lopengl32
 
 
 REM AddCSource
@@ -22,8 +28,7 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-SET addCSourceFile=lib/imgui/cimgui.cpp lib/imgui/cimgui_impl_sdl3.cpp lib/imgui/cimgui_impl_opengl3.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_sdl3.cpp lib/imgui/imgui_impl_opengl3.cpp
-
+SET addCSourceFile=lib/imgui/cimgui.cpp lib/imgui/cimgui_impl_opengl2.cpp lib/imgui/cimgui_impl_win32.cpp lib/imgui/cimgui_memory_editor.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_win32.cpp lib/imgui/imgui_impl_opengl2.cpp 
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
   MKDIR %CD%\bin\ReleaseStrip 
@@ -40,14 +45,20 @@ IF EXIST "*.rc" (
   SET rcmd=-rcflags /c65001 -- %CD%\%ProjectName%.rc
 )
 
+SET singlethread=-fsingle-threaded
 SET libc=
 FINDSTR /L linkLibC build.zig > NUL && (
-  SET libc=-lc++
+  SET libc=-lc
+)
+SET libcpp=
+FINDSTR /L linkLibCpp build.zig > NUL && (
+  SET libcpp=-lc++
+  SET singlethread=
 )
 
 REM OUTPUT TO ZIG_REPORT.EXE
 > bin/ReleaseStrip/obj/zig_report.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% -fstrip -fsingle-threaded --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
 
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
@@ -56,3 +67,4 @@ IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
 
 ECHO.
 ECHO Done!
+PAUSE

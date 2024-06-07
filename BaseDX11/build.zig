@@ -10,12 +10,12 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
     .optimize = optimize,
   });
   exe.addWin32ResourceFile(.{
-    .file = .{ .path = projectname ++ ".rc" },
+    .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("d3d11");
   exe.linkSystemLibrary("d3dcompiler_47");
 
-  exe.addIncludePath( .{ .path = "lib/DX11" } );
+  exe.addIncludePath( b.path("lib/DX11") );
   b.installBinFile("shaders.hlsl", "shaders.hlsl");
 
   exe.linkLibCpp();
@@ -49,7 +49,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
    .optimize = optimize,
   });

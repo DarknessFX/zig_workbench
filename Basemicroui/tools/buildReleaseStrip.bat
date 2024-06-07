@@ -55,3 +55,4 @@ IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
 
 ECHO.
 ECHO Done!
+PAUSE

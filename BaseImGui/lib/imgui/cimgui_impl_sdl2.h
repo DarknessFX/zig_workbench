@@ -25,7 +25,6 @@
 // - Getting Started      https://dearimgui.com/getting-started
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 // - Introduction, links and more at the top of imgui.cpp
-
 #pragma once
 
 #ifdef __cplusplus
@@ -46,6 +45,7 @@ CIMGUI_IMPL_API bool cImGui_ImplSDL2_InitForOther(SDL_Window* window);
 CIMGUI_IMPL_API void cImGui_ImplSDL2_Shutdown(void);
 CIMGUI_IMPL_API void cImGui_ImplSDL2_NewFrame(void);
 CIMGUI_IMPL_API bool cImGui_ImplSDL2_ProcessEvent(const SDL_Event* event);
+
 
 #endif // #ifndef IMGUI_DISABLE
 #ifdef __cplusplus

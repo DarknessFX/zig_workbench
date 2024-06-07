@@ -35,8 +35,8 @@ pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: 
   _ = nCmdShow;
 
   wnd.hInstance = hInstance;
-  wnd.name = title ++ "\\0";
-  wnd.classname = title ++ "_class" ++ "\\0";
+  wnd.name = @as([*:0]const u8, @ptrCast(title));
+  wnd.classname = title ++ "_class";
   const wnd_class: win.WNDCLASSEXA = .{
     .cbSize = @sizeOf(win.WNDCLASSEXA),
     .style = win.CS_CLASSDC | win.CS_HREDRAW | win.CS_VREDRAW,

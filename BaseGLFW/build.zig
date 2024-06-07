@@ -10,23 +10,23 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
     .optimize = optimize
   });
   exe.addWin32ResourceFile(.{
-    .file = .{ .path = projectname ++ ".rc" },
+    .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
-  exe.addIncludePath( .{ .path = "lib" });
-  exe.addLibraryPath( .{ .path = "lib/glad" } );
-  exe.addIncludePath( .{ .path = "lib/glfw/include" });
-  exe.addLibraryPath( .{ .path = "lib/glfw" } );
+  exe.addIncludePath( b.path("lib") );
+  exe.addLibraryPath( b.path("lib/glad") );
+  exe.addIncludePath( b.path("lib/glfw/include") );
+  exe.addLibraryPath( b.path("lib/glfw") );
   exe.linkSystemLibrary("glfw3dll");
   exe.linkSystemLibrary("opengl32");
   exe.addCSourceFile(.{
-    .file = std.build.LazyPath.relative("lib/glad/src/glad.c"), 
+    .file = b.path("lib/glad/src/glad.c"), 
     .flags = &.{ }
   });
   b.installBinFile("lib/glfw/glfw3.dll", "glfw3.dll");
@@ -53,7 +53,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
    .optimize = optimize,
   });

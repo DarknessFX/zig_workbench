@@ -10,12 +10,12 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
     .optimize = optimize,
   });
   exe.addWin32ResourceFile(.{
-    .file = .{ .path = projectname ++ ".rc" },
+    .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
@@ -23,15 +23,16 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("dwmapi");
   exe.linkSystemLibrary("SDL3");
 
-  exe.addLibraryPath( .{ .path = "lib/SDL3" } );
-
-  exe.addIncludePath( .{ .path = "lib/imgui" }  );
-  exe.addIncludePath( .{ .path = "lib/SDL3/include" }  );
+  exe.addIncludePath( b.path("lib/imgui") );
+  exe.addIncludePath( b.path("lib/opengl") );
+  exe.addIncludePath( b.path("lib/SDL3/include") );
+  exe.addLibraryPath( b.path("lib/SDL3") );
 
   const c_srcs = .{
     "lib/imgui/cimgui.cpp",
     "lib/imgui/cimgui_impl_sdl3.cpp",
     "lib/imgui/cimgui_impl_sdlrenderer3.cpp",
+    "lib/imgui/cimgui_memory_editor.cpp",
     "lib/imgui/imgui.cpp",
     "lib/imgui/imgui_widgets.cpp",
     "lib/imgui/imgui_draw.cpp",
@@ -42,7 +43,7 @@ pub fn build(b: *std.Build) void {
   };
   inline for (c_srcs) |c_cpp| {
     exe.addCSourceFile(.{
-      .file = std.build.LazyPath.relative(c_cpp), 
+      .file = b.path(c_cpp), 
       .flags = &.{ }
     });
   }
@@ -70,9 +71,9 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = .{ .path = rootfile },
+    .root_source_file = b.path(rootfile),
     .target = target,
-   .optimize = optimize,
+    .optimize = optimize,
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");

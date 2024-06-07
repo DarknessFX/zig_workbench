@@ -15,7 +15,7 @@
 ## About
 I'm studying and learning [Zig Language](https://ziglearn.org/chapter-0/) (started Nov 19, 2023), sharing here my Zig projects, templates, libs and tools.
 
-Using Windows 10, Zig x86_64 Version : **0.12.0**
+Using Windows 10, Zig x86_64 Version : **0.13.0**
 
 > [!NOTE]
 > This is a student project, code will run and build without errors (mostly because I just throw away errors), it is not a reference of "*best coding practices*". Suggestions or contributions changing the code to the "*right way and best practices*" are welcome.
@@ -30,7 +30,7 @@ Zig have a useful built in feature: *zig init-exe* that creates a basic project.
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
 | **BaseWinEx** | Template for a Windows program, Windows API as submodule. | Windows |
-| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
+| **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **BaseLVGL** | Template with [LVGL](https://lvgl.io/) . | Console |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
@@ -58,12 +58,12 @@ Zig have a useful built in feature: *zig init-exe* that creates a basic project.
  
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
-<pre>Using Dear ImGui Docking 1.90.7 and Dear Bindings (20240605)
+<pre>Using Dear ImGui Docking 1.90.8 and Dear Bindings (20240607)
 All necessary libraries are inside the template.<br/>
 
 Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
 
-ImGui_Memory_Editor: Edited from Dear Bindings output. Usage and sample inside <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
+ImGui_Memory_Editor: Edited from Dear Bindings output. Sample inside all ImGui templates and usage details at <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
 </details>
 
 <details>
@@ -125,7 +125,7 @@ All necessary libraries are inside the template.</pre>
 
 | Folder | Description |
 | ------------- | ------------- |
-| **zTime** | Similar to Linux TIME command, add zTime in front of your command to get the time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0). (console program) |
+| **zTime** | Similar to Linux TIME command, add zTime in front of your command to get the time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0.1). (console program) |
 
 <details>
   <summary><ins>zTime Usage</ins></summary>
@@ -148,12 +148,15 @@ All necessary libraries are inside the template.</pre>
 | **updateProjectName.bat** | Read parent folder name as your ProjectName and replace template references to ProjectName. |
 | **buildReleaseStrip.bat** | Call "zig build-exe" with additional options (ReleaseSmall, strip, single-thread), emit assembly (.s), llvm bitcode (.ll, .bc), C header, zig build report. |
 | **clean_zig-cache.bat** | Remove zig-cache from **all** sub folders. |
+
+## Tools_ContextMenu
 | **zig.ico** | Zig logo Icon file (.ico). (Resolutions 64p, 32p, 16p) |
 | **zig_256p.ico** | Zig logo Icon file (.ico) with higher resolutions . (Resolutions 256p, 128p, 64p, 32p, 16p) |
 | **zig_contextmenu.bat** | Launcher used by Windows Explorer context menu, copy to Zig folder PATH. |
 | **zig_icon.reg** | Associate an icon for .Zig files, add Build, Run, Test to Windows Explorer context menu. [Read more details](/tools/zig_icon.reg) in the file comments. |
 | **zig_icon_cascade.reg** | Alternative of zig_icon.reg, groups all options inside a Zig submenu. [Read more details](/tools/zig_icon_cascade.reg) in the file comments. |
 
+Tools to help setup Windows Explorer to apply icons to .ZIG files and add context menu short-cuts to Build, Run and Test.
 <details>
   <summary><ins>zig_icon.reg - screenshot</ins></summary>
      
