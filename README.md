@@ -148,6 +148,7 @@ All necessary libraries are inside the template.</pre>
 | **updateProjectName.bat** | Read parent folder name as your ProjectName and replace template references to ProjectName. |
 | **buildReleaseStrip.bat** | Call "zig build-exe" with additional options (ReleaseSmall, strip, single-thread), emit assembly (.s), llvm bitcode (.ll, .bc), C header, zig build report. |
 | **clean_zig-cache.bat** | Remove zig-cache from **all** sub folders. |
+<br/>
 
 ## Tools_ContextMenu
 | **zig.ico** | Zig logo Icon file (.ico). (Resolutions 64p, 32p, 16p) |
