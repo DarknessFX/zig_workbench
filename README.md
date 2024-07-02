@@ -22,7 +22,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 
 ## Templates
 
-Zig have a useful built in feature: *zig init-exe* that creates a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
+Zig have a useful built in feature: *zig init* that creates a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
 
 | Folder | Description | /Subsystem |
 | ------------- | ------------- | ------------- |
@@ -107,20 +107,6 @@ GLAD 2.0 (OpenGL 3.3 Compatibility).
 All necessary libraries are inside the template.</pre>
 </details>
 
-## Libraries
-
-| Folder | Description |
-| ------------- | ------------- |
-| **dos_color.zig** | Helper to output colors to console (std.debug.print) or debug console (OutputDebugString). |
-| **string.zig** | WIP String Type. |
-
-<details>
-  <summary><ins>Libraries usage</ins></summary>
-<pre>&nbsp;&nbsp;Create a /lib/ folder in your project folder.
-&nbsp;&nbsp;Copy the library file to /lib/ .
-&nbsp;&nbsp;Add <q>const libname = @Import("lib/lib_name.zig");</q> to your source code.</pre>
-</details>
-
 ## Programs
 
 | Folder | Description |
@@ -136,6 +122,35 @@ All necessary libraries are inside the template.</pre>
 &nbsp;&nbsp;Suggestion:
 &nbsp;&nbsp;Copy zTime.exe to your Zig folder, this way the application will 
 &nbsp;&nbsp;share the Environment Path and can be executed from anywhere.</pre>
+</details>
+
+## Projects
+
+| Folder | Description |
+| ------------- | ------------- |
+|  **ModernOpenGL**  |  [Mike Shah](https://github.com/MikeShah) [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) Youtube Tutorials ported to Zig + SDL3.1.2 OpenGL 4.6. |
+
+<details>
+  <summary><ins>ModernOpenGL Info</ins></summary>
+All files at Lib/SDL3 are the original ones from SDL Github, GLAD generated for 4.6 Core. For this project I did not use any zig binds or wrappers, just plain cImport.<br/>
+A copy of SDL.h and glad.h exist at Lib root just replacing &lt;&gt; with "", this change made easier for VSCode and ZLS display auto-complete.<br/>
+I tried to @cImport GLM OpenGL Mathematics "C" version cGML, @import ziglm and glm-zig, but each have their own quirks and styles while I'm wanted to keep the source code similar to the episodes, for this reason I built my own GLM.ZIG library with just a handful of used functions.<br/>
+There are some small changes implemented from the original tutorial code, mostly adding full Translate, Rotate, Scale, Keyboard and Mouse Movement.<br/>
+The Window Caption have a brief instruction of the keyboard settings and also, as my default, I used SHIFT+ESC to close the program.<br/>
+</details>
+
+## Libraries
+
+| Folder | Description |
+| ------------- | ------------- |
+| **dos_color.zig** | Helper to output colors to console (std.debug.print) or debug console (OutputDebugString). |
+| **string.zig** | WIP String Type. |
+
+<details>
+  <summary><ins>Libraries usage</ins></summary>
+<pre>&nbsp;&nbsp;Create a /lib/ folder in your project folder.
+&nbsp;&nbsp;Copy the library file to /lib/ .
+&nbsp;&nbsp;Add <q>const libname = @Import("lib/lib_name.zig");</q> to your source code.</pre>
 </details>
 
 ## Tools
@@ -187,11 +202,11 @@ I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and
 &nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme" target="_blank">Material Icon Theme</a> from Philipp Kief. (non-essential, but make VSCode looks better)</pre>
 </details>
 
-### Ctrl+T, Enter is the new F5
+### Ctrl+R is the new F5
 
 I changed a few VSCode keybindings for better use, mostly because Zig offer multiple options for Build, Run, Test, Generate Docs, and I setup VSCode Tasks.json with all available options.
 
-The more important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last ask. 
+The most important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last ask. 
 
 Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. **CTRL+T, Enter** became one of my most used keyboard shortcut inside VSCode and **CTRL+R** to repeat the last task.<br/>
 
@@ -255,13 +270,7 @@ When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run 
 
 I have a Love/Hate relationship with VSCode, I only used it to code for Arduino and ESP32 with [Platform.io](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and the hate is always when the editor try to be "smart and helpful". 
 
-Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me.
-
-## Projects
-
-| Folder | Description |
-| ------------- | ------------- |
-|  soon  |  soon |
+Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me. And my favorite gripe: You select a function name in the Intellisense combo, it prints at your source code "YourFunction([cursor here])" BUT it don't display the arguments list, you need to backspace to delete the ( opening parenthesis, type ( and now the tooltip show up with the arguments list.
 
 ## Credits
 
@@ -273,6 +282,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Dear ImGui](https://github.com/ocornut/imgui) from Omar Cornut .<br/>
 [Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
+[ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
 
 ## License
 MIT - Free for everyone and any use.
