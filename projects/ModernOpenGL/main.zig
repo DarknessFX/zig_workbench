@@ -1,9 +1,12 @@
 //!zig-autodoc-section: SDL3
 //!  OpenGL SDL3 program.
 // Build using Zig 0.13.0
-// Credits : 
+// Credits :
 //   Introduction to OpenGL
 //   Mike Shah - https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox
+//
+// This is the complete final source code from the tutorial, check episode_##.zig
+// to follow along the progress and new features added from each episode.
 
 // ============================================================================
 // Globals.
@@ -202,8 +205,8 @@ fn MainLoop() void {
   }
 }
 
-/// Initialization of the graphics application. Typically this will involver
-/// settings up a window and the OpenGL context (with appropriate version)
+/// Initialization of the graphics application. Typically this will involve
+/// setting up a window and OpenGL context (with appropriate version)
 fn InitializeProgram() void {
   // Initialize SDL
   if (sdl.SDL_Init(sdl.SDL_INIT_VIDEO) < 0) {
@@ -211,7 +214,7 @@ fn InitializeProgram() void {
     win.ExitProcess(1);
   }
 
-  // Setup OpenGL Context
+  // Setup OpenGL Attributes
   // Use OpenGL 4.6 core or greater
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 4);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MINOR_VERSION, 6);
@@ -222,7 +225,9 @@ fn InitializeProgram() void {
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DEPTH_SIZE, 24);
 
   // Create an application window using OpenGL that supports SDL
-  gAppWindow = sdl.SDL_CreateWindow("SDL3 OpenGL: [Arrow,Pg Down/Up]=Position, [1..6]=Rotation, [IJKLUO]=Scale, [WASDQE]=Camera | SHIFT+ESC = Quit", gScreenWidth, gScreenHeight, sdl.SDL_WINDOW_OPENGL);
+  gAppWindow = sdl.SDL_CreateWindow(
+    "SDL3 OpenGL: [Arrow,Pg Down/Up]=Position, [1..6]=Rotation, [IJKLUO]=Scale, [WASDQE]=Camera | SHIFT+ESC = Quit", 
+    gScreenWidth, gScreenHeight, sdl.SDL_WINDOW_OPENGL);
   if (gAppWindow == null) {
     print("SDL3 Window was not able to be created.\n", .{});
     win.ExitProcess(1);
@@ -258,7 +263,7 @@ fn GetGLVersionInfo() void {
   print("Shader  : {s}\n", .{ sdl.glGetString(sdl.GL_SHADING_LANGUAGE_VERSION)});
 }
 
-/// Closes all objects still in use befor terminate the program.
+/// Closes all objects still in use before terminate the program.
 fn CleanUp() void {
   _ = sdl.SDL_GL_DeleteContext(gOpenGLCtx);
   sdl.SDL_DestroyWindow(gAppWindow);
@@ -321,7 +326,6 @@ fn Input() void {
   if (keyboardstate[sdl.SDL_SCANCODE_K]         != 0)  { g_uScale[1] -= 0.01; }
   if (keyboardstate[sdl.SDL_SCANCODE_U]         != 0)  { g_uScale[2] += 0.01; }
   if (keyboardstate[sdl.SDL_SCANCODE_O]         != 0)  { g_uScale[2] -= 0.01; }
-
   if (keyboardstate[sdl.SDL_SCANCODE_A]         != 0)  { gCamera.MoveLeft(); }
   if (keyboardstate[sdl.SDL_SCANCODE_D]         != 0)  { gCamera.MoveRight(); }
   if (keyboardstate[sdl.SDL_SCANCODE_W]         != 0)  { gCamera.MoveForward(); }
@@ -417,7 +421,7 @@ fn VertexSpecification() void {
   sdl.glGenBuffers(1, &gVertexBufferObject);
   sdl.glBindBuffer(sdl.GL_ARRAY_BUFFER, gVertexBufferObject);
 
-  // Now, in oput currently binded (i.e selected) buffer, we populate the data
+  // Now, in our currently binded (i.e selected) buffer, we populate the data
   // from our vertexPositions (which is on the CPU), onto a buffer that will 
   // live on the GPU
   sdl.glBufferData(
@@ -649,7 +653,7 @@ fn CheckErrorStatus() void {
 }
 
 // From C++ Macro : #define GLCheck(x) GLClearErrors(); x; GLCheckErrorStatus();
-// Inline function to debug.print errors wrap OpenGL calls with error checking
+// Inline function to debug.print errors, call this before and after OpenGL calls
 inline fn GLCheck() void {
   CheckErrorStatus();
   ClearAllErrors();
