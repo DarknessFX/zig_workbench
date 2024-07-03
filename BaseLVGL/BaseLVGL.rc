@@ -19,7 +19,7 @@ BEGIN
             VALUE "FileDescription", "BaseLVGL"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "BaseLVGL.exe"
-            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
             VALUE "OriginalFilename", "BaseLVGL.exe"
             VALUE "ProductName", "BaseLVGL"
             VALUE "ProductVersion", "1.0.0.0"

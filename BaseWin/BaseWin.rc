@@ -19,7 +19,7 @@ BEGIN
             VALUE "FileDescription", "BaseWin"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "BaseWin.exe"
-            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
             VALUE "OriginalFilename", "BaseWin.exe"
             VALUE "ProductName", "BaseWin"
             VALUE "ProductVersion", "1.0.0.0"

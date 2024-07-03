@@ -19,7 +19,7 @@ BEGIN
             VALUE "FileDescription", "BaseDX11"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "BaseDX11.exe"
-            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
             VALUE "OriginalFilename", "BaseDX11.exe"
             VALUE "ProductName", "BaseDX11"
             VALUE "ProductVersion", "1.0.0.0"

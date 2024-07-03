@@ -19,7 +19,7 @@ BEGIN
             VALUE "FileDescription", "BaseSDL3"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "BaseSDL3.exe"
-            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
             VALUE "OriginalFilename", "BaseSDL3.exe"
             VALUE "ProductName", "BaseSDL3"
             VALUE "ProductVersion", "1.0.0.0"

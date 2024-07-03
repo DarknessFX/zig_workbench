@@ -19,7 +19,7 @@ BEGIN
             VALUE "FileDescription", "Basemicroui"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "Basemicroui.exe"
-            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
             VALUE "OriginalFilename", "Basemicroui.exe"
             VALUE "ProductName", "Basemicroui"
             VALUE "ProductVersion", "1.0.0.0"

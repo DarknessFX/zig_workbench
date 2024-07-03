@@ -1,6 +1,6 @@
 #include "windows.h"
 
-IDI_ICON1 ICON  "BaseOpenGL.ico"
+IDI_ICON1 ICON  "BaseRayLib.ico"
 
 1 VERSIONINFO
  FILEVERSION 1,0,0,0
@@ -15,13 +15,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "BaseOpenGL"
-            VALUE "FileDescription", "BaseOpenGL"
+            VALUE "CompanyName", "RayLib"
+            VALUE "FileDescription", "RayLib"
             VALUE "FileVersion", "1.0.0.0"
-            VALUE "InternalName", "BaseOpenGL.exe"
+            VALUE "InternalName", "RayLib.exe"
             VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
-            VALUE "OriginalFilename", "BaseOpenGL.exe"
-            VALUE "ProductName", "BaseOpenGL"
+            VALUE "OriginalFilename", "RayLib.exe"
+            VALUE "ProductName", "RayLib"
             VALUE "ProductVersion", "1.0.0.0"
         END
     END

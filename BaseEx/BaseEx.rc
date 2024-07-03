@@ -19,7 +19,7 @@ BEGIN
             VALUE "FileDescription", "BaseEx"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "BaseEx.exe"
-            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
             VALUE "OriginalFilename", "BaseEx.exe"
             VALUE "ProductName", "BaseEx"
             VALUE "ProductVersion", "1.0.0.0"
