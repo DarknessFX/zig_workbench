@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,10 +19,10 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
+/*
  *  \file SDL_test_font.h
  *
- *  \brief Font related functions of SDL test framework.
+ *  Font related functions of SDL test framework.
  *
  *  This code is a part of the SDL test library, not the main SDL library.
  */
@@ -30,7 +30,7 @@
 #ifndef SDL_test_font_h_
 #define SDL_test_font_h_
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -42,8 +42,8 @@ extern int FONT_CHARACTER_SIZE;
 
 #define FONT_LINE_HEIGHT    (FONT_CHARACTER_SIZE + 2)
 
-/**
- *  \brief Draw a string in the currently set font.
+/*
+ *  Draw a string in the currently set font.
  *
  *  \param renderer The renderer to draw on.
  *  \param x The X coordinate of the upper left corner of the character.
@@ -54,8 +54,8 @@ extern int FONT_CHARACTER_SIZE;
  */
 int SDLTest_DrawCharacter(SDL_Renderer *renderer, float x, float y, Uint32 c);
 
-/**
- *  \brief Draw a UTF-8 string in the currently set font.
+/*
+ *  Draw a UTF-8 string in the currently set font.
  *
  *  The font currently only supports characters in the Basic Latin and Latin-1 Supplement sets.
  *
@@ -68,8 +68,8 @@ int SDLTest_DrawCharacter(SDL_Renderer *renderer, float x, float y, Uint32 c);
  */
 int SDLTest_DrawString(SDL_Renderer *renderer, float x, float y, const char *s);
 
-/**
- *  \brief Data used for multi-line text output
+/*
+ *  Data used for multi-line text output
  */
 typedef struct SDLTest_TextWindow
 {
@@ -79,8 +79,8 @@ typedef struct SDLTest_TextWindow
     char **lines;
 } SDLTest_TextWindow;
 
-/**
- *  \brief Create a multi-line text output window
+/*
+ *  Create a multi-line text output window
  *
  *  \param x The X coordinate of the upper left corner of the window.
  *  \param y The Y coordinate of the upper left corner of the window.
@@ -93,8 +93,8 @@ typedef struct SDLTest_TextWindow
  */
 SDLTest_TextWindow *SDLTest_TextWindowCreate(float x, float y, float w, float h);
 
-/**
- *  \brief Display a multi-line text output window
+/*
+ *  Display a multi-line text output window
  *
  *  This function should be called every frame to display the text
  *
@@ -105,8 +105,8 @@ SDLTest_TextWindow *SDLTest_TextWindowCreate(float x, float y, float w, float h)
  */
 void SDLTest_TextWindowDisplay(SDLTest_TextWindow *textwin, SDL_Renderer *renderer);
 
-/**
- *  \brief Add text to a multi-line text output window
+/*
+ *  Add text to a multi-line text output window
  *
  *  Adds UTF-8 text to the end of the current text. The newline character starts a
  *  new line of text. The backspace character deletes the last character or, if the
@@ -120,8 +120,8 @@ void SDLTest_TextWindowDisplay(SDLTest_TextWindow *textwin, SDL_Renderer *render
  */
 void SDLTest_TextWindowAddText(SDLTest_TextWindow *textwin, SDL_PRINTF_FORMAT_STRING const char *fmt, ...) SDL_PRINTF_VARARG_FUNC(2);
 
-/**
- *  \brief Add text to a multi-line text output window
+/*
+ *  Add text to a multi-line text output window
  *
  *  Adds UTF-8 text to the end of the current text. The newline character starts a
  *  new line of text. The backspace character deletes the last character or, if the
@@ -135,8 +135,8 @@ void SDLTest_TextWindowAddText(SDLTest_TextWindow *textwin, SDL_PRINTF_FORMAT_ST
  */
 void SDLTest_TextWindowAddTextWithLength(SDLTest_TextWindow *textwin, const char *text, size_t len);
 
-/**
- *  \brief Clear the text in a multi-line text output window
+/*
+ *  Clear the text in a multi-line text output window
  *
  *  \param textwin The text output window
  *
@@ -144,8 +144,8 @@ void SDLTest_TextWindowAddTextWithLength(SDLTest_TextWindow *textwin, const char
  */
 void SDLTest_TextWindowClear(SDLTest_TextWindow *textwin);
 
-/**
- *  \brief Free the storage associated with a multi-line text output window
+/*
+ *  Free the storage associated with a multi-line text output window
  *
  *  \param textwin The text output window
  *
@@ -153,8 +153,8 @@ void SDLTest_TextWindowClear(SDLTest_TextWindow *textwin);
  */
 void SDLTest_TextWindowDestroy(SDLTest_TextWindow *textwin);
 
-/**
- *  \brief Cleanup textures used by font drawing functions.
+/*
+ *  Cleanup textures used by font drawing functions.
  */
 void SDLTest_CleanupTextDrawing(void);
 
@@ -162,6 +162,6 @@ void SDLTest_CleanupTextDrawing(void);
 #ifdef __cplusplus
 }
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_test_font_h_ */

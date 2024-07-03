@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,18 +20,18 @@
 */
 
 /**
- *  \file SDL_locale.h
+ * # CategoryLocale
  *
- *  \brief Include file for SDL locale services
+ * SDL locale services.
  */
 
 #ifndef SDL_locale_h
 #define SDL_locale_h
 
-#include "SDL_stdinc.h"
-#include "SDL_error.h"
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_error.h>
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 /* *INDENT-OFF* */
@@ -39,7 +39,18 @@ extern "C" {
 /* *INDENT-ON* */
 #endif
 
-
+/**
+ * A struct to provide locale data.
+ *
+ * Locale data is split into a spoken language, like English, and an optional
+ * country, like Canada. The language will be in ISO-639 format (so English
+ * would be "en"), and the country, if not NULL, will be an ISO-3166 country
+ * code (so Canada would be "CA").
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetPreferredLocales
+ */
 typedef struct SDL_Locale
 {
     const char *language;  /**< A language name, like "en" for English. */
@@ -84,11 +95,12 @@ typedef struct SDL_Locale
  * preferred locales.
  *
  * \returns array of locales, terminated with a locale with a NULL language
- *          field. Will return NULL on error.
+ *          field. Will return NULL on error; call SDL_GetError() for more
+ *          information.
  *
  * \since This function is available since SDL 3.0.0.
  */
-extern DECLSPEC SDL_Locale * SDLCALL SDL_GetPreferredLocales(void);
+extern SDL_DECLSPEC SDL_Locale * SDLCALL SDL_GetPreferredLocales(void);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
@@ -96,6 +108,6 @@ extern DECLSPEC SDL_Locale * SDLCALL SDL_GetPreferredLocales(void);
 }
 /* *INDENT-ON* */
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_locale_h */

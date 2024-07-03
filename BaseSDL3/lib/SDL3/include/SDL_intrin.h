@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,16 +19,14 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
- *  \file SDL_intrin.h
- *
- *  \brief Header file for CPU intrinsics for SDL
+/*
+ *  Header file for CPU intrinsics for SDL
  */
 
 #ifndef SDL_intrin_h_
 #define SDL_intrin_h_
 
-#include "SDL_stdinc.h"
+#include <SDL3/SDL_stdinc.h>
 
 /* Need to do this here because intrin.h has C++ code in it */
 /* Visual Studio 2005 has a bug where intrin.h conflicts with winnt.h */
@@ -45,37 +43,37 @@ _m_prefetch(void *__P)
 }
 #endif /* __PRFCHWINTRIN_H */
 #endif /* __clang__ */
-#include <intrin.h"
+#include <intrin.h>
 
 #elif defined(__MINGW64_VERSION_MAJOR)
-#include <intrin.h"
+#include <intrin.h>
 #if defined(__ARM_NEON) && !defined(SDL_DISABLE_NEON)
 #  define SDL_NEON_INTRINSICS 1
-#  include <arm_neon.h"
+#  include <arm_neon.h>
 #endif
 
 #else
 /* altivec.h redefining bool causes a number of problems, see bugs 3993 and 4392, so you need to explicitly define SDL_ENABLE_ALTIVEC to have it included. */
 #if defined(__ALTIVEC__) && defined(SDL_ENABLE_ALTIVEC)
 #define SDL_ALTIVEC_INTRINSICS 1
-#include <altivec.h"
+#include <altivec.h>
 #endif
 #ifndef SDL_DISABLE_NEON
 #  ifdef __ARM_NEON
 #    define SDL_NEON_INTRINSICS 1
-#    include <arm_neon.h"
-#  elif defined(__WINDOWS__) || defined(__WINRT__) || defined(__GDK__)
+#    include <arm_neon.h>
+#  elif defined(SDL_PLATFORM_WINDOWS)
 /* Visual Studio doesn't define __ARM_ARCH, but _M_ARM (if set, always 7), and _M_ARM64 (if set, always 1). */
 #    ifdef _M_ARM
 #      define SDL_NEON_INTRINSICS 1
-#      include <armintr.h"
-#      include <arm_neon.h"
+#      include <armintr.h>
+#      include <arm_neon.h>
 #      define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
 #    endif
 #    if defined (_M_ARM64)
 #      define SDL_NEON_INTRINSICS 1
-#      include <arm64intr.h"
-#      include <arm64_neon.h"
+#      include <arm64intr.h>
+#      include <arm64_neon.h>
 #      define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
 #      define __ARM_ARCH 8
 #    endif
@@ -102,59 +100,59 @@ _m_prefetch(void *__P)
 #ifdef __loongarch64
 # ifndef SDL_DISABLE_LSX
 #  define SDL_LSX_INTRINSICS 1
-#  include <lsxintrin.h"
+#  include <lsxintrin.h>
 # endif
 # ifndef SDL_DISABLE_LASX
 #  define SDL_LASX_INTRINSICS 1
-#  include <lasxintrin.h"
+#  include <lasxintrin.h>
 # endif
 #endif
 
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 # if ((defined(_MSC_VER) && !defined(_M_X64)) || defined(__MMX__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_MMX)
 #  define SDL_MMX_INTRINSICS 1
-#  include <mmintrin.h"
+#  include <mmintrin.h>
 # endif
 # if (defined(_MSC_VER) || defined(__SSE__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_SSE)
 #  define SDL_SSE_INTRINSICS 1
-#  include <xmmintrin.h"
+#  include <xmmintrin.h>
 # endif
 # if (defined(_MSC_VER) || defined(__SSE2__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_SSE2)
 #  define SDL_SSE2_INTRINSICS 1
-#  include <emmintrin.h"
+#  include <emmintrin.h>
 # endif
 # if (defined(_MSC_VER) || defined(__SSE3__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_SSE3)
 #  define SDL_SSE3_INTRINSICS 1
-#  include <pmmintrin.h"
+#  include <pmmintrin.h>
 # endif
 # if (defined(_MSC_VER) || defined(__SSE4_1__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_SSE4_1)
 #  define SDL_SSE4_1_INTRINSICS 1
-#  include <smmintrin.h"
+#  include <smmintrin.h>
 # endif
 # if (defined(_MSC_VER) || defined(__SSE4_2__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_SSE4_2)
 #  define SDL_SSE4_2_INTRINSICS 1
-#  include <nmmintrin.h"
+#  include <nmmintrin.h>
 # endif
 # if defined(__clang__) && (defined(_MSC_VER) || defined(__SCE__)) && !defined(__AVX__) && !defined(SDL_DISABLE_AVX)
 #  define SDL_DISABLE_AVX       /* see https://reviews.llvm.org/D20291 and https://reviews.llvm.org/D79194 */
 # endif
 # if (defined(_MSC_VER) || defined(__AVX__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_AVX)
 #  define SDL_AVX_INTRINSICS 1
-#  include <immintrin.h"
+#  include <immintrin.h>
 # endif
 # if defined(__clang__) && (defined(_MSC_VER) || defined(__SCE__)) && !defined(__AVX2__) && !defined(SDL_DISABLE_AVX2)
 #  define SDL_DISABLE_AVX2      /* see https://reviews.llvm.org/D20291 and https://reviews.llvm.org/D79194 */
 # endif
 # if (defined(_MSC_VER) || defined(__AVX2__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_AVX2)
 #  define SDL_AVX2_INTRINSICS 1
-#  include <immintrin.h"
+#  include <immintrin.h>
 # endif
 # if defined(__clang__) && (defined(_MSC_VER) || defined(__SCE__)) && !defined(__AVX512F__) && !defined(SDL_DISABLE_AVX512F)
 #  define SDL_DISABLE_AVX512F   /* see https://reviews.llvm.org/D20291 and https://reviews.llvm.org/D79194 */
 # endif
 # if (defined(_MSC_VER) || defined(__AVX512F__) || defined(SDL_HAS_TARGET_ATTRIBS)) && !defined(SDL_DISABLE_AVX512F)
 #  define SDL_AVX512F_INTRINSICS 1
-#  include <immintrin.h"
+#  include <immintrin.h>
 # endif
 #endif /* defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86) */
 

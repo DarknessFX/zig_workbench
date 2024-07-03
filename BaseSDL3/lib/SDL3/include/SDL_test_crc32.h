@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,9 +20,7 @@
 */
 
 /**
- *  \file SDL_test_crc32.h
- *
- *  \brief CRC32 functions of SDL test framework.
+ *  CRC32 functions of SDL test framework.
  *
  *  This code is a part of the SDL test library, not the main SDL library.
  */
@@ -36,7 +34,7 @@
 #ifndef SDL_test_crc32_h_
 #define SDL_test_crc32_h_
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -60,17 +58,17 @@ extern "C" {
  #define CRC32_POLY 0xEDB88320   /* Perl String::CRC32 compatible */
 #endif
 
-/**
+/*
  * Data structure for CRC32 (checksum) computation
  */
-  typedef struct {
+  typedef struct SDLTest_Crc32Context {
     CrcUint32    crc32_table[256]; /* CRC table */
   } SDLTest_Crc32Context;
 
 /* ---------- Function Prototypes ------------- */
 
-/**
- * \brief Initialize the CRC context
+/*
+ * Initialize the CRC context
  *
  * Note: The function initializes the crc table required for all crc calculations.
  *
@@ -82,8 +80,8 @@ extern "C" {
  int SDLTest_Crc32Init(SDLTest_Crc32Context *crcContext);
 
 
-/**
- * \brief calculate a crc32 from a data block
+/*
+ * calculate a crc32 from a data block
  *
  * \param crcContext         pointer to context variable
  * \param inBuf              input buffer to checksum
@@ -101,8 +99,8 @@ int SDLTest_Crc32CalcEnd(SDLTest_Crc32Context *crcContext, CrcUint32 *crc32);
 int SDLTest_Crc32CalcBuffer(SDLTest_Crc32Context *crcContext, CrcUint8 *inBuf, CrcUint32 inLen, CrcUint32 *crc32);
 
 
-/**
- * \brief clean up CRC context
+/*
+ * clean up CRC context
  *
  * \param crcContext        pointer to context variable
  *
@@ -117,6 +115,6 @@ int SDLTest_Crc32Done(SDLTest_Crc32Context *crcContext);
 #ifdef __cplusplus
 }
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_test_crc32_h_ */

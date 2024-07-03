@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,25 +19,19 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
- *  \file SDL_opengl.h
+/*
+ * This is a simple file to encapsulate the OpenGL API headers.
  *
- *  \brief This is a simple file to encapsulate the OpenGL API headers.
- */
-
-/**
- *  \def NO_SDL_GLEXT
- *
- *  Define this if you have your own version of glext.h and want to disable the
- *  version included in SDL_opengl.h.
+ * Define NO_SDL_GLEXT if you have your own version of glext.h and want
+ * to disable the version included in SDL_opengl.h.
  */
 
 #ifndef SDL_opengl_h_
 #define SDL_opengl_h_
 
-#include "SDL_platform.h"
+#include <SDL3/SDL_platform.h>
 
-#ifndef __IOS__  /* No OpenGL on iOS. */
+#ifndef SDL_PLATFORM_IOS  /* No OpenGL on iOS. */
 
 /*
  * Mesa 3-D graphics library
@@ -69,7 +63,7 @@
 #define __gl_h_
 
 #ifdef USE_MGL_NAMESPACE
-#include "gl_mangle.h"
+#include <SDL3/gl_mangle.h>
 #endif
 
 
@@ -77,11 +71,7 @@
  * Begin system-specific stuff.
  */
 
-#if defined(_WIN32) && !defined(__WIN32__) && !defined(__CYGWIN__)
-#define __WIN32__
-#endif
-
-#if defined(__WIN32__) && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 #  if (defined(_MSC_VER) || defined(__MINGW32__)) && defined(BUILD_GL32) /* tag specify we're building mesa as a DLL */
 #    define GLAPI __declspec(dllexport)
 #  elif (defined(_MSC_VER) || defined(__MINGW32__)) && defined(_DLL) /* tag specifying we're building for DLL runtime support */
@@ -90,7 +80,7 @@
 #    define GLAPI extern
 #  endif /* _STATIC_MESA support */
 #  if defined(__MINGW32__) && defined(GL_NO_STDCALL) || defined(UNDER_CE)  /* The generated DLLs by MingW with STDCALL are not compatible with the ones done by Microsoft's compilers */
-#    define GLAPIENTRY 
+#    define GLAPIENTRY
 #  else
 #    define GLAPIENTRY __stdcall
 #  endif
@@ -2095,7 +2085,7 @@ typedef void (APIENTRYP PFNGLMULTITEXCOORD4SVARBPROC) (GLenum target, const GLsh
  * defined in gl.h).  Otherwise, extensions will be included from glext.h.
  */
 #if !defined(NO_SDL_GLEXT) && !defined(GL_GLEXT_LEGACY)
-#include "SDL_opengl_glext.h"
+#include <SDL3/SDL_opengl_glext.h>
 #endif  /* GL_GLEXT_LEGACY */
 
 
@@ -2118,6 +2108,6 @@ typedef void (APIENTRYP PFNGLMULTITEXCOORD4SVARBPROC) (GLenum target, const GLsh
 
 #endif /* __gl_h_ */
 
-#endif /* !__IOS__ */
+#endif /* !SDL_PLATFORM_IOS */
 
 #endif /* SDL_opengl_h_ */

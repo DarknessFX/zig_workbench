@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,9 +20,7 @@
 */
 
 /**
- *  \file SDL_test_fuzzer.h
- *
- *  \brief Fuzzer functions of SDL test framework.
+ *  Fuzzer functions of SDL test framework.
  *
  *  This code is a part of the SDL test library, not the main SDL library.
  */
@@ -36,7 +34,7 @@
 #ifndef SDL_test_fuzzer_h_
 #define SDL_test_fuzzer_h_
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +47,6 @@ extern "C" {
 
 
 /**
- * \file
  * Note: The fuzzer implementation uses a static instance of random context
  * internally which makes it thread-UNsafe.
  */
@@ -379,6 +376,6 @@ int SDLTest_GetFuzzerInvocationCount(void);
 #ifdef __cplusplus
 }
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_test_fuzzer_h_ */

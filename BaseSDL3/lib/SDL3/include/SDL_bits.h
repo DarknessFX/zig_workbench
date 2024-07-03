@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,17 +20,17 @@
 */
 
 /**
- *  \file SDL_bits.h
+ * # CategoryBits
  *
- *  \brief Functions for fiddling with bits and bitmasks.
+ * Functions for fiddling with bits and bitmasks.
  */
 
 #ifndef SDL_bits_h_
 #define SDL_bits_h_
 
-#include "SDL_stdinc.h"
+#include <SDL3/SDL_stdinc.h>
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -40,13 +40,6 @@ extern "C" {
  *  \file SDL_bits.h
  */
 
-/**
- *  Get the index of the most significant bit. Result is undefined when called
- *  with 0. This operation can also be stated as "count leading zeroes" and
- *  "log base 2".
- *
- *  \return the index of the most significant bit, or -1 if the value is 0.
- */
 #if defined(__WATCOMC__) && defined(__386__)
 extern __inline int _SDL_bsr_watcom(Uint32);
 #pragma aux _SDL_bsr_watcom = \
@@ -56,8 +49,25 @@ extern __inline int _SDL_bsr_watcom(Uint32);
     modify exact [eax] nomemory;
 #endif
 
-SDL_FORCE_INLINE int
-SDL_MostSignificantBitIndex32(Uint32 x)
+/**
+ * Get the index of the most significant (set) bit in a 32-bit number.
+ *
+ * Result is undefined when called with 0. This operation can also be stated
+ * as "count leading zeroes" and "log base 2".
+ *
+ * Note that this is a forced-inline function in a header, and not a public
+ * API function available in the SDL library (which is to say, the code is
+ * embedded in the calling program and the linker and dynamic loader will not
+ * be able to find this function inside SDL itself).
+ *
+ * \param x the 32-bit value to examine.
+ * \returns the index of the most significant bit, or -1 if the value is 0.
+ *
+ * \threadsafety It is safe to call this function from any thread.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+SDL_FORCE_INLINE int SDL_MostSignificantBitIndex32(Uint32 x)
 {
 #if defined(__GNUC__) && (__GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4))
     /* Count Leading Zeroes builtin in GCC.
@@ -106,8 +116,26 @@ SDL_MostSignificantBitIndex32(Uint32 x)
 #endif
 }
 
-SDL_FORCE_INLINE SDL_bool
-SDL_HasExactlyOneBitSet32(Uint32 x)
+/**
+ * Determine if a unsigned 32-bit value has exactly one bit set.
+ *
+ * If there are no bits set (`x` is zero), or more than one bit set, this
+ * returns SDL_FALSE. If any one bit is exclusively set, this returns
+ * SDL_TRUE.
+ *
+ * Note that this is a forced-inline function in a header, and not a public
+ * API function available in the SDL library (which is to say, the code is
+ * embedded in the calling program and the linker and dynamic loader will not
+ * be able to find this function inside SDL itself).
+ *
+ * \param x the 32-bit value to examine.
+ * \returns SDL_TRUE if exactly one bit is set in `x`, SDL_FALSE otherwise.
+ *
+ * \threadsafety It is safe to call this function from any thread.
+ *
+ * \since This function is available since SDL 3.0.0.
+ */
+SDL_FORCE_INLINE SDL_bool SDL_HasExactlyOneBitSet32(Uint32 x)
 {
     if (x && !(x & (x - 1))) {
         return SDL_TRUE;
@@ -119,6 +147,6 @@ SDL_HasExactlyOneBitSet32(Uint32 x)
 #ifdef __cplusplus
 }
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_bits_h_ */

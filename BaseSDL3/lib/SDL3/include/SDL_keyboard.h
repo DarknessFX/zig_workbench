@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -20,39 +20,87 @@
 */
 
 /**
- *  \file SDL_keyboard.h
+ * # CategoryKeyboard
  *
- *  \brief Include file for SDL keyboard event handling
+ * SDL keyboard management.
  */
 
 #ifndef SDL_keyboard_h_
 #define SDL_keyboard_h_
 
-#include "SDL_stdinc.h"
-#include "SDL_error.h"
-#include "SDL_keycode.h"
-#include "SDL_video.h"
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_error.h>
+#include <SDL3/SDL_keycode.h>
+#include <SDL3/SDL_video.h>
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- *  \brief The SDL keysym structure, used in key events.
+ * This is a unique ID for a keyboard for the time it is connected to the
+ * system, and is never reused for the lifetime of the application.
  *
- *  \note  If you are looking for translated character input, see the ::SDL_EVENT_TEXT_INPUT event.
+ * If the keyboard is disconnected and reconnected, it will get a new ID.
+ *
+ * The ID value starts at 1 and increments from there. The value 0 is an
+ * invalid ID.
+ *
+ * \since This datatype is available since SDL 3.0.0.
  */
-typedef struct SDL_Keysym
-{
-    SDL_Scancode scancode;      /**< SDL physical key code - see ::SDL_Scancode for details */
-    SDL_Keycode sym;            /**< SDL virtual key code - see ::SDL_Keycode for details */
-    Uint16 mod;                 /**< current key modifiers */
-    Uint32 unused;
-} SDL_Keysym;
+typedef Uint32 SDL_KeyboardID;
 
 /* Function prototypes */
+
+/**
+ * Return whether a keyboard is currently connected.
+ *
+ * \returns SDL_TRUE if a keyboard is connected, SDL_FALSE otherwise.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetKeyboards
+ */
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_HasKeyboard(void);
+
+/**
+ * Get a list of currently connected keyboards.
+ *
+ * Note that this will include any device or virtual driver that includes
+ * keyboard functionality, including some mice, KVM switches, motherboard
+ * power buttons, etc. You should wait for input from a device before you
+ * consider it actively in use.
+ *
+ * \param count a pointer filled in with the number of keyboards returned.
+ * \returns a 0 terminated array of keyboards instance IDs which should be
+ *          freed with SDL_free(), or NULL on error; call SDL_GetError() for
+ *          more details.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetKeyboardInstanceName
+ * \sa SDL_HasKeyboard
+ */
+extern SDL_DECLSPEC SDL_KeyboardID *SDLCALL SDL_GetKeyboards(int *count);
+
+/**
+ * Get the name of a keyboard.
+ *
+ * This function returns "" if the keyboard doesn't have a name.
+ *
+ * The returned string follows the SDL_GetStringRule.
+ *
+ * \param instance_id the keyboard instance ID.
+ * \returns the name of the selected keyboard, or NULL on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetKeyboards
+ */
+extern SDL_DECLSPEC const char *SDLCALL SDL_GetKeyboardInstanceName(SDL_KeyboardID instance_id);
 
 /**
  * Query the window which currently has keyboard focus.
@@ -61,7 +109,7 @@ typedef struct SDL_Keysym
  *
  * \since This function is available since SDL 3.0.0.
  */
-extern DECLSPEC SDL_Window * SDLCALL SDL_GetKeyboardFocus(void);
+extern SDL_DECLSPEC SDL_Window * SDLCALL SDL_GetKeyboardFocus(void);
 
 /**
  * Get a snapshot of the current state of the keyboard.
@@ -84,7 +132,7 @@ extern DECLSPEC SDL_Window * SDLCALL SDL_GetKeyboardFocus(void);
  * Note: This function doesn't take into account whether shift has been
  * pressed or not.
  *
- * \param numkeys if non-NULL, receives the length of the returned array
+ * \param numkeys if non-NULL, receives the length of the returned array.
  * \returns a pointer to an array of key states.
  *
  * \since This function is available since SDL 3.0.0.
@@ -92,10 +140,10 @@ extern DECLSPEC SDL_Window * SDLCALL SDL_GetKeyboardFocus(void);
  * \sa SDL_PumpEvents
  * \sa SDL_ResetKeyboard
  */
-extern DECLSPEC const Uint8 *SDLCALL SDL_GetKeyboardState(int *numkeys);
+extern SDL_DECLSPEC const Uint8 *SDLCALL SDL_GetKeyboardState(int *numkeys);
 
 /**
- * Clear the state of the keyboard
+ * Clear the state of the keyboard.
  *
  * This function will generate key up events for all pressed keys.
  *
@@ -103,7 +151,7 @@ extern DECLSPEC const Uint8 *SDLCALL SDL_GetKeyboardState(int *numkeys);
  *
  * \sa SDL_GetKeyboardState
  */
-extern DECLSPEC void SDLCALL SDL_ResetKeyboard(void);
+extern SDL_DECLSPEC void SDLCALL SDL_ResetKeyboard(void);
 
 /**
  * Get the current key modifier state for the keyboard.
@@ -116,7 +164,7 @@ extern DECLSPEC void SDLCALL SDL_ResetKeyboard(void);
  * \sa SDL_GetKeyboardState
  * \sa SDL_SetModState
  */
-extern DECLSPEC SDL_Keymod SDLCALL SDL_GetModState(void);
+extern SDL_DECLSPEC SDL_Keymod SDLCALL SDL_GetModState(void);
 
 /**
  * Set the current key modifier state for the keyboard.
@@ -129,21 +177,23 @@ extern DECLSPEC SDL_Keymod SDLCALL SDL_GetModState(void);
  * This does not change the keyboard state, only the key modifier flags that
  * SDL reports.
  *
- * \param modstate the desired SDL_Keymod for the keyboard
+ * \param modstate the desired SDL_Keymod for the keyboard.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_GetModState
  */
-extern DECLSPEC void SDLCALL SDL_SetModState(SDL_Keymod modstate);
+extern SDL_DECLSPEC void SDLCALL SDL_SetModState(SDL_Keymod modstate);
 
 /**
- * Get the key code corresponding to the given scancode according to the
- * current keyboard layout.
+ * Get the key code corresponding to the given scancode according to a default
+ * en_US keyboard layout.
  *
  * See SDL_Keycode for details.
  *
- * \param scancode the desired SDL_Scancode to query
+ * \param scancode the desired SDL_Scancode to query.
+ * \param modstate the modifier state to use when translating the scancode to
+ *                 a keycode.
  * \returns the SDL_Keycode that corresponds to the given SDL_Scancode.
  *
  * \since This function is available since SDL 3.0.0.
@@ -151,28 +201,86 @@ extern DECLSPEC void SDLCALL SDL_SetModState(SDL_Keymod modstate);
  * \sa SDL_GetKeyName
  * \sa SDL_GetScancodeFromKey
  */
-extern DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromScancode(SDL_Scancode scancode);
+extern SDL_DECLSPEC SDL_Keycode SDLCALL SDL_GetDefaultKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
+
+/**
+ * Get the key code corresponding to the given scancode according to the
+ * current keyboard layout.
+ *
+ * See SDL_Keycode for details.
+ *
+ * \param scancode the desired SDL_Scancode to query.
+ * \param modstate the modifier state to use when translating the scancode to
+ *                 a keycode.
+ * \returns the SDL_Keycode that corresponds to the given SDL_Scancode.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetDefaultKeyFromScancode
+ * \sa SDL_GetKeyName
+ * \sa SDL_GetScancodeFromKey
+ */
+extern SDL_DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromScancode(SDL_Scancode scancode, SDL_Keymod modstate);
+
+/**
+ * Get the scancode corresponding to the given key code according to a default
+ * en_US keyboard layout.
+ *
+ * Note that there may be multiple scancode+modifier states that can generate
+ * this keycode, this will just return the first one found.
+ *
+ * \param key the desired SDL_Keycode to query.
+ * \param modstate a pointer to the modifier state that would be used when the
+ *                 scancode generates this key, may be NULL.
+ * \returns the SDL_Scancode that corresponds to the given SDL_Keycode.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetScancodeFromKey
+ * \sa SDL_GetScancodeName
+ */
+extern SDL_DECLSPEC SDL_Scancode SDLCALL SDL_GetDefaultScancodeFromKey(SDL_Keycode key, SDL_Keymod *modstate);
 
 /**
  * Get the scancode corresponding to the given key code according to the
  * current keyboard layout.
  *
- * See SDL_Scancode for details.
+ * Note that there may be multiple scancode+modifier states that can generate
+ * this keycode, this will just return the first one found.
  *
- * \param key the desired SDL_Keycode to query
+ * \param key the desired SDL_Keycode to query.
+ * \param modstate a pointer to the modifier state that would be used when the
+ *                 scancode generates this key, may be NULL.
  * \returns the SDL_Scancode that corresponds to the given SDL_Keycode.
  *
  * \since This function is available since SDL 3.0.0.
  *
+ * \sa SDL_GetDefaultScancodeFromKey
  * \sa SDL_GetKeyFromScancode
  * \sa SDL_GetScancodeName
  */
-extern DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromKey(SDL_Keycode key);
+extern SDL_DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromKey(SDL_Keycode key, SDL_Keymod *modstate);
+
+/**
+ * Set a human-readable name for a scancode.
+ *
+ * \param scancode the desired SDL_Scancode.
+ * \param name the name to use for the scancode, encoded as UTF-8. The string
+ *             is not copied, so the pointer given to this function must stay
+ *             valid while SDL is being used.
+ * \returns 0 on success or a negative error code on failure; call
+ *          SDL_GetError() for more information.
+ *
+ * \since This function is available since SDL 3.0.0.
+ *
+ * \sa SDL_GetScancodeName
+ */
+extern SDL_DECLSPEC int SDLCALL SDL_SetScancodeName(SDL_Scancode scancode, const char *name);
 
 /**
  * Get a human-readable name for a scancode.
  *
- * See SDL_Scancode for details.
+ * The returned string follows the SDL_GetStringRule.
  *
  * **Warning**: The returned name is by design not stable across platforms,
  * e.g. the name for `SDL_SCANCODE_LGUI` is "Left GUI" under Linux but "Left
@@ -183,7 +291,7 @@ extern DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromKey(SDL_Keycode key);
  * unsuitable for creating a stable cross-platform two-way mapping between
  * strings and scancodes.
  *
- * \param scancode the desired SDL_Scancode to query
+ * \param scancode the desired SDL_Scancode to query.
  * \returns a pointer to the name for the scancode. If the scancode doesn't
  *          have a name this function returns an empty string ("").
  *
@@ -191,13 +299,14 @@ extern DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromKey(SDL_Keycode key);
  *
  * \sa SDL_GetScancodeFromKey
  * \sa SDL_GetScancodeFromName
+ * \sa SDL_SetScancodeName
  */
-extern DECLSPEC const char *SDLCALL SDL_GetScancodeName(SDL_Scancode scancode);
+extern SDL_DECLSPEC const char *SDLCALL SDL_GetScancodeName(SDL_Scancode scancode);
 
 /**
  * Get a scancode from a human-readable name.
  *
- * \param name the human-readable scancode name
+ * \param name the human-readable scancode name.
  * \returns the SDL_Scancode, or `SDL_SCANCODE_UNKNOWN` if the name wasn't
  *          recognized; call SDL_GetError() for more information.
  *
@@ -207,14 +316,14 @@ extern DECLSPEC const char *SDLCALL SDL_GetScancodeName(SDL_Scancode scancode);
  * \sa SDL_GetScancodeFromKey
  * \sa SDL_GetScancodeName
  */
-extern DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromName(const char *name);
+extern SDL_DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromName(const char *name);
 
 /**
  * Get a human-readable name for a key.
  *
- * See SDL_Scancode and SDL_Keycode for details.
+ * The returned string follows the SDL_GetStringRule.
  *
- * \param key the desired SDL_Keycode to query
+ * \param key the desired SDL_Keycode to query.
  * \returns a pointer to a UTF-8 string that stays valid at least until the
  *          next call to this function. If you need it around any longer, you
  *          must copy it. If the key doesn't have a name, this function
@@ -226,12 +335,12 @@ extern DECLSPEC SDL_Scancode SDLCALL SDL_GetScancodeFromName(const char *name);
  * \sa SDL_GetKeyFromScancode
  * \sa SDL_GetScancodeFromKey
  */
-extern DECLSPEC const char *SDLCALL SDL_GetKeyName(SDL_Keycode key);
+extern SDL_DECLSPEC const char *SDLCALL SDL_GetKeyName(SDL_Keycode key);
 
 /**
  * Get a key code from a human-readable name.
  *
- * \param name the human-readable key name
+ * \param name the human-readable key name.
  * \returns key code, or `SDLK_UNKNOWN` if the name wasn't recognized; call
  *          SDL_GetError() for more information.
  *
@@ -241,7 +350,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetKeyName(SDL_Keycode key);
  * \sa SDL_GetKeyName
  * \sa SDL_GetScancodeFromName
  */
-extern DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromName(const char *name);
+extern SDL_DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromName(const char *name);
 
 /**
  * Start accepting Unicode text input events.
@@ -251,6 +360,8 @@ extern DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromName(const char *name);
  * and SDL_TextEditingEvent (SDL_EVENT_TEXT_EDITING) events. Please use this
  * function in pair with SDL_StopTextInput().
  *
+ * Text input events are not received by default.
+ *
  * On some platforms using this function activates the screen keyboard.
  *
  * \since This function is available since SDL 3.0.0.
@@ -258,7 +369,7 @@ extern DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromName(const char *name);
  * \sa SDL_SetTextInputRect
  * \sa SDL_StopTextInput
  */
-extern DECLSPEC void SDLCALL SDL_StartTextInput(void);
+extern SDL_DECLSPEC void SDLCALL SDL_StartTextInput(void);
 
 /**
  * Check whether or not Unicode text input events are enabled.
@@ -269,16 +380,18 @@ extern DECLSPEC void SDLCALL SDL_StartTextInput(void);
  *
  * \sa SDL_StartTextInput
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_TextInputActive(void);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_TextInputActive(void);
 
 /**
  * Stop receiving any text input events.
+ *
+ * Text input events are not received by default.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_StartTextInput
  */
-extern DECLSPEC void SDLCALL SDL_StopTextInput(void);
+extern SDL_DECLSPEC void SDLCALL SDL_StopTextInput(void);
 
 /**
  * Dismiss the composition window/IME without disabling the subsystem.
@@ -288,19 +401,13 @@ extern DECLSPEC void SDLCALL SDL_StopTextInput(void);
  * \sa SDL_StartTextInput
  * \sa SDL_StopTextInput
  */
-extern DECLSPEC void SDLCALL SDL_ClearComposition(void);
-
-/**
- * Returns if an IME Composite or Candidate window is currently shown.
- *
- * \returns SDL_TRUE if shown, else SDL_FALSE
- *
- * \since This function is available since SDL 3.0.0.
- */
-extern DECLSPEC SDL_bool SDLCALL SDL_TextInputShown(void);
+extern SDL_DECLSPEC void SDLCALL SDL_ClearComposition(void);
 
 /**
  * Set the rectangle used to type Unicode text inputs.
+ *
+ * Native input methods will place a window with word suggestions near it,
+ * without covering the text being inputted.
  *
  * To start text input in a given location, this function is intended to be
  * called before SDL_StartTextInput, although some platforms support moving
@@ -311,7 +418,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_TextInputShown(void);
  * any feedback.
  *
  * \param rect the SDL_Rect structure representing the rectangle to receive
- *             text (ignored if NULL)
+ *             text (ignored if NULL).
  * \returns 0 on success or a negative error code on failure; call
  *          SDL_GetError() for more information.
  *
@@ -319,7 +426,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_TextInputShown(void);
  *
  * \sa SDL_StartTextInput
  */
-extern DECLSPEC int SDLCALL SDL_SetTextInputRect(const SDL_Rect *rect);
+extern SDL_DECLSPEC int SDLCALL SDL_SetTextInputRect(const SDL_Rect *rect);
 
 /**
  * Check whether the platform has screen keyboard support.
@@ -332,24 +439,24 @@ extern DECLSPEC int SDLCALL SDL_SetTextInputRect(const SDL_Rect *rect);
  * \sa SDL_StartTextInput
  * \sa SDL_ScreenKeyboardShown
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_HasScreenKeyboardSupport(void);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_HasScreenKeyboardSupport(void);
 
 /**
  * Check whether the screen keyboard is shown for given window.
  *
- * \param window the window for which screen keyboard should be queried
+ * \param window the window for which screen keyboard should be queried.
  * \returns SDL_TRUE if screen keyboard is shown or SDL_FALSE if not.
  *
  * \since This function is available since SDL 3.0.0.
  *
  * \sa SDL_HasScreenKeyboardSupport
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_ScreenKeyboardShown(SDL_Window *window);
+extern SDL_DECLSPEC SDL_bool SDLCALL SDL_ScreenKeyboardShown(SDL_Window *window);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_keyboard_h_ */

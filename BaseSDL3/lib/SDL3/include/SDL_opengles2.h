@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,31 +19,30 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
- *  \file SDL_opengles2.h
- *
- *  \brief This is a simple file to encapsulate the OpenGL ES 2.0 API headers.
+/*
+ * This is a simple file to encapsulate the OpenGL ES 2.0 API headers.
  */
-#include "SDL_platform_defines.h"
+
+#include <SDL3/SDL_platform_defines.h>
 
 #if !defined(_MSC_VER) && !defined(SDL_USE_BUILTIN_OPENGL_DEFINITIONS)
 
-#ifdef __IOS__
-#include <OpenGLES/ES2/gl.h"
-#include <OpenGLES/ES2/glext.h"
+#ifdef SDL_PLATFORM_IOS
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
 #else
-#include <GLES2/gl2platform.h"
-#include <GLES2/gl2.h"
-#include <GLES2/gl2ext.h"
+#include <GLES2/gl2platform.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #endif
 
 #else /* _MSC_VER */
 
 /* OpenGL ES2 headers for Visual Studio */
-#include "SDL_opengles2_khrplatform.h"
-#include "SDL_opengles2_gl2platform.h"
-#include "SDL_opengles2_gl2.h"
-#include "SDL_opengles2_gl2ext.h"
+#include <SDL3/SDL_opengles2_khrplatform.h>
+#include <SDL3/SDL_opengles2_gl2platform.h>
+#include <SDL3/SDL_opengles2_gl2.h>
+#include <SDL3/SDL_opengles2_gl2ext.h>
 
 #endif /* _MSC_VER */
 

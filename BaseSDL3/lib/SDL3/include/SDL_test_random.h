@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 /**
  *  \file SDL_test_random.h
  *
- *  \brief Random number generator related function of SDL test framework.
+ *  Random number generator related function of SDL test framework.
  *
  *  This code is a part of the SDL test library, not the main SDL library.
  */
@@ -40,7 +40,7 @@
 #ifndef SDL_test_random_h_
 #define SDL_test_random_h_
 
-#include "SDL_begin_code.h"
+#include <SDL3/SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -56,7 +56,7 @@ extern "C" {
 /*
  * Context structure for the random number generator state.
  */
-  typedef struct {
+  typedef struct SDLTest_RandomContext {
     unsigned int a;
     unsigned int x;
     unsigned int c;
@@ -68,7 +68,7 @@ extern "C" {
 /* --- Function prototypes */
 
 /**
- *  \brief Initialize random number generator with two integers.
+ *  Initialize random number generator with two integers.
  *
  *  Note: The random sequence of numbers returned by ...Random() is the
  *  same for the same two integers and has a period of 2^31.
@@ -81,7 +81,7 @@ extern "C" {
  void SDLTest_RandomInit(SDLTest_RandomContext *rndContext, unsigned int xi, unsigned int ci);
 
 /**
- *  \brief Initialize random number generator based on current system time.
+ *  Initialize random number generator based on current system time.
  *
  *  \param rndContext     pointer to context structure
  *
@@ -90,7 +90,7 @@ extern "C" {
 
 
 /**
- *  \brief Initialize random number generator based on current system time.
+ *  Initialize random number generator based on current system time.
  *
  *  Note: ...RandomInit() or ...RandomInitTime() must have been called
  *  before using this function.
@@ -107,6 +107,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#include "SDL_close_code.h"
+#include <SDL3/SDL_close_code.h>
 
 #endif /* SDL_test_random_h_ */
