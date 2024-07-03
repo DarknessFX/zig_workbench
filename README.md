@@ -22,8 +22,6 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 
 ## Templates
 
-Zig have a useful built in feature: *zig init* that creates a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
-
 | Folder | Description | /Subsystem |
 | ------------- | ------------- | ------------- |
 | **Base** | Template for a console program. | Console |
@@ -31,8 +29,9 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
 | **BaseWin** | Template for a Windows program. | Windows |
 | **BaseWinEx** | Template for a Windows program, Windows API as submodule. | Windows |
 | **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
-| **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **BaseLVGL** | Template with [LVGL](https://lvgl.io/) . | Console |
+| **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
+| **BaseRayLib** | Template with [RayLib](https://www.raylib.com/) . | Console |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **BaseSDL3** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
@@ -54,6 +53,8 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
 > Current VSCode + ZLS extension do not accept **@cInclude** relative to project folder and will break builds.<br/>
 > After open your new project, remember to edit **.zig** files **@cInclude** including your full path and using / folder separator.
 
+Zig have a useful built in feature: *zig init* that creates a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
+
 </details> 
  
  <details>
@@ -64,6 +65,15 @@ All necessary libraries are inside the template.<br/>
 Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
 
 ImGui_Memory_Editor: Edited from Dear Bindings output. Sample inside all ImGui templates and usage details at <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
+</details>
+
+ <details>
+  <summary><ins>About LVGL</ins></summary>
+<pre>Using <a href="https://github.com/lvgl/lvgl" target="_blank">LVGL from source</a> (20231105, 9.0 Preview).
+Used parts of code from <a href="https://github.com/lvgl/lv_port_pc_visual_studio" target="_blank">lv_port_pc_visual_studio</a> (lv_conf and main source).
+All necessary libraries are inside the template.
+Download Demos and Examples folders from the GitHub source<br/>
+(and don't forget to add all .C files necessary to build).</pre>
 </details>
 
 <details>
@@ -77,13 +87,12 @@ error: member access within misaligned address</i> and without the
 <a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
 
- <details>
-  <summary><ins>About LVGL</ins></summary>
-<pre>Using <a href="https://github.com/lvgl/lvgl" target="_blank">LVGL from source</a> (20231105, 9.0 Preview).
-Used parts of code from <a href="https://github.com/lvgl/lv_port_pc_visual_studio" target="_blank">lv_port_pc_visual_studio</a> (lv_conf and main source).
-All necessary libraries are inside the template.
-Download Demos and Examples folders from the GitHub source<br/>
-(and don't forget to add all .C files necessary to build).</pre>
+<details>
+  <summary><ins>About RayLib</ins></summary>
+<pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib from source</a> (v5.0 from 20231118).
+Rebuild the raylib.dll because the original was compiled with 
+/MT (Multi-thread) and Zig is allergic of this kind of DLLS, 
+changing the compile option to /MD solve the problem.</pre>
 </details>
 
 <details>
@@ -97,7 +106,7 @@ Download Demos and Examples folders from the GitHub source<br/>
 
 <details>
   <summary><ins>About SDL3 Preview</ins></summary>
-<pre>&nbsp;&nbsp;Built from source in 20231102.</pre>
+<pre>&nbsp;&nbsp;Built from source in 20240624, version 3.1.2.</pre>
 </details>
 
 <details>
@@ -283,6 +292,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
 [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
+[RayLib](https://github.com/raysan5/raylib) from Ramon Santamaria (@raysan5) .<br/>
 
 ## License
 MIT - Free for everyone and any use.
@@ -295,8 +305,9 @@ https://github.com/DarknessFX/zig_workbench
 <pre>Giving Google a little help pairing Zig + LIB words, because it find my twitter posts easier than this repo:
 BaseWinEx   = Zig Windows program template with Windows API as submodule.
 BaseImGui   = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer.
-Basemicroui = Zig microui Windows program template with renderers: SDL2, Windows GDI.
 BaseLVGL    = Zig LVGL Windows program template.
+Basemicroui = Zig microui Windows program template with renderers: SDL2, Windows GDI.
+BaseRayLib  = Zig RayLib Windows program template.
 BaseSDL2    = Zig SDL2 Windows program template.
 BaseSDL3    = Zig SDL3 Windows program template.
 BaseOpenGL  = Zig OpenGL GL.h Windows program template.
