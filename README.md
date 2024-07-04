@@ -145,11 +145,19 @@ All necessary libraries are inside the template.</pre>
 
 <details>
   <summary><ins>ModernOpenGL Info</ins></summary>
-All files at Lib/SDL3 are the original ones from SDL Github, GLAD generated for 4.6 Core. For this project I did not use any zig binds or wrappers, just plain cImport.<br/>
-A copy of SDL.h and glad.h exist at Lib root just replacing &lt;&gt; with "", this change made easier for VSCode and ZLS display auto-complete.<br/>
-I tried to @cImport GLM OpenGL Mathematics "C" version cGML, @import ziglm and glm-zig, but each have their own quirks and styles while I'm wanted to keep the source code similar to the episodes, for this reason I built my own GLM.ZIG library with just a handful of used functions.<br/>
-There are some small changes implemented from the original tutorial code, mostly adding full Translate, Rotate, Scale, Keyboard and Mouse Movement.<br/>
-The Window Caption have a brief instruction of the keyboard settings and also, as my default, I used SHIFT+ESC to close the program.<br/>
+<pre>All files at Lib/SDL3 are the original ones from SDL Github, 
+GLAD generated for 4.6 Core. For this project I did not use any 
+zig binds or wrappers, just plain cImport.
+A copy of SDL.h and glad.h exist at Lib root just replacing &lt;&gt; with "",
+this change made easier for VSCode and ZLS display auto-complete.
+I tried to @cImport GLM OpenGL Mathematics "C" version cGML, @import ziglm
+and glm-zig, but each have their own quirks and styles while I'm wanted to 
+keep the source code similar to the episodes, for this reason I built my 
+own GLM.ZIG library with just a handful of used functions.
+There are some small changes implemented from the original tutorial code, 
+mostly adding full Translate, Rotate, Scale, Keyboard and Mouse Movement.
+The Window Caption have a brief instruction of the keyboard settings and 
+also, as my default, I used SHIFT+ESC to close the program.</pre>
 </details>
 
 ## Libraries
