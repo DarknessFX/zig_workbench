@@ -92,8 +92,8 @@ error: member access within misaligned address</i> and without the
 <pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib from source</a> (v5.0 from 20231118).
 Using <a href="https://github.com/raysan5/raygui" target="_blank">RayGUI from source</a> (v4.1.0-dev from 20240704).
 Rebuild raylib.dll because the original was compiled with 
-/MT (Multi-thread) and Zig is allergic of this kind of DLLS, 
-changing the compile option to /MD solve the problem.
+/MT (Multi-thread) and Zig is allergic of this kind of DLL, 
+changing the compile option to /MD solved the problem.
 Raygui.h edited to fix a problem with Zig cImport where C 
 sizeof(int) is treated as [*c]int instead of usize.
 </pre>
@@ -296,7 +296,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
 [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
-[RayLib](https://github.com/raysan5/raylib) from Ramon Santamaria (@raysan5) .<br/>
+[RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui)  from Ramon Santamaria (@raysan5) .<br/>
 
 ## License
 MIT - Free for everyone and any use.
@@ -311,7 +311,7 @@ BaseWinEx   = Zig Windows program template with Windows API as submodule.
 BaseImGui   = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer.
 BaseLVGL    = Zig LVGL Windows program template.
 Basemicroui = Zig microui Windows program template with renderers: SDL2, Windows GDI.
-BaseRayLib  = Zig RayLib Windows program template.
+BaseRayLib  = Zig RayLib and RayGUI Windows program template.
 BaseSDL2    = Zig SDL2 Windows program template.
 BaseSDL3    = Zig SDL3 Windows program template.
 BaseOpenGL  = Zig OpenGL GL.h Windows program template.
