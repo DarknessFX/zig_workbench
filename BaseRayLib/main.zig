@@ -8,13 +8,13 @@ const std = @import("std");
 // Use full path for all cIncludes:
 //   @cInclude("C:/BaseRayLib/lib/raylib.h"); 
 const rl = @cImport({ 
-  @cInclude("D:/workbench/Zig/BaseRayLib/lib/raylib/raylib.h"); 
+  @cInclude("lib/raylib/raylib.h"); 
 });
-const gl = @cImport({ @cInclude("D:/workbench/Zig/BaseRayLib/lib/raylib/rlgl.h"); });
-const rm = @cImport({ @cInclude("D:/workbench/Zig/BaseRayLib/lib/raylib/raymath.h"); });
+const gl = @cImport({ @cInclude("lib/raylib/rlgl.h"); });
+const rm = @cImport({ @cInclude("lib/raylib/raymath.h"); });
 const ui = @cImport({ 
   @cDefine("RAYGUI_IMPLEMENTATION","");
-  @cInclude("D:/workbench/Zig/BaseRayLib/lib/raylib/raygui.h"); 
+  @cInclude("lib/raylib/raygui.h"); 
 });
 
 const WINDOW_WIDTH: usize  = 1280;
