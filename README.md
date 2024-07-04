@@ -31,7 +31,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **BaseImGui** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **BaseLVGL** | Template with [LVGL](https://lvgl.io/) . | Console |
 | **Basemicroui** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
-| **BaseRayLib** | Template with [RayLib](https://www.raylib.com/) . | Console |
+| **BaseRayLib** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console |
 | **BaseSDL2** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **BaseSDL3** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
@@ -90,9 +90,13 @@ error: member access within misaligned address</i> and without the
 <details>
   <summary><ins>About RayLib</ins></summary>
 <pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib from source</a> (v5.0 from 20231118).
-Rebuild the raylib.dll because the original was compiled with 
+Using <a href="https://github.com/raysan5/raygui" target="_blank">RayGUI from source</a> (v4.1.0-dev from 20240704).
+Rebuild raylib.dll because the original was compiled with 
 /MT (Multi-thread) and Zig is allergic of this kind of DLLS, 
-changing the compile option to /MD solve the problem.</pre>
+changing the compile option to /MD solve the problem.
+Raygui.h edited to fix a problem with Zig cImport where C 
+sizeof(int) is treated as [*c]int instead of usize.
+</pre>
 </details>
 
 <details>
