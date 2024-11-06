@@ -37,6 +37,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **BaseOpenGL** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **BaseGLFW** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **BaseDX11** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
+| **BaseWebGPU** | Template with [WebGPU](https://www.w3.org/TR/webgpu/), able to build to Web (HTML5 Wasm) and Windows (DirectX12). (probably Linux (Vulkan) and Mac (Metal) too). | Windows + Web |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -119,6 +120,19 @@ sizeof(int) is treated as [*c]int instead of usize.
 GLAD 2.0 (OpenGL 3.3 Compatibility).
 All necessary libraries are inside the template.</pre>
 </details>
+
+<details>
+  <summary><ins>About WebGPU</ins></summary>
+<pre>SDL2 and Dawn Native.
+All necessary libraries are inside the template.
+
+Requirements:
+- [Emscripten](https://emscripten.org/) installed.
+- Change a few hard-coded paths to reflect your local emscripten paths.
+</pre>
+
+</details>
+
 
 ## Programs
 
@@ -305,6 +319,17 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
 [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
 [RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui)  from Ramon Santamaria (@raysan5) .<br/>
+[WebGPU](https://www.w3.org/TR/webgpu/) from [World Wide Web Consortium](https://www.w3.org/) .<br/>
+[Dawn](https://dawn.googlesource.com/dawn) from Google .<br/>
+<br/>
+
+### References, acknowledge and thanks
+
+**BaseWebGPU** Template would not exist without the following:<br/>
+webgpu-wasm-zig from Seyhajin - https://github.com/seyhajin/webgpu-wasm-zig . Without webgpu-wasm-zig knowledge the template would not exist.<br/>
+wasm_webgpu from Juj - https://github.com/juj/wasm_webgpu . Essential to sync HTML5 WebGPU events and Zig Wasm.<br/>
+zig-wasm-logger from Daneelsan - https://github.com/daneelsan/zig-wasm-logger . Where I finally learned how to send strings to HTML5 Wasm. <br/>
+zgpu and wgpu from Zig-Gamedev - https://github.com/zig-gamedev/zig-gamedev/ . I didn't use the libraries, but the source code was essential to better understand Zig + WebGPU and helped fix some hard to catch bugs.<br/>
 
 ## License
 MIT - Free for everyone and any use.
