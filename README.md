@@ -323,18 +323,6 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Dawn](https://dawn.googlesource.com/dawn) from Google .<br/>
 <br/>
 
-### References, acknowledge and thanks
-
-**BaseWebGPU** Template would not exist without the following:<br/>
-- webgpu-wasm-zig from Seyhajin - https://github.com/seyhajin/webgpu-wasm-zig .<br/>
-Without webgpu-wasm-zig knowledge the template would not exist.<br/>
-- wasm_webgpu from Juj - https://github.com/juj/wasm_webgpu .<br/>
-Essential to sync HTML5 WebGPU events and Zig Wasm.<br/>
-- zig-wasm-logger from Daneelsan - https://github.com/daneelsan/zig-wasm-logger .<br/>
-Where I finally learned how to send strings to HTML5 Wasm. <br/>
-- zgpu and wgpu from Zig-Gamedev - https://github.com/zig-gamedev/zig-gamedev/ .<br/>
-I didn't use the libraries, but the source code was essential to better understand Zig + WebGPU and helped fix some hard to catch bugs.<br/>
-
 ## License
 MIT - Free for everyone and any use.
 
