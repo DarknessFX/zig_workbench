@@ -1,0 +1,32 @@
+#include "windows.h"
+
+IDI_ICON1 ICON  "ToSysTray.ico"
+
+1 VERSIONINFO
+ FILEVERSION 0,9,0,0
+ PRODUCTVERSION 0,9,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x1L
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "ToSysTray"
+            VALUE "FileDescription", "ToSysTray"
+            VALUE "FileVersion", "0.9.0.0"
+            VALUE "InternalName", "ToSysTray.exe"
+            VALUE "LegalCopyright", "Copyleft(c)"
+            VALUE "OriginalFilename", "ToSysTray.exe"
+            VALUE "ProductName", "ToSysTray"
+            VALUE "ProductVersion", "0.9.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
