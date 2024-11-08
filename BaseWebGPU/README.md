@@ -1,3 +1,5 @@
+*Sales pitch? Is the smallest, fastest, easiest way to get into WebGPU(+DX12+Vulkan+Metal) and create your own Compute+Fragment+Vertex shaders, while able to build and share as OS platform binaries or Web html5 wasm..*
+
 <img src="https://raw.githubusercontent.com/DarknessFX/zig_workbench/refs/heads/main/.git_img/BaseWebGPU_screenshot.png" width="640px" /> <br/>
 
 ## About
