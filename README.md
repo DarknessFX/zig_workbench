@@ -24,7 +24,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 
 | Folder | Description | /Subsystem |
 | ------------- | ------------- | ------------- |
-| **Base** | Template for a console program. | Console |
+| **[Base](/Base/)** | Template for a console program. | Console |
 | **BaseEx** | Template for a console program that hide the console window. | Console |
 | **BaseWin** | Template for a Windows program. | Windows |
 | **BaseWinEx** | Template for a Windows program, Windows API as submodule. | Windows |
@@ -221,13 +221,13 @@ also, as my default, I used SHIFT+ESC to close the program.</pre>
 
 Tools to help setup Windows Explorer to apply icons to .ZIG files and add context menu short-cuts to Build, Run and Test.
 <details>
-  <summary><ins>zig_icon.reg - screenshot</ins></summary>
+  <summary>📷<ins>zig_icon.reg - screenshot</ins></summary>
      
 <pre>After run zig_icon.reg, Windows Explorer will look like:<br/>
 <img src="/.git_img/zig_icon_contextmenu.png" width="480" /></pre>
 </details>
 <details>
-  <summary><ins>zig_icon_cascade.reg - screenshot</ins></summary>
+  <summary>📷<ins>zig_icon_cascade.reg - screenshot</ins></summary>
      
 <pre>After run zig_icon_cascade.reg, Windows Explorer will look like:<br/>
 <img src="/.git_img/zig_icon_cascade_contextmenu.png" width="480" /></pre>
@@ -256,7 +256,7 @@ The most important key binding change is **CTRL+T** to open TASKS menu, because 
 Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. **CTRL+T, Enter** became one of my most used keyboard shortcut inside VSCode and **CTRL+R** to repeat the last task.<br/>
 
 <details>
-  <summary><ins>Task menu screenshot</ins></summary>
+  <summary>📷<ins>Task menu screenshot</ins></summary>
 <img src="/.git_img/vscode_tasks_menu.png" width="480" />
 </details>
 
@@ -328,8 +328,8 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
 [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
-[RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui)  from Ramon Santamaria (@raysan5) .<br/>
-[WebGPU](https://www.w3.org/TR/webgpu/) from [World Wide Web Consortium](https://www.w3.org/) .<br/>
+[RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui) from Ramon Santamaria (@raysan5) .<br/>
+[WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium . .<br/>
 [Dawn](https://dawn.googlesource.com/dawn) from Google .<br/>
 <br/>
 
@@ -351,5 +351,6 @@ BaseSDL2    = Zig SDL2 Windows program template.
 BaseSDL3    = Zig SDL3 Windows program template.
 BaseOpenGL  = Zig OpenGL GL.h Windows program template.
 BaseGLFW    = Zig GLFW GLAD Windows program template.
-BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.</pre>
+BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.
+BaseWebGPU  = Zig WebGPU WASM program template.</pre>
 </details>
