@@ -23,8 +23,8 @@ This template have 3 main features:
 ## How to build
 - Download /BaseWebGPU/ folder.
 - Install Zig language, v0.13.0, from https://ziglang.org
-- Install Emscripten from [https://emscripten.org](https://emscripten.org/docs/getting_started/downloads.html)
-- Fix some hard-coded paths (not sorry, I'm lazy. But I tried to expose hard-coded paths as the 1st line of each file. ).
+- Install Emscripten, v3.1.70 latest Nov/2024, from [https://emscripten.org](https://emscripten.org/docs/getting_started/downloads.html) .
+- Fix some hard-coded paths (*not sorry, I'm lazy. But I tried to expose hard-coded paths as the 1st line of each file.* ).
 - Go to /BaseWebGPU/ folder and run : **zig build**
 - 10secs compiling and done.
 - &nbsp;&nbsp;optional: Run **zig build** again to populate /Build/ folder.
