@@ -43,7 +43,7 @@
   },
   {
     "label": "Zig: Run main",
-    "args": [  "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "-I", "lib/opengl", "-I", "lib/imgui", "main.zig",
     "lib/imgui/cimgui.cpp",
     "lib/imgui/cimgui_impl_opengl2.cpp",
     "lib/imgui/cimgui_impl_win32.cpp",

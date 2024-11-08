@@ -10,15 +10,17 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
-  @cInclude("lib/imgui/cimgui.h");
-  @cInclude("lib/imgui/cimgui_impl_sdl3.h");
-  @cInclude("lib/imgui/cimgui_impl_sdlrenderer3.h");
-  @cInclude("lib/imgui/cimgui_memory_editor.h");
+  //lib/imgui/
+  @cInclude("cimgui.h");
+  @cInclude("cimgui_impl_sdl3.h");
+  @cInclude("cimgui_impl_sdlrenderer3.h");
+  @cInclude("cimgui_memory_editor.h");
 });
 
 const sdl = @cImport({
-  @cInclude("lib/SDL3/include/SDL.h");
-  @cInclude("lib/SDL3/include/SDL_opengl.h");
+  //lib/SDL3/include/
+  @cInclude("SDL.h");
+  @cInclude("SDL_opengl.h");
 });
 
 const ImVec4 = struct {

@@ -10,14 +10,16 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
-  @cInclude("lib/imgui/cimgui.h");
-  @cInclude("lib/imgui/cimgui_impl_opengl3.h");
-  @cInclude("lib/imgui/cimgui_impl_win32.h");
-  @cInclude("lib/imgui/cimgui_memory_editor.h");
+  //lib/imgui/
+  @cInclude("cimgui.h");
+  @cInclude("cimgui_impl_opengl3.h");
+  @cInclude("cimgui_impl_win32.h");
+  @cInclude("cimgui_memory_editor.h");
 });
 
 const gl = @cImport({
-  @cInclude("lib/opengl/gl.h");
+  //lib/opengl/
+  @cInclude("gl.h");
 });
 
 var wnd: win.HWND = undefined;

@@ -19,32 +19,32 @@ namespace cimgui
 
 #ifndef IMGUI_DISABLE
 
-CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForOpenGL(cimgui::SDL_Window* window, void* sdl_gl_context)
+CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForOpenGL(SDL_Window* window, void* sdl_gl_context)
 {
     return ::ImGui_ImplSDL2_InitForOpenGL(reinterpret_cast<::SDL_Window*>(window), sdl_gl_context);
 }
 
-CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForVulkan(cimgui::SDL_Window* window)
+CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForVulkan(SDL_Window* window)
 {
     return ::ImGui_ImplSDL2_InitForVulkan(reinterpret_cast<::SDL_Window*>(window));
 }
 
-CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForD3D(cimgui::SDL_Window* window)
+CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForD3D(SDL_Window* window)
 {
     return ::ImGui_ImplSDL2_InitForD3D(reinterpret_cast<::SDL_Window*>(window));
 }
 
-CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForMetal(cimgui::SDL_Window* window)
+CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForMetal(SDL_Window* window)
 {
     return ::ImGui_ImplSDL2_InitForMetal(reinterpret_cast<::SDL_Window*>(window));
 }
 
-CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForSDLRenderer(cimgui::SDL_Window* window, cimgui::SDL_Renderer* renderer)
+CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForSDLRenderer(SDL_Window* window, SDL_Renderer* renderer)
 {
     return ::ImGui_ImplSDL2_InitForSDLRenderer(reinterpret_cast<::SDL_Window*>(window), reinterpret_cast<::SDL_Renderer*>(renderer));
 }
 
-CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForOther(cimgui::SDL_Window* window)
+CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_InitForOther(SDL_Window* window)
 {
     return ::ImGui_ImplSDL2_InitForOther(reinterpret_cast<::SDL_Window*>(window));
 }
@@ -61,8 +61,17 @@ CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL2_NewFrame(void)
 
 CIMGUI_IMPL_API bool cimgui::cImGui_ImplSDL2_ProcessEvent(const SDL_Event* event)
 {
-  return ::ImGui_ImplSDL2_ProcessEvent(reinterpret_cast<const ::SDL_Event*>(event));
-    //return ::ImGui_ImplSDL2_ProcessEvent(event);
+    return ::ImGui_ImplSDL2_ProcessEvent(event);
 }
+
+// CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL2_SetGamepadMode(cimgui::ImGui_ImplSDL2_GamepadMode mode)
+// {
+//     ::ImGui_ImplSDL2_SetGamepadMode(static_cast<::ImGui_ImplSDL2_GamepadMode>(mode));
+// }
+
+// CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL2_SetGamepadModeEx(cimgui::ImGui_ImplSDL2_GamepadMode mode, struct cimgui::_SDL_GameController** manual_gamepads_array, int manual_gamepads_count)
+// {
+//     ::ImGui_ImplSDL2_SetGamepadMode(static_cast<::ImGui_ImplSDL2_GamepadMode>(mode), reinterpret_cast<struct ::_SDL_GameController**>(manual_gamepads_array), manual_gamepads_count);
+// }
 
 #endif // #ifndef IMGUI_DISABLE

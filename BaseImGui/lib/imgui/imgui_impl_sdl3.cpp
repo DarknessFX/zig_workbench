@@ -459,7 +459,7 @@ static bool ImGui_ImplSDL3_Init(SDL_Window* window, SDL_Renderer* renderer, void
     io.SetClipboardTextFn = ImGui_ImplSDL3_SetClipboardText;
     io.GetClipboardTextFn = ImGui_ImplSDL3_GetClipboardText;
     io.ClipboardUserData = nullptr;
-    io.SetPlatformImeDataFn = ImGui_ImplSDL3_SetPlatformImeData;
+    //io.SetPlatformImeDataFn = ImGui_ImplSDL3_SetPlatformImeData;
 
     // Gamepad handling
     bd->GamepadMode = ImGui_ImplSDL3_GamepadMode_AutoFirst;

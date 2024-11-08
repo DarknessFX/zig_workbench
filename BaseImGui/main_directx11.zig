@@ -10,14 +10,16 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_workbench/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
-  @cInclude("lib/imgui/cimgui.h");
-  @cInclude("lib/imgui/cimgui_impl_dx11.h");
-  @cInclude("lib/imgui/cimgui_impl_win32.h");
-  @cInclude("lib/imgui/cimgui_memory_editor.h");
+  //lib/imgui/
+  @cInclude("cimgui.h");
+  @cInclude("cimgui_impl_dx11.h");
+  @cInclude("cimgui_impl_win32.h");
+  @cInclude("cimgui_memory_editor.h");
 });
 
 const dx = @cImport({
-  @cInclude("lib/DX11/DX11.h");
+  //lib/DX11/
+  @cInclude("DX11.h");
 });
 
 var wnd: win.HWND = undefined;
@@ -569,42 +571,42 @@ pub extern "user32" fn CreateWindowExW(dwExStyle: win.DWORD, lpClassName: [*:0]c
 pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
 pub extern "user32" fn GetDC(hWnd: ?win.HWND) callconv(WINAPI) ?win.HDC;
 pub const PIXELFORMATDESCRIPTOR = extern struct {
-    nSize: win.WORD = @sizeOf(PIXELFORMATDESCRIPTOR),
-    nVersion: win.WORD,
-    dwFlags: win.DWORD,
-    iPixelType: win.BYTE,
-    cColorBits: win.BYTE,
-    cRedBits: win.BYTE,
-    cRedShift: win.BYTE,
-    cGreenBits: win.BYTE,
-    cGreenShift: win.BYTE,
-    cBlueBits: win.BYTE,
-    cBlueShift: win.BYTE,
-    cAlphaBits: win.BYTE,
-    cAlphaShift: win.BYTE,
-    cAccumBits: win.BYTE,
-    cAccumRedBits: win.BYTE,
-    cAccumGreenBits: win.BYTE,
-    cAccumBlueBits: win.BYTE,
-    cAccumAlphaBits: win.BYTE,
-    cDepthBits: win.BYTE,
-    cStencilBits: win.BYTE,
-    cAuxBuffers: win.BYTE,
-    iLayerType: win.BYTE,
-    bReserved: win.BYTE,
-    dwLayerMask: win.DWORD,
-    dwVisibleMask: win.DWORD,
-    dwDamageMask: win.DWORD,
+  nSize: win.WORD = @sizeOf(PIXELFORMATDESCRIPTOR),
+  nVersion: win.WORD,
+  dwFlags: win.DWORD,
+  iPixelType: win.BYTE,
+  cColorBits: win.BYTE,
+  cRedBits: win.BYTE,
+  cRedShift: win.BYTE,
+  cGreenBits: win.BYTE,
+  cGreenShift: win.BYTE,
+  cBlueBits: win.BYTE,
+  cBlueShift: win.BYTE,
+  cAlphaBits: win.BYTE,
+  cAlphaShift: win.BYTE,
+  cAccumBits: win.BYTE,
+  cAccumRedBits: win.BYTE,
+  cAccumGreenBits: win.BYTE,
+  cAccumBlueBits: win.BYTE,
+  cAccumAlphaBits: win.BYTE,
+  cDepthBits: win.BYTE,
+  cStencilBits: win.BYTE,
+  cAuxBuffers: win.BYTE,
+  iLayerType: win.BYTE,
+  bReserved: win.BYTE,
+  dwLayerMask: win.DWORD,
+  dwVisibleMask: win.DWORD,
+  dwDamageMask: win.DWORD,
 };
 
 pub extern "gdi32" fn SetPixelFormat(
-    hdc: ?win.HDC,
-    format: win.INT,
-    ppfd: ?*const PIXELFORMATDESCRIPTOR,
+  hdc: ?win.HDC,
+  format: win.INT,
+  ppfd: ?*const PIXELFORMATDESCRIPTOR,
 ) callconv(WINAPI) bool;
 
 pub extern "gdi32" fn ChoosePixelFormat(
-    hdc: ?win.HDC,
-    ppfd: ?*const PIXELFORMATDESCRIPTOR,
+  hdc: ?win.HDC,
+  ppfd: ?*const PIXELFORMATDESCRIPTOR,
 ) callconv(WINAPI) win.INT;
 pub extern "gdi32" fn SwapBuffers(hdc: ?win.HDC) callconv(WINAPI) bool;
