@@ -60,10 +60,12 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
  
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
-<pre>Using Dear ImGui Docking 1.90.8 and Dear Bindings (20240607)
+<pre>Using Dear ImGui Docking 1.91.5 and Dear Bindings (20241108)
 All necessary libraries are inside the template.<br/>
 
-Note: When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
+Note:
+- When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
+- Check tools/RunAll.bat to get a list of **Zig Run** commands to launch rendereres without renaming files.
 
 ImGui_Memory_Editor: Edited from Dear Bindings output. Sample inside all ImGui templates and usage details at <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
 </details>
