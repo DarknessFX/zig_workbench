@@ -1,0 +1,4 @@
+To make easier to use SDL3 with Zig, I replaced all:
+#include <SDL3/...>
+with
+#include <...>
