@@ -1,16 +1,13 @@
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 
-const sdl = struct{
-  usingnamespace @cImport({
-    // NOTE: Need full path to SDL3/include
-    // Remember to copy SDL3.dll to Zig.exe folder PATH
-    @cDefine("SDL_MAIN_USE_CALLBACKS", "1");
-    @cInclude("SDL.h");
-    @cInclude("SDL_main.h");
-  });
-  const SUCCESS: bool = true;
-};
+const sdl = @cImport({
+  // NOTE: Need full path to SDL3/include
+  // Remember to copy SDL3.dll to Zig.exe folder PATH
+  @cDefine("SDL_MAIN_USE_CALLBACKS", "1");
+  @cInclude("SDL.h");
+  @cInclude("SDL_main.h");
+});
 
 var window: *sdl.SDL_Window = undefined;
 var renderer: *sdl.SDL_Renderer = undefined;
@@ -21,20 +18,12 @@ pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sd
   const appTitle = "SDL3 Example Renderer Clear";
   _ = sdl.SDL_SetAppMetadata(appTitle, "1.0", "com.example.renderer-clear");
 
-  if (sdl.SDL_Init(sdl.SDL_INIT_VIDEO) != sdl.SUCCESS) {
+  if (!sdl.SDL_Init(sdl.SDL_INIT_VIDEO)) {
     sdl.SDL_Log("Couldn't initialize SDL: %s", sdl.SDL_GetError());
     return sdl.SDL_APP_FAILURE;
   }
 
-  if (sdl.SDL_CreateWindowAndRenderer(
-      appTitle,
-      640, 
-      480, 
-      0, 
-      @ptrCast(&window),
-      @ptrCast(&renderer),
-    ) != sdl.SUCCESS) 
-  {
+  if (!sdl.SDL_CreateWindowAndRenderer(appTitle, 640, 480, 0, @ptrCast(&window), @ptrCast(&renderer))) {
     sdl.SDL_Log("Couldn't create window/renderer: %s", sdl.SDL_GetError());
     return sdl.SDL_APP_FAILURE;
   }
