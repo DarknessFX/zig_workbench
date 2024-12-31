@@ -38,7 +38,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
-| **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/) + [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui). | Windows |
+| **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -332,10 +332,11 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
 [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
 [RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui) from Ramon Santamaria (@raysan5) .<br/>
-[WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium . .<br/>
+[WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium .<br/>
 [Dawn](https://dawn.googlesource.com/dawn) from Google .<br/>
 [Sokol](https://github.com/floooh/sokol/) from Floooh .<br/>
 [cimgui](https://github.com/cimgui/cimgui) from Sonoro1234 .<br/>
+[Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) from Micha Mettke .<br/>
 <br/>
 
 ## License
@@ -357,5 +358,6 @@ BaseSDL3    = Zig SDL3 Windows program template.
 BaseOpenGL  = Zig OpenGL GL.h Windows program template.
 BaseGLFW    = Zig GLFW GLAD Windows program template.
 BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.
-BaseWebGPU  = Zig WebGPU WASM program template.</pre>
+BaseWebGPU  = Zig WebGPU WASM program template.
+BaseSokol   = Zig Sokol Dear ImGui Nuklear UI program template.</pre>
 </details>
