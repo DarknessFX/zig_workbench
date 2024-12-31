@@ -18,7 +18,29 @@ pub fn build(b: *std.Build) void {
     .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
-  exe.linkLibC();
+
+  exe.addIncludePath( b.path("lib/sokol") );
+  exe.addIncludePath( b.path("lib/cimgui") );
+
+  exe.linkSystemLibrary("gdi32");
+
+  const c_srcs = .{
+      "lib/sokol/sokol.c",
+      "lib/cimgui/cimgui.cpp",
+      "lib/cimgui/imgui.cpp",
+      "lib/cimgui/imgui_widgets.cpp",
+      "lib/cimgui/imgui_draw.cpp",
+      "lib/cimgui/imgui_tables.cpp",
+      "lib/cimgui/imgui_demo.cpp",
+  };
+  inline for (c_srcs) |c_cpp| {
+    exe.addCSourceFile(.{
+      .file = b.path(c_cpp), 
+      .flags = &.{ }
+    });
+  }
+
+  exe.linkLibCpp();
   
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
