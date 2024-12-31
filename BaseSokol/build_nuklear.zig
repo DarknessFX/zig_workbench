@@ -24,11 +24,6 @@ pub fn build(b: *std.Build) void {
 
   exe.linkSystemLibrary("gdi32");
 
-  exe.addIncludePath( b.path("lib/sokol") );
-  exe.addIncludePath( b.path("lib/cimgui") );
-
-  exe.linkSystemLibrary("gdi32");
-
   const c_srcs = .{
     "lib/sokol/sokol_nuklear.c",
     "lib/nuklear/nuklear.c",

@@ -20,18 +20,18 @@ pub fn build(b: *std.Build) void {
   });
 
   exe.addIncludePath( b.path("lib/sokol") );
-  exe.addIncludePath( b.path("lib/nuklear") );
-
-  exe.linkSystemLibrary("gdi32");
-
-  exe.addIncludePath( b.path("lib/sokol") );
   exe.addIncludePath( b.path("lib/cimgui") );
 
   exe.linkSystemLibrary("gdi32");
 
   const c_srcs = .{
-    "lib/sokol/sokol_nuklear.c",
-    "lib/nuklear/nuklear.c",
+    "lib/sokol/sokol.c",
+    "lib/cimgui/cimgui.cpp",
+    "lib/cimgui/imgui.cpp",
+    "lib/cimgui/imgui_widgets.cpp",
+    "lib/cimgui/imgui_draw.cpp",
+    "lib/cimgui/imgui_tables.cpp",
+    "lib/cimgui/imgui_demo.cpp",
   };
   inline for (c_srcs) |c_cpp| {
     exe.addCSourceFile(.{
@@ -40,7 +40,7 @@ pub fn build(b: *std.Build) void {
     });
   }
 
-  exe.linkLibC();
+  exe.linkLibCpp();
   
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
