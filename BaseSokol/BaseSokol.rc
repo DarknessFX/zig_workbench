@@ -1,0 +1,32 @@
+#include "windows.h"
+
+IDI_ICON1 ICON  "BaseSokol.ico"
+
+1 VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x1L
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "BaseSokol"
+            VALUE "FileDescription", "BaseSokol"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "BaseSokol.exe"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
+            VALUE "OriginalFilename", "BaseSokol.exe"
+            VALUE "ProductName", "BaseSokol"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

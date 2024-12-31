@@ -33,11 +33,12 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[Basemicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console |
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
-| **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/) Preview. | Windows |
+| **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
+| **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/) + [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui). | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -113,7 +114,7 @@ sizeof(int) is treated as [*c]int instead of usize.
 
 <details>
   <summary><ins>About SDL3 Preview</ins></summary>
-<pre>&nbsp;&nbsp;Built from source in 20240624, version 3.1.2.</pre>
+<pre>&nbsp;&nbsp;Built from source in 20241216, version 3.1.6.</pre>
 </details>
 
 <details>
@@ -333,6 +334,8 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui) from Ramon Santamaria (@raysan5) .<br/>
 [WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium . .<br/>
 [Dawn](https://dawn.googlesource.com/dawn) from Google .<br/>
+[Sokol](https://github.com/floooh/sokol/) from Floooh .<br/>
+[cimgui](https://github.com/cimgui/cimgui) from Sonoro1234 .<br/>
 <br/>
 
 ## License
