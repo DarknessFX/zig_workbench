@@ -40,6 +40,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
+| **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) using [RayLib](https://www.raylib.com/) renderer. | Windows + Web |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -140,7 +141,12 @@ Requirements:
 . [Emscripten](https://emscripten.org/) installed.
 . Change a few hard-coded paths to reflect your local emscripten paths.
 </pre>
+</details>
 
+<details>
+  <summary><ins>About Clay</ins></summary>
+<pre>Everything is working from the code/template part, but Zig's cImport fails to import Clay's macros with variadic arguments (...) .<br/>
+Sharing here for anyone interested.</pre>
 </details>
 
 
@@ -344,6 +350,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Sokol](https://github.com/floooh/sokol/) from Floooh .<br/>
 [cimgui](https://github.com/cimgui/cimgui) from Sonoro1234 .<br/>
 [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) from Micha Mettke .<br/>
+[Clay](https://github.com/nicbarker/clay) from Nic Barker .<br/>
 <br/>
 
 ## License
@@ -366,5 +373,7 @@ BaseOpenGL  = Zig OpenGL GL.h Windows program template.
 BaseGLFW    = Zig GLFW GLAD Windows program template.
 BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.
 BaseWebGPU  = Zig WebGPU WASM program template.
-BaseSokol   = Zig Sokol Dear ImGui Nuklear UI program template.</pre>
+BaseSokol   = Zig Sokol Dear ImGui Nuklear UI program template.
+BaseNuklear = Zig Nuklear UI program template.
+BaseClay    = Zig Clay UI program template.</pre>
 </details>

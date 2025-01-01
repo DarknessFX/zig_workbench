@@ -1,0 +1,194 @@
+{
+  "folders": [{ "path": ".." }],
+  "settings": {
+    // Zig Workspace
+    "files.exclude": {
+      "*.lnk": true,
+      "**/.git": true,
+      ".gitignore": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true,
+      // VSCODE FOLDERS --------
+      "**/.vscode": true,
+      "**/.code-workspace": true,
+      // ZIG FOLDERS --------
+      "**/zig-cache": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "**/*.code-search": true,
+      // ZIG FOLDERS --------
+      "**/zig-out": true
+    },
+    "files.watcherExclude": {
+      // ZIG FOLDERS --------
+      "**/zig-cache": true
+    },
+
+    // DarknessFX settings
+    "telemetry.telemetryLevel": "off",
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.startupEditor": "none",
+    "workbench.colorCustomizations": {
+      "statusBar.background" : "#1A1A1A",
+      "statusBar.noFolderBackground" : "#212121",
+      "statusBar.debuggingBackground": "#263238",
+      "editorBracketHighlight.foreground1": "#888888",
+      "editorBracketHighlight.foreground2": "#686888",
+      "editorBracketHighlight.foreground3": "#688868",
+      "editorBracketHighlight.foreground4": "#886868",
+      "editorBracketHighlight.foreground5": "#686868",
+    },
+    "editor.tokenColorCustomizations": {
+      "comments": "#546E7A",
+      "functions": "#DFAB4B",
+      "keywords": "#367CB6",
+      "numbers": "#CE9178",
+      "strings": "#CE9178",
+      "types": "#2EA990",
+      "variables": "#7CBCDE",
+
+      "[Default Dark+]": {
+        "textMateRules": [
+          {
+            "scope": [
+              "other",
+              "source",
+              "keyword.operator",
+              "keyword.operator.noexcept",
+              "punctuation",
+              "punctuation.dot",
+              "punctuation.comma",
+              "punctuation.definitions",
+              "punctuation.definition.comment",
+              "punctuation.definition.tag",
+              "punctuation.definition.tag.html",
+              "punctuation.definition.tag.begin.html",
+              "punctuation.definition.tag.end.html",
+              "punctuation.section.embedded",
+              "punctuation.separator",
+              "punctuation.separator.inheritance.php",
+            ],
+            "settings": {
+              "foreground": "#758E68",
+              "fontStyle": "",
+            }
+          },
+          {
+            "scope": [
+              "comment",
+            ],
+            "settings": {
+              "fontStyle": "italic",
+            }            
+          },
+          {
+            "scope": [
+              "keyword",
+              "keyword.control",
+              "keyword.other",
+              "keyword.other.template",
+              "keyword.other.substitution",
+              "keyword.other.unit",
+              "storage",
+              "storage.type",
+              "storage.modifier",
+              "keywordLiteral",
+              "keyword.literal",
+              "keyword.constant.default",
+            ],
+            "settings": {
+              "fontStyle": "italic",
+              "foreground": "#367CB6"
+            }
+          },
+          {
+            "scope": [
+              "support.class",
+              "support.type",
+              "entity.name.type",
+              "entity.name.namespace",
+              "entity.other.attribute",
+              "entity.name.scope-resolution",
+              "entity.name.class",
+            ],
+            "settings": {
+              "foreground": "#2EA990"
+            }
+          },
+        ],
+      },
+    },
+    "editor.tabSize": 2,
+    "editor.fontSize": 16,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "editor.autoClosingBrackets": "never",
+    "editor.autoSurround": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.detectIndentation": false,
+    "editor.lightbulb.enabled": "off",
+    "workbench.editor.focusRecentEditorAfterClose": false,
+    "workbench.panel.defaultLocation": "left",
+    "workbench.panel.opensMaximized": "never",
+    "workbench.editor.tabSizing": "fixed",
+    "workbench.editor.tabSizingFixedMaxWidth": 140,
+    "workbench.sideBar.location": "right",
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.onTaskErrors": "abort",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.compactFolders": false,
+    "explorer.confirmDelete": false,
+    "terminal.integrated.profiles.windows": {
+      "Windows Terminal": {
+        "path": "wt",
+        "args": [
+          "-p", "cmd", "cmd"
+        ],
+        "icon": "terminal-bash",
+      },
+      "Command Prompt": {
+        "path": [
+          "${env:windir}\\Sysnative\\cmd.exe",
+          "${env:windir}\\System32\\cmd.exe"
+        ],
+        "args": [],
+        "icon": "terminal-cmd"
+      },
+      "PowerShell": {
+        "source": "PowerShell",
+        "icon": "terminal-powershell"
+      },
+      "Git Bash": {
+        "source": "Git Bash"
+      },
+    },
+    "terminal.integrated.tabs.location": "left",
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "C_Cpp.vcFormat.space.groupSquareBrackets": false,
+    "C_Cpp.loggingLevel": "Debug",
+    "C_Cpp.codeAnalysis.clangTidy.codeAction.formatFixes": false,
+    "git.openRepositoryInParentFolders": "never",
+    "html.autoCreateQuotes": false,
+    "zig.buildFilePath": "${workspaceFolder}",
+    "zig.formattingProvider": "off",
+    "zig.checkForUpdate": false,
+    "zig.zls.enabled": true,
+    "zig.zls.highlightGlobalVarDeclarations": true,
+    "zig.zls.semanticTokens": "full",
+    "zig.zls.enableArgumentPlaceholders": false,
+    "zig.zls.inlayHintsExcludeSingleArgument": false,
+    "zig.zls.enableAutofix": false,
+    "zig.zls.checkForUpdate": false,
+    "zig.zls.enableInlayHints": false,
+    "zig.zls.preferAstCheckAsChildProcess": false,
+  },
+  "extensions": {
+    "recommendations": [
+      "pkief.material-icon-theme"
+    ]
+  }
+}

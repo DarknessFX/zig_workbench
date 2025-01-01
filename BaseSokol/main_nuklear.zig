@@ -1,6 +1,5 @@
 const std = @import("std");
 pub extern fn main() void; // Skip Zig Maig in favor of Sokol_Main.
-fn tocStr(c_str: [*c]const u8) [:0]const u8 { return std.mem.span(c_str); }
 
 const sk = @cImport({
   @cDefine("SOKOL_GLCORE", "");
