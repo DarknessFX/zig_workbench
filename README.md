@@ -29,7 +29,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseWin](/BaseWin/)** | Template for a Windows program. | Windows |
 | **[BaseWinEx](/BaseWinEx/)** | Template for a Windows program, Windows API as submodule. | Windows |
 | **[BaseImGui](/BaseImGui/)** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
-| **[BaseLVGL](/BaseLVGL/)** | Template with [LVGL](https://lvgl.io/) . | Console |
+| **[BaseLVGL](/BaseLVGL/)** | Template with [LVGL](https://lvgl.io/) UI. | Console |
 | **[BaseMicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console |
@@ -40,7 +40,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
-| **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) using [RayLib](https://www.raylib.com/) renderer. | Windows + Web |
+| **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows + Web |
 
 <details>
    <summary><ins>Usage</ins></summary>
