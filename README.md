@@ -30,15 +30,16 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseWinEx](/BaseWinEx/)** | Template for a Windows program, Windows API as submodule. | Windows |
 | **[BaseImGui](/BaseImGui/)** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **[BaseLVGL](/BaseLVGL/)** | Template with [LVGL](https://lvgl.io/) . | Console |
-| **[Basemicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
+| **[BaseMicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
+| **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console |
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
+| **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
-| **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -89,6 +90,12 @@ but sadly microui is outdated (last update 3 years ago) and I applied
 It was necessary because the original code crashed with <i>runtime 
 error: member access within misaligned address</i> and without the 
 <a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
+</details>
+
+ <details>
+  <summary><ins>About Nuklear</ins></summary>
+<pre>Using Nuklear from source (20241231).
+I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it failed with duplicate symbols (added inline) and later missing functions (removed static).</pre>
 </details>
 
 <details>
