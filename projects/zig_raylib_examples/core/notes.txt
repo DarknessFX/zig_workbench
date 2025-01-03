@@ -1,0 +1,7 @@
+core_basic_window_web, not implemented yet. Depends on emscripten.
+
+core_custom_frame_control is broken? C source .EXE crashes and zig port have terrible response on input keys.
+
+core_random_sequence, this one is easier to remake using Zig objects, like ArrayList.
+
+core_storage_values, same thing, easier to user Writer/Printer to work with files.
