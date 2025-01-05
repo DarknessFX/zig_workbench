@@ -14,10 +14,9 @@ const nvg = @cImport({
   @cDefine("NANOVG_GL3_IMPLEMENTATION", "1");
   @cInclude("lib/nanovg/nanovg.h");
   @cInclude("lib/nanovg/nanovg_gl.h");
-
 });
 
-pub fn main() void {
+pub fn main() u8 {
   HideConsoleWindow();
 
   // Initialize GLFW
@@ -27,11 +26,11 @@ pub fn main() void {
   }
   defer nvg.glfwTerminate();
 
-	nvg.glfwWindowHint(nvg.GLFW_CONTEXT_VERSION_MAJOR, 3);
-	nvg.glfwWindowHint(nvg.GLFW_CONTEXT_VERSION_MINOR, 3);
-	nvg.glfwWindowHint(nvg.GLFW_OPENGL_PROFILE, nvg.GLFW_OPENGL_CORE_PROFILE);
+  nvg.glfwWindowHint(nvg.GLFW_CONTEXT_VERSION_MAJOR, 3);
+  nvg.glfwWindowHint(nvg.GLFW_CONTEXT_VERSION_MINOR, 3);
+  nvg.glfwWindowHint(nvg.GLFW_OPENGL_PROFILE, nvg.GLFW_OPENGL_CORE_PROFILE);
   nvg.glfwWindowHint(nvg.GLFW_OPENGL_DEBUG_CONTEXT, nvg.GLFW_TRUE);
-	//nvg.glfwWindowHint(nvg.GLFW_SAMPLES, 4);
+  //nvg.glfwWindowHint(nvg.GLFW_SAMPLES, 4);
 
   // Create a windowed mode window and its OpenGL context
   const window = nvg.glfwCreateWindow(800, 600, "NanoVG with GLFW3", null, null) orelse {
@@ -79,6 +78,8 @@ pub fn main() void {
 
     nvg.glfwSwapBuffers(window);
   }
+
+  return 0;
 }
 
 
