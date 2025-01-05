@@ -1,0 +1,32 @@
+#include "windows.h"
+
+IDI_ICON1 ICON  "BaseNanoVG.ico"
+
+1 VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x1L
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "BaseNanoVG"
+            VALUE "FileDescription", "BaseNanoVG"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "BaseNanoVG.exe"
+            VALUE "LegalCopyright", "Copyleft(c) Created by DarknessFX, http://dfx.lv/ , @DrkFX."
+            VALUE "OriginalFilename", "BaseNanoVG.exe"
+            VALUE "ProductName", "BaseNanoVG"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

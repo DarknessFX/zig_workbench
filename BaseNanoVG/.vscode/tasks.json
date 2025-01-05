@@ -1,0 +1,101 @@
+{
+  "tasks": [{
+    "label": "Zig: Build",
+    "args": [ "build", "--summary", "all" ],
+    "detail": "zig build --summary all",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": true },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Safe.",
+    "args": [ "build", "-Doptimize=ReleaseSafe", "--summary", "all" ],
+    "detail": "zig build -Doptimize=ReleaseSafe --summary all",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Fast.",
+    "args": [ "build", "-Doptimize=ReleaseFast", "--summary", "all" ],
+    "detail": "zig build -Doptimize=ReleaseFast --summary all",
+    "command": "zig","type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Small.",
+    "args": [ "build", "-Doptimize=ReleaseSmall", "--summary", "all" ],
+    "detail": "zig build -Doptimize=ReleaseSmall --summary all",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Strip.",
+    "args": [ ],
+    "detail": "zig build-exe -O ReleaseSmall -fstrip -fsingle-threaded (+ lots of options) main.zig",
+    "command": "buildReleaseStrip.bat", "type": "shell", "options": { "cwd": "${workspaceRoot}\\tools" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Test",
+    "args": [ "test", "${file}" ],
+    "detail": "'zig test' in the current workspace.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "test", "isDefault": true },
+    "presentation": { "group": "test", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main",
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "lib/nanovg/nanovg.c", "lib/nanovg/nanovg_gl.c" ],
+    "detail": "zig run main.zig",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": true }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (With Args)",
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "lib/nanovg/nanovg.c", "lib/nanovg/nanovg_gl.c", "--", "ArgsForYourProgram" ],
+    "detail": "zig run main.zig -- ArgsForYourProgram",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (Fast)",
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "lib/nanovg/nanovg.c", "lib/nanovg/nanovg_gl.c", "-O", "ReleaseFast" ],
+    "detail": "zig run main.zig -O ReleaseFast",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (Safe)",
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "lib/nanovg/nanovg.c", "lib/nanovg/nanovg_gl.c", "-O", "ReleaseSafe" ], 
+    "detail": "zig run main.zig -O ReleaseSafe",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (Small)",
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "lib/nanovg/nanovg.c", "lib/nanovg/nanovg_gl.c", "-O", "ReleaseSmall" ],
+    "detail": "zig run main.zig -O ReleaseSmall",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run current file",
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "${file}", "lib/glad/src/glad.c", "lib/nanovg/nanovg.c", "lib/nanovg/nanovg_gl.c" ],
+    "detail": "'zig run' active file in the current workspace.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "zTime Zig: Run current file",
+    "args": [ "zig", "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "${file}" ],
+    "detail": "'zTime zig run' active file in the current workspace.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "zTime", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Docs",
+    "args": [ "run", "-femit-docs", "main.zig" ],
+    "detail": "Generate docs from source comments.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "docs", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  }],
+  "version": "2.0.0"
+}

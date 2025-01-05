@@ -29,14 +29,15 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseWin](/BaseWin/)** | Template for a Windows program. | Windows |
 | **[BaseWinEx](/BaseWinEx/)** | Template for a Windows program, Windows API as submodule. | Windows |
 | **[BaseImGui](/BaseImGui/)** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
-| **[BaseLVGL](/BaseLVGL/)** | Template with [LVGL](https://lvgl.io/) UI. | Console |
-| **[BaseMicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
-| **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console |
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
 | **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
 | **[BaseAllegro](/BaseAllegro/)** | Template with [Allegro5](https://liballeg.org/). | Console |
+| **[BaseNanoVG](/BaseNanoVG/)** | Template with [NanoVG](https://github.com/memononen/nanovg) using GLFW3 OpenGL3. | Console |
+| **[BaseLVGL](/BaseLVGL/)** | Template with [LVGL](https://lvgl.io/) UI. | Console |
+| **[BaseMicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
+| **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
@@ -351,6 +352,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) from Micha Mettke.<br/>
 [Clay](https://github.com/nicbarker/clay) from Nic Barker.<br/>
 [Allegro5](https://liballeg.org/) from Allegro 5 Development Team.<br/>
+[NanoVG](https://github.com/memononen/nanovg) from Memononen.<br/>
 <br/>
 
 ## License
@@ -377,5 +379,6 @@ BaseSokol   = Zig Sokol Dear ImGui Nuklear UI program template.
 BaseNuklear = Zig Nuklear UI program template.
 BaseClay    = Zig Clay UI program template.
 BaseAllegro = Zig Allegro5 program template.
+BaseNanoVG  = Zig NanoVG program template.
 </pre>
 </details>

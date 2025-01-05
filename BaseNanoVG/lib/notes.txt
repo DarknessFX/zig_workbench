@@ -1,0 +1,4 @@
+Forced #define NANOVG_GL_IMPLEMENTATION at nanovg_gl.h line 108
+Forced #define NANOVG_GL3 at nanovg_gl.h line 108
+Added #ifndef SKIP_DUPLICATE and #endif at nanovg_gl.h lines 1607 and 1663
+Created a nanovg_gl.c and added to compile with main.zig, forcing nanovg_gl.h code to build together.
