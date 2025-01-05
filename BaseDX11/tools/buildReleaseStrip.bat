@@ -20,7 +20,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lgdi32 -ldwmapi -ld3d11 -ld3dcompiler_47 -I "%CD%\lib\DX11"
+SET extra_args=-lgdi32 -ldwmapi -ld3d11 -ld3dcompiler_47 -I"%CD%" -I"%CD%\lib\DX11"
 
 
 REM AddCSource
@@ -69,4 +69,4 @@ IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
 
 ECHO.
 ECHO Done!
-PAUSE
+REM PAUSE

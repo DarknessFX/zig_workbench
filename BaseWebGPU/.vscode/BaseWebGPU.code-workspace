@@ -12,10 +12,10 @@
       "**/.DS_Store": true,
       "**/Thumbs.db": true,
       // VSCODE FOLDERS --------
-      "**/.vscode": true,
+      "**/.vscode": false,
       "**/.code-workspace": true,
       // ZIG FOLDERS --------
-      "**/zig-cache": true
+      "**/zig-cache": true,
       "**/.zig-cache": true
     },
     "search.exclude": {
@@ -186,6 +186,11 @@
     "zig.zls.checkForUpdate": false,
     "zig.zls.enableInlayHints": false,
     "zig.zls.preferAstCheckAsChildProcess": false,
+    "files.associations": {
+      "raylib.h": "c",
+      "rcamera.h": "c",
+      "raymath.h": "c"
+    },
   },
   "extensions": {
     "recommendations": [

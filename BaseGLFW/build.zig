@@ -19,6 +19,7 @@ pub fn build(b: *std.Build) void {
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
+  exe.addIncludePath( b.path(".") );
   exe.addIncludePath( b.path("lib") );
   exe.addLibraryPath( b.path("lib/glad") );
   exe.addIncludePath( b.path("lib/glfw/include") );
@@ -29,7 +30,7 @@ pub fn build(b: *std.Build) void {
     .file = b.path("lib/glad/src/glad.c"), 
     .flags = &.{ }
   });
-  b.installBinFile("lib/glfw/glfw3.dll", "glfw3.dll");
+  //b.installBinFile("lib/glfw/glfw3.dll", "glfw3.dll");
 
   exe.linkLibC();
   

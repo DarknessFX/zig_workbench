@@ -23,8 +23,8 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("dwmapi");
   exe.linkSystemLibrary("opengl32");
 
-  exe.addIncludePath( b.path("lib/cimgui") );
-  exe.addIncludePath( b.path("lib/cimgui/imgui") );
+  exe.addIncludePath( b.path("lib/opengl") );
+  exe.addIncludePath( b.path("lib/imgui") );
 
   const c_srcs = .{
     "lib/imgui/cimgui.cpp",

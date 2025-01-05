@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseSDL2\\main.zig
+//! main.zig :
+//!	  Template using SDL2 framework.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;

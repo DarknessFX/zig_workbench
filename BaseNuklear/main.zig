@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseNuklear.Main
+//! BaseNuklear//main.zig :
+//!   Template using Nuklear UI.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 const win = std.os.windows;
 pub inline fn fmt(comptime format: []const u8, args: anytype) []u8 {  return std.fmt.allocPrint(std.heap.page_allocator, format, args) catch unreachable; }

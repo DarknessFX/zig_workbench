@@ -1,3 +1,7 @@
+//!zig-autodoc-section: BaseWin
+//!  Template for a Windows program.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;

@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseSDL3\\main.zig
+//! main.zig :
+//!	  Template using SDL3 framework.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 

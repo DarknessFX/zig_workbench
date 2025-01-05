@@ -1,5 +1,7 @@
-// microui Windows GDI
-// Change to .vscode/Tasks_GDI.json to build without SDL2/OpenGL dependencies.
+//!zig-autodoc-section: BaseMicroui.Main
+//! BaseMicroui//main.zig :
+//!   Template using Microui and Windows GDI.
+// Build using Zig 0.13.0
 
 const std = @import("std");
 const win = struct {

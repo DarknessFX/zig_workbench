@@ -325,7 +325,7 @@ Reason: Because this key binding try to reload the current document or display a
 
 ### Copy your libraries DLL to Zig folder
 
-When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run Main will fail because it cannot find the DLL and the exe was built somewhere in zig-cache. The easier way to fix is to copy the library DLL to your Zig folder.
+When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run Main will fail because it cannot find the DLL and the exe was built somewhere in zig-cache, the error is "The terminal process ... terminated with exit code: 53.". The easier way to fix this error is to copy the library DLL to your Zig folder.
 
 ### Personal observation about VSCode
 

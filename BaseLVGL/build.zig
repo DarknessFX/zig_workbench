@@ -19,6 +19,7 @@ pub fn build(b: *std.Build) void {
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
+  exe.addIncludePath( b.path("."));
   exe.addIncludePath( b.path("lib/lvgl"));
   exe.addIncludePath( b.path("lib/lvgl/src"));
   exe.addIncludePath( b.path("lib/lvgl_drv/"));

@@ -1,7 +1,8 @@
 //!zig-autodoc-section: BaseWebGPU\\main.zig
 //! main.zig :
-//!	  Template for a WebGPU project that build both .bin/.exe and HTML5 Wasm.
+//!	  Template for a WebGPU project that build both bin/.exe and HTML5 WebGPU and Wasm.
 // Build using Zig 0.13.0
+
 const std = @import("std");
 
 pub fn main() void {

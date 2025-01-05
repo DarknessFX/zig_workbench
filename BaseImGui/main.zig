@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseImGui.Main
+//! BaseImGui//main.zig :
+//!   Template using Dear ImGui with OpenGL2 renderer.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 const win = struct {
     usingnamespace std.os.windows;

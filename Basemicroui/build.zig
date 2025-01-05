@@ -23,7 +23,7 @@ pub fn build(b: *std.Build) void {
   exe.addLibraryPath( b.path("lib/SDL2/") );
   exe.linkSystemLibrary("SDL2");
   exe.linkSystemLibrary("OpenGL32");
-  b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
+  //b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
 
   // microui
   exe.addCSourceFile(.{

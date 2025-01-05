@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseEx\\main.zig
 //! main.zig :
 //!	  Template for a console program that hide the console window.
-// Build using Zig 0.12.0
+// Build using Zig 0.13.0
 
 const std = @import("std");
 const win = struct {

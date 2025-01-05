@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseLVGL.Main
+//! BaseLVGL//main.zig :
+//!   Template using LVGL.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 
 // NOTE: Need full path to lib/lvgl

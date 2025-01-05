@@ -22,6 +22,7 @@ pub fn build(b: *std.Build) void {
 
   exe.addIncludePath( b.path("lib/SDL3/include") );
   exe.addLibraryPath( b.path("lib/SDL3") );
+
   exe.linkSystemLibrary("SDL3");
   b.installBinFile("lib/SDL3/SDL3.dll", "SDL3.dll");
 

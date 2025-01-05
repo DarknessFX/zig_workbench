@@ -19,6 +19,8 @@ pub fn build(b: *std.Build) void {
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
+  exe.addIncludePath(b.path("."));
+  exe.addIncludePath(b.path("lib/opengl"));
   exe.linkSystemLibrary("OpenGL32");
 
   exe.linkLibC();

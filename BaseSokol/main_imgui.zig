@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseSokol\\main.zig
+//! main.zig :
+//!	  Template using Sokol framework and Dear ImGui.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 pub extern fn main() void; // Skip Zig Maig in favor of Sokol_Main.
 

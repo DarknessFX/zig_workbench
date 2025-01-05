@@ -19,7 +19,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lgdi32 -ldwmapi -lopengl32
+SET extra_args=-lgdi32 -ldwmapi -lopengl32 -Ilib/opengl -Ilib/imgui 
 
 
 REM AddCSource
@@ -64,7 +64,10 @@ REM OUTPUT TO ZIG_REPORT.EXE
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
   MOVE %CD%\bin\ReleaseStrip\%ProjectName%.exe.obj %CD%\bin\ReleaseStrip\obj > NUL
 )
+IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.lib" (
+  MOVE %CD%\bin\ReleaseStrip\%ProjectName%.lib %CD%\bin\ReleaseStrip\obj > NUL
+)
 
 ECHO.
 ECHO Done!
-PAUSE
+REM PAUSE

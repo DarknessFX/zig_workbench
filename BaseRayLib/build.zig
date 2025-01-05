@@ -20,10 +20,13 @@ pub fn build(b: *std.Build) void {
   });
   exe.linkLibC();
 
-  exe.addIncludePath( b.path("lib/raylib") );
+  exe.addIncludePath( b.path("lib/raylib/include") );
   exe.addLibraryPath( b.path("lib/raylib") );
   exe.linkSystemLibrary("raylib");
-  b.installBinFile("lib/raylib/raylib.dll", "raylib.dll");
+  exe.linkSystemLibrary("winmm");
+  exe.linkSystemLibrary("gdi32");
+  exe.linkSystemLibrary("opengl32");
+  //b.installBinFile("lib/raylib/raylib.dll", "raylib.dll");
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",

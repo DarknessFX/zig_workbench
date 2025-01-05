@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseDX11.Main
+//! BaseDX11//main.zig :
+//!   Template using DirectX 11.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;

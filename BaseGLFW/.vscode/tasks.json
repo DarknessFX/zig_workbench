@@ -43,35 +43,35 @@
   },
   {
     "label": "Zig: Run main",
-    "args": [ "run", "-lc", "-I", "lib/glfw/include", "-I", "lib", "-I", "lib/glad", "-lglfw3dll", "-lopengl32", "-L", "lib/glfw", "main.zig", "lib/glad/src/glad.c" ],
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c" ],
     "detail": "zig run main.zig",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": true }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (With Args)",
-    "args": [ "run", "-lc", "-I", "lib/glfw/include", "-I", "lib", "-I", "lib/glad", "-lglfw3dll", "-lopengl32", "-L", "lib/glfw", "main.zig", "lib/glad/src/glad.c", "--", "ArgsForYourProgram" ],
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "--", "ArgsForYourProgram" ],
     "detail": "zig run main.zig -- ArgsForYourProgram",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (Fast)",
-    "args": [ "run", "-lc", "-I", "lib/glfw/include", "-I", "lib", "-I", "lib/glad", "-lglfw3dll", "-lopengl32", "-L", "lib/glfw", "main.zig", "lib/glad/src/glad.c", "-O", "ReleaseFast" ],
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "-O", "ReleaseFast" ],
     "detail": "zig run main.zig -O ReleaseFast",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (Safe)",
-    "args": [ "run", "-lc", "-I", "lib/glfw/include", "-I", "lib", "-I", "lib/glad", "-lglfw3dll", "-lopengl32", "-L", "lib/glfw", "main.zig", "lib/glad/src/glad.c", "-O", "ReleaseSafe" ], 
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "-O", "ReleaseSafe" ], 
     "detail": "zig run main.zig -O ReleaseSafe",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (Small)",
-    "args": [ "run", "-lc", "-I", "lib/glfw/include", "-I", "lib", "-I", "lib/glad", "-lglfw3dll", "-lopengl32", "-L", "lib/glfw", "main.zig", "lib/glad/src/glad.c", "-O", "ReleaseSmall" ],
+    "args": [ "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "main.zig", "lib/glad/src/glad.c", "-O", "ReleaseSmall" ],
     "detail": "zig run main.zig -O ReleaseSmall",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
@@ -85,7 +85,7 @@
   },
   {
     "label": "zTime Zig: Run current file",
-    "args": [ "zig", "run", "-lc", "-I", "lib/glfw/include", "-I", "lib", "-I", "lib/glad", "-lglfw3dll", "-lopengl32", "-L", "lib/glfw", "${file}" ],
+    "args": [ "zig", "run", "-lc", "-I.", "-Ilib/glfw/include", "-Ilib", "-Ilib/glad", "-lglfw3dll", "-lopengl32", "-Llib/glfw", "${file}" ],
     "detail": "'zTime zig run' active file in the current workspace.",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "zTime", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []

@@ -16,7 +16,7 @@
       "**/.code-workspace": true,
       // ZIG FOLDERS --------
       "**/zig-cache": true,
-      "**/.zig-cache": true,
+      "**/.zig-cache": true
     },
     "search.exclude": {
       "**/node_modules": true,
@@ -186,6 +186,11 @@
     "zig.zls.checkForUpdate": false,
     "zig.zls.enableInlayHints": false,
     "zig.zls.preferAstCheckAsChildProcess": false,
+    "files.associations": {
+      "raylib.h": "c",
+      "rcamera.h": "c",
+      "raymath.h": "c"
+    },
   },
   "extensions": {
     "recommendations": [

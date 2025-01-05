@@ -1,3 +1,8 @@
+//!zig-autodoc-section: BaseGLFW.Main
+//! BaseGLFW//main.zig :
+//!   Template using GLFW3.
+// Build using Zig 0.13.0
+
 const std = @import("std");
 
 const win = struct {

@@ -13,7 +13,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lSDL2 -lOpenGL32 -L"%CD%\lib\SDL2" -I"%CD%\lib\SDL2\include" -I"%CD%\lib\microui"
+SET extra_args=-lSDL3 -lOpenGL32 -L"%CD%\lib\SDL3" -I"%CD%\lib\SDL3\include"
 
 
 REM AddCSource
@@ -22,7 +22,7 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-SET addCSourceFile="%CD%\lib\microui\microui.c"
+SET addCSourceFile=
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
   MKDIR %CD%\bin\ReleaseStrip 
@@ -49,10 +49,13 @@ REM OUTPUT TO ZIG_REPORT.EXE
   zig build-exe -O ReleaseSmall %rcmd% %libc% -fstrip -fsingle-threaded --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile% 
 ) 2>&1 
 
+IF EXIST "%CD%\lib\SDL3\SDL3.dll" (
+  COPY /Y "%CD%\lib\SDL3\SDL3.dll" "%CD%\bin\ReleaseStrip\" > NUL
+)
+
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
   MOVE %CD%\bin\ReleaseStrip\%ProjectName%.exe.obj %CD%\bin\ReleaseStrip\obj > NUL
 )
 
 ECHO.
 ECHO Done!
-REM PAUSE

@@ -24,6 +24,7 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("d3d11");
   exe.linkSystemLibrary("d3dcompiler_47");
 
+  exe.addIncludePath( b.path(".") );
   exe.addIncludePath( b.path("lib/DX11") );
   b.installBinFile("shaders.hlsl", "shaders.hlsl");
 

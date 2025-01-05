@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseWinEX
 //!  Template for a Windows program, Windows API as submodule.
-// Build using Zig 0.12.0
+// Build using Zig 0.13.0
 
 // ============================================================================
 // Globals.

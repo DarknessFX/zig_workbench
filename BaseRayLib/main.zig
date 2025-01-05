@@ -1,6 +1,7 @@
 //!zig-autodoc-section: BaseRayLib.Main
 //! BaseRayLib//main.zig :
-//!   Template for basic window using RayLib and RayGUI.
+//!   Template using RayLib and RayGUI.
+// Build using Zig 0.13.0
 
 const std = @import("std");
 
