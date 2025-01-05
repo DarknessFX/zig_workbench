@@ -5,7 +5,7 @@ pub fn build(b: *std.Build) void {
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
-  const projectname = "BaseEx";
+  const projectname = "BaseWebview";
   const rootfile = "main.zig";
 
   const exe = b.addExecutable(.{
@@ -18,7 +18,15 @@ pub fn build(b: *std.Build) void {
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
-  
+  exe.linkLibC();
+
+  exe.addIncludePath( b.path(".") );
+  exe.addIncludePath( b.path("lib/webview/include") );
+
+  exe.addLibraryPath( b.path("lib/webview") );
+
+  exe.linkSystemLibrary("webview");
+
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
     .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
