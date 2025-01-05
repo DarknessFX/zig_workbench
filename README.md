@@ -32,6 +32,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console |
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
+| **[BaseSFML2](/BaseSFML2/)** | Template with [SFML2](https://www.sfml-dev.org/) via [CSFML2](https://www.sfml-dev.org/download/csfml/) C bindings. | Console |
 | **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
 | **[BaseAllegro](/BaseAllegro/)** | Template with [Allegro5](https://liballeg.org/). | Console |
 | **[BaseNanoVG](/BaseNanoVG/)** | Template with [NanoVG](https://github.com/memononen/nanovg) using GLFW3 OpenGL3. | Console |
@@ -121,9 +122,15 @@ I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it
 </details>
 
 <details>
-  <summary><ins>About SDL3 Preview</ins></summary>
+  <summary><ins>About SDL3</ins></summary>
 <pre>&nbsp;&nbsp;Built from source in 20241216, version 3.1.6.</pre>
 </details>
+
+<details>
+  <summary><ins>About SFML2</ins></summary>
+<pre>&nbsp;&nbsp;Using CSFML2 v2.6.1 from https://www.sfml-dev.org/download/csfml/ .</pre>
+</details>
+
 
 <details>
   <summary><ins>About GLFW and GLAD</ins></summary>
@@ -353,6 +360,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Clay](https://github.com/nicbarker/clay) from Nic Barker.<br/>
 [Allegro5](https://liballeg.org/) from Allegro 5 Development Team.<br/>
 [NanoVG](https://github.com/memononen/nanovg) from Memononen.<br/>
+[SFML2](https://www.sfml-dev.org/) from Laurent Gomila.<br/>
 <br/>
 
 ## License

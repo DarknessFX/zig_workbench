@@ -22,7 +22,7 @@ pub fn main() u8 {
   // Initialize GLFW
   if (nvg.glfwInit() == 0) {
     std.debug.print("Failed to initialize GLFW\n", .{});
-    return;
+    return 1;
   }
   defer nvg.glfwTerminate();
 
@@ -33,9 +33,9 @@ pub fn main() u8 {
   //nvg.glfwWindowHint(nvg.GLFW_SAMPLES, 4);
 
   // Create a windowed mode window and its OpenGL context
-  const window = nvg.glfwCreateWindow(800, 600, "NanoVG with GLFW3", null, null) orelse {
+  const window = nvg.glfwCreateWindow(800, 600, "BaseNanoVG", null, null) orelse {
     std.debug.print("Failed to create GLFW window\n", .{});
-    return;
+    return 2;
   };
   defer nvg.glfwDestroyWindow(window);
 
@@ -44,13 +44,13 @@ pub fn main() u8 {
   // Checking Glad context to help debug a crash.
   if (nvg.gladLoadGL(@ptrCast(&nvg.glfwGetProcAddress)) == 0) {
     std.debug.print("Failed to initialize GLAD\n", .{});
-    return;
+    return 3;
   }
 
   // Initialize NanoVG
   const vg = nvg.nvgCreateGL3(nvg.NVG_ANTIALIAS | nvg.NVG_STENCIL_STROKES) orelse {
     std.debug.print("Could not init nanovg\n", .{});
-    return;
+    return 4;
   };
   defer nvg.nvgDeleteGL3(vg);
 
@@ -68,8 +68,8 @@ pub fn main() u8 {
 
     nvg.nvgBeginPath(vg);
     // Animate rectangle position with sine function
-    const x = 100.0 + 100 * @sin(time);
-    const y = 100.0 + 100 * @cos(time);
+    const x = 250.0 + 250 * @sin(time);
+    const y = 200.0 + 200 * @cos(time);
     nvg.nvgRect(vg, x, y, 300, 200);
     nvg.nvgFillColor(vg, nvg.nvgRGBA(255, 0, 0, 255));
     nvg.nvgFill(vg);
