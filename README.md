@@ -39,7 +39,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseLVGL](/BaseLVGL/)** | Template with [LVGL](https://lvgl.io/) UI. | Console |
 | **[BaseMicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
-| **[BaseWebview](/BaseWebview/)** | Template with [Webview](https://github.com/webview/webview) . | Console |
+| **[BaseWebview](/BaseWebview/)** | Template with [Webview](https://github.com/webview/webview). | Console |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
