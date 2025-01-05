@@ -36,6 +36,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
 | **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
+| **[BaseAllegro](/BaseAllegro/)** | Template with [Allegro5](https://liballeg.org/). | Console |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
@@ -101,14 +102,12 @@ I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it
 
 <details>
   <summary><ins>About RayLib</ins></summary>
-<pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib from source</a> (v5.0 from 20231118).
-Using <a href="https://github.com/raysan5/raygui" target="_blank">RayGUI from source</a> (v4.1.0-dev from 20240704).
-Rebuild raylib.dll because the original was compiled with 
-/MT (Multi-thread) and Zig is allergic of this kind of DLL, 
-changing the compile option to /MD solved the problem.
-Raygui.h edited to fix a problem with Zig cImport where C 
-sizeof(int) is treated as [*c]int instead of usize.
-</pre>
+<pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib from source</a> (v5.0 from 20231118).</pre>
+</details>
+
+<details>
+  <summary><ins>About Allegro</ins></summary>
+<pre>Using <a href="https://github.com/liballeg/allegro5" target="_blank">Allegro5 from nuget package</a> (v5.2.10 from 20241127).</pre>
 </details>
 
 <details>
@@ -335,22 +334,23 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 
 ## Credits
 
-[Zig Language](https://ziglang.org/) from ZigLang.org .<br/>
-[SDL2, SDL3](https://libsdl.org/) from libSDL.org .<br/>
-[GLFW](https://www.glfw.org) from GLFW.org .<br/>
-[GLAD](https://github.com/Dav1dde/glad) from Dav1dde .<br/>
-[microui](https://github.com/rxi/microui) from rxi .<br/>
-[Dear ImGui](https://github.com/ocornut/imgui) from Omar Cornut .<br/>
-[Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter .<br/>
-[LVGL](https://github.com/lvgl/lvgl) from LVGL Kft .<br/>
-[ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah .<br/>
-[RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui) from Ramon Santamaria (@raysan5) .<br/>
-[WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium .<br/>
-[Dawn](https://dawn.googlesource.com/dawn) from Google .<br/>
-[Sokol](https://github.com/floooh/sokol/) from Floooh .<br/>
-[cimgui](https://github.com/cimgui/cimgui) from Sonoro1234 .<br/>
-[Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) from Micha Mettke .<br/>
-[Clay](https://github.com/nicbarker/clay) from Nic Barker .<br/>
+[Zig Language](https://ziglang.org/) from ZigLang.org.<br/>
+[SDL2, SDL3](https://libsdl.org/) from libSDL.org.<br/>
+[GLFW](https://www.glfw.org) from GLFW.org.<br/>
+[GLAD](https://github.com/Dav1dde/glad) from Dav1dde.<br/>
+[microui](https://github.com/rxi/microui) from rxi.<br/>
+[Dear ImGui](https://github.com/ocornut/imgui) from Omar Cornut.<br/>
+[Dear Bindings](https://github.com/dearimgui/dear_bindings) from Ben Carter.<br/>
+[LVGL](https://github.com/lvgl/lvgl) from LVGL Kft.<br/>
+[ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah.<br/>
+[RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui) from Ramon Santamaria (@raysan5).<br/>
+[WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium.<br/>
+[Dawn](https://dawn.googlesource.com/dawn) from Google.<br/>
+[Sokol](https://github.com/floooh/sokol/) from Floooh.<br/>
+[cimgui](https://github.com/cimgui/cimgui) from Sonoro1234.<br/>
+[Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) from Micha Mettke.<br/>
+[Clay](https://github.com/nicbarker/clay) from Nic Barker.<br/>
+[Allegro5](https://liballeg.org/) from Allegro 5 Development Team.<br/>
 <br/>
 
 ## License
@@ -375,5 +375,7 @@ BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.
 BaseWebGPU  = Zig WebGPU WASM program template.
 BaseSokol   = Zig Sokol Dear ImGui Nuklear UI program template.
 BaseNuklear = Zig Nuklear UI program template.
-BaseClay    = Zig Clay UI program template.</pre>
+BaseClay    = Zig Clay UI program template.
+BaseAllegro = Zig Allegro5 program template.
+</pre>
 </details>

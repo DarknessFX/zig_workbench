@@ -1,0 +1,1 @@
+Files extracted from https://www.nuget.org/packages/Allegro/
