@@ -20,7 +20,7 @@ REM
 REM Full extra_args sample of a project that use SDL3 + OpenGL :
 REM  SET extra_args=-lSDL3 -lOpenGL32 -L "%CD%\lib\SDL3" -I"%CD%" -I"%CD%\lib" -I"%CD%\lib\SDL3"
 
-SET extra_args=-lraylib -lwinmm -lgdi32 -lopengl32 -Llib/raylib -Ilib/raylib/include
+SET extra_args=-lraylib -lwinmm -lgdi32 -lopengl32 -Llib/raylib -I"%CD%" -Ilib/raylib/include
 
 
 REM AddCSource

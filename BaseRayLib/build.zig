@@ -20,6 +20,7 @@ pub fn build(b: *std.Build) void {
   });
   exe.linkLibC();
 
+  exe.addIncludePath( b.path(".") );
   exe.addIncludePath( b.path("lib/raylib/include") );
   exe.addLibraryPath( b.path("lib/raylib") );
   exe.linkSystemLibrary("raylib");

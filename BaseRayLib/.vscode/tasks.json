@@ -43,49 +43,49 @@
   },
   {
     "label": "Zig: Run main",
-    "args": [ "run", "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "main.zig" ],
+    "args": [ "run", "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "main.zig" ],
     "detail": "zig run main.zig",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": true }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (With Args)",
-    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "main.zig" , "--", "ArgsForYourProgram" ],
+    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "main.zig" , "--", "ArgsForYourProgram" ],
     "detail": "zig run main.zig -- ArgsForYourProgram",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (Fast)",
-    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "main.zig" , "-O", "ReleaseFast" ],
+    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "main.zig" , "-O", "ReleaseFast" ],
     "detail": "zig run main.zig -O ReleaseFast",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (Safe)",
-    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "main.zig" , "-O", "ReleaseSafe" ], 
+    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "main.zig" , "-O", "ReleaseSafe" ], 
     "detail": "zig run main.zig -O ReleaseSafe",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run main (Small)",
-    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "main.zig" , "-O", "ReleaseSmall" ],
+    "args": [ "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "main.zig" , "-O", "ReleaseSmall" ],
     "detail": "zig run main.zig -O ReleaseSmall",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "Zig: Run current file",
-    "args": [ "run", "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "${file}" ],
+    "args": [ "run", "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "${file}" ],
     "detail": "'zig run' active file in the current workspace.",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
   },
   {
     "label": "zTime Zig: Run current file",
-    "args": [ "zig", "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-Ilib/raylib/include", "${file}" ],
+    "args": [ "zig", "run",  "-lc", "-lraylib", "-lwinmm", "-lgdi32", "-lopengl32", "-L", "lib/raylib", "-I.", "-Ilib/raylib/include", "${file}" ],
     "detail": "'zTime zig run' active file in the current workspace.",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "zTime", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
