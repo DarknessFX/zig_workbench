@@ -368,7 +368,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Webview](https://github.com/webview/webview/) from Webview Team.<br/>
 [Lua](https://www.lua.org/home.html) from PUC-Rio.<br/>
 [SQLite](https://www.sqlite.org/index.html) from SQLite Consortium.<br/>
-[LMDB](https://www.symas.com/mdb) from Symas Corporation, under OpenLDAP.
+[LMDB](https://www.symas.com/mdb) from Symas Corporation.<br/>
 <br/>
 
 ## License
