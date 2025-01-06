@@ -5,7 +5,7 @@
 
 const std = @import("std");
 const cp = @cImport({
-  @cInclude("D:/workbench/Zig/BaseChipmunk2D/lib/chipmunk/include/chipmunk.h");
+  @cInclude("lib/chipmunk/include/chipmunk.h");
 });
 
 // Define custom collision types
