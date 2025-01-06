@@ -48,6 +48,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseSQLite](/BaseSQLite/)** | Template with [SQLite](https://www.sqlite.org/index.html) database. | Console |
 | **[BaseLMDB](/BaseLMDB/)** | Template with [LMDB](https://www.symas.com/mdb) database. | Console |
 | **[BaseDuckDB](/BaseDuckDB/)** | Template with [DuckDB](https://duckdb.org/) database. | Console |
+| **[BaseODE](/BaseODE/)** | Template with [ODE](https://www.ode.org/) Open Dynamics Engine physics. | Console |
 | **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows |
 
 <details>
@@ -371,6 +372,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [SQLite](https://www.sqlite.org/index.html) from SQLite Consortium.<br/>
 [LMDB](https://www.symas.com/mdb) from Symas Corporation.<br/>
 [DuckDB](https://duckdb.org/) from DuckDB Foundation.<br/>
+[ODE](https://www.ode.org/) from Russ Smith.<br/>
 <br/>
 
 ## License
@@ -402,5 +404,6 @@ BaseWebview = Zig Webview program template.
 BaseLua     = Zig Lua scripting language program template.
 BaseSQLite  = Zig SQLite database program template.
 BaseLMDB    = Zig LMDB transactional database program template.
+BaseODE     = Zig ODE Open Dynamics Engine physics program template.
 </pre>
 </details>
