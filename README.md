@@ -44,6 +44,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
+| **[BaseLua](/BaseLua/)** | Template with [Lua](https://www.lua.org/home.html) scripting language. | Console |
 | **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows |
 
 <details>
@@ -363,6 +364,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [NanoVG](https://github.com/memononen/nanovg) from Memononen.<br/>
 [SFML2](https://www.sfml-dev.org/) from Laurent Gomila.<br/>
 [Webview](https://github.com/webview/webview/) from Webview Team.<br/>
+[Lua](https://www.lua.org/home.html) from PUC-Rio.<br/>
 <br/>
 
 ## License
@@ -391,5 +393,6 @@ BaseClay    = Zig Clay UI program template.
 BaseAllegro = Zig Allegro5 program template.
 BaseNanoVG  = Zig NanoVG program template.
 BaseWebview = Zig Webview program template.
+BaseLua     = Zig Lua scripting language program template.
 </pre>
 </details>
