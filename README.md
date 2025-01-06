@@ -46,6 +46,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
 | **[BaseLua](/BaseLua/)** | Template with [Lua](https://www.lua.org/home.html) scripting language. | Console |
 | **[BaseSQLite](/BaseSQLite/)** | Template with [SQLite](https://www.sqlite.org/index.html) database. | Console |
+| **[BaseLMDB](/BaseLMDB/)** | Template with [LMDB](https://www.symas.com/mdb) database. | Console |
 | **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows |
 
 <details>
@@ -367,6 +368,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Webview](https://github.com/webview/webview/) from Webview Team.<br/>
 [Lua](https://www.lua.org/home.html) from PUC-Rio.<br/>
 [SQLite](https://www.sqlite.org/index.html) from SQLite Consortium.<br/>
+[LMDB](https://www.symas.com/mdb) from Symas Corporation, under OpenLDAP.
 <br/>
 
 ## License
@@ -397,5 +399,6 @@ BaseNanoVG  = Zig NanoVG program template.
 BaseWebview = Zig Webview program template.
 BaseLua     = Zig Lua scripting language program template.
 BaseSQLite  = Zig SQLite database program template.
+BaseLMDB    = Zig LMDB transactional database program template.
 </pre>
 </details>
