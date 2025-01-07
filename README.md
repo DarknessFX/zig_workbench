@@ -374,7 +374,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [SQLite](https://www.sqlite.org/index.html) from SQLite Consortium.<br/>
 [LMDB](https://www.symas.com/mdb) from Symas Corporation.<br/>
 [DuckDB](https://duckdb.org/) from DuckDB Foundation.<br/>
-[ODE](https://www.ode.org/) from Russ Smith.<br/>
+[ODE](https://www.ode.org/) from Russ L. Smith.<br/>
 [Chipmunk2D](https://chipmunk-physics.net/) from Howling Moon Software.<br/>
 [BaseBox2D](https://box2d.org/) from Erin Catto.<br/>
 <br/>
