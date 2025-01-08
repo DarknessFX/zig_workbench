@@ -8,7 +8,7 @@ const std = @import("std");
 // Remember to copy lib/GLFW/glfw3.dll to Zig.exe Folder PATH
 // Change @cInclude to full path
 const nvg = @cImport({
-  @cDefine("GLFW_INCLUDE_NONE", "1");  // Must have, without it the template crashes. 
+  @cDefine("GLFW_INCLUDE_NONE", "1");  // ? Must have, without it the template crashes. 
   @cInclude("lib/glad/include/glad.h");
   @cInclude("lib/glfw/include/glfw3.h");
   @cDefine("NANOVG_GL3_IMPLEMENTATION", "1");

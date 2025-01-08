@@ -20,8 +20,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-I"%CD%" -I"%CD%/lib" -I"%CD%/lib/glfw/include" -I"%CD%/lib/glad/include" -I"%CD%/lib/glad" -lglfw3dll -lopengl32 -L"%CD%/lib/glfw" 
-
+SET extra_args=-I"%CD%/." -I"%CD%/lib/glfw/include" -I"%CD%/lib/glad" -I"%CD%/lib/nanovg" -lglfw3 -lopengl32 -lgdi32 -L"%CD%\lib\glfw\static"
 
 REM AddCSource
 REM ==========
@@ -29,7 +28,7 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-SET addCSourceFile="%CD%\lib\glad\src\glad.c" "%CD%\lib\nanovg\nanovg.c" "%CD%\lib\nanovg\nanovg_gl.c" 
+SET addCSourceFile="%CD%\lib\glad\src\glad.c" "%CD%\lib\nanovg\nanovg.c" "%CD%\lib\nanovg\nanovg_gl.c"
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
   MKDIR %CD%\bin\ReleaseStrip 

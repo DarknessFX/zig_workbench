@@ -21,16 +21,24 @@ pub fn build(b: *std.Build) void {
 
   exe.addIncludePath( b.path(".") );
   exe.addIncludePath( b.path("lib") );
-  exe.addLibraryPath( b.path("lib/glad") );
   exe.addIncludePath( b.path("lib/glfw/include") );
-  exe.addLibraryPath( b.path("lib/glfw") );
-  exe.linkSystemLibrary("glfw3dll");
+
+  const use_shared = b.option(bool, "shared", "Use shared library linking") orelse false;
+  if (use_shared) {
+    exe.addLibraryPath( b.path("lib/glfw/shared") );
+    exe.linkSystemLibrary("glfw3dll");
+    b.installBinFile("lib/glfw/shared/glfw3.dll", "glfw3.dll");
+  } else {
+    exe.addLibraryPath( b.path("lib/glfw/static") );
+    exe.linkSystemLibrary("glfw3");
+    exe.linkSystemLibrary("gdi32");
+  }
+
   exe.linkSystemLibrary("opengl32");
   exe.addCSourceFile(.{
     .file = b.path("lib/glad/src/glad.c"), 
     .flags = &.{ }
   });
-  //b.installBinFile("lib/glfw/glfw3.dll", "glfw3.dll");
 
   exe.linkLibC();
   
