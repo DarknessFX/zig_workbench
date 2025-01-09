@@ -17,6 +17,7 @@ pub fn build(b: *std.Build) !void {
     "audio",
     "core",
     "text",
+    "shapes",
   };
 
   // Loop each folder to build
@@ -49,18 +50,24 @@ pub fn build(b: *std.Build) !void {
     }
 
     // // Make bin/build/resources folders
-    const destFolder = fmt("{s}\\{s}\\{s}\\{s}", .{  cwd, "bin", build_dir, "resources\\" } );
-    std.fs.makeDirAbsolute( fmt("{s}\\{s}", .{ cwd, "bin" } )) catch { };
-    std.fs.makeDirAbsolute( fmt("{s}\\{s}\\{s}", .{ cwd, "bin", build_dir } )) catch { };
-    std.fs.makeDirAbsolute( destFolder ) catch { };
-    
-    const copyStep = b.addSystemCommand(&.{ "CMD", "/C", 
-      b.fmt("COPY /Y {s} {s}>nul", .{
-        fmt("{s}\\{s}\\resources\\*.*", .{ cwd, folder } ),
-        destFolder,
-      }),
-    });
-    b.getInstallStep().dependOn(&copyStep.step);
+    const cwd_resources = try std.fs.path.join(b.allocator, &.{ cwd, folder, "resources" });
+    var dir_resources = std.fs.cwd().openDir(cwd_resources, .{ .iterate = false }) catch null;
+    defer if ((comptime builtin.zig_version.minor >= 13) and (dir_resources != null)) dir_resources.?.close();
+
+    if (@TypeOf(dir_resources) == std.fs.Dir) {
+      const destFolder = fmt("{s}\\{s}\\{s}\\{s}", .{  cwd, "bin", build_dir, "resources\\" } );
+      std.fs.makeDirAbsolute( fmt("{s}\\{s}", .{ cwd, "bin" } )) catch { };
+      std.fs.makeDirAbsolute( fmt("{s}\\{s}\\{s}", .{ cwd, "bin", build_dir } )) catch { };
+      std.fs.makeDirAbsolute( destFolder ) catch { };
+      
+      const copyStep = b.addSystemCommand(&.{ "CMD", "/C", 
+        b.fmt("COPY /Y {s} {s} >nul", .{
+          fmt("{s}\\{s}\\resources\\*.*", .{ cwd, folder } ),
+          destFolder,
+        }),
+      });
+      b.getInstallStep().dependOn(&copyStep.step);
+    }
   }
 }
 
