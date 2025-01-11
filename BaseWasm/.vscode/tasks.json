@@ -1,0 +1,101 @@
+{
+  "tasks": [{
+    "label": "Zig: Build",
+    "args": [ "build", "--summary", "all" ],
+    "detail": "zig build --summary all",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": true },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Safe.",
+    "args": [ "build", "-Doptimize=ReleaseSafe", "--summary", "all" ],
+    "detail": "zig build -Doptimize=ReleaseSafe --summary all",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Fast.",
+    "args": [ "build", "-Doptimize=ReleaseFast", "--summary", "all" ],
+    "detail": "zig build -Doptimize=ReleaseFast --summary all",
+    "command": "zig","type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Small.",
+    "args": [ "build", "-Doptimize=ReleaseSmall", "--summary", "all" ],
+    "detail": "zig build -Doptimize=ReleaseSmall --summary all",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Build Release Strip.",
+    "args": [ ],
+    "detail": "zig build-exe -O ReleaseSmall -fstrip -fsingle-threaded (+ lots of options) main.zig",
+    "command": "buildReleaseStrip.bat", "type": "shell", "options": { "cwd": "${workspaceRoot}\\tools" }, "group": { "kind": "build", "isDefault": false },
+    "presentation": { "group": "build", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Test",
+    "args": [ "test", "${file}" ],
+    "detail": "'zig test' in the current workspace.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "test", "isDefault": true },
+    "presentation": { "group": "test", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main",
+    "args": [ "run", "main.zig" ],
+    "detail": "zig run main.zig",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": true }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (With Args)",
+    "args": [ "run", "main.zig", "--", "ArgsForYourProgram" ],
+    "detail": "zig run main.zig -- ArgsForYourProgram",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (Fast)",
+    "args": [ "run", "main.zig", "-O", "ReleaseFast" ],
+    "detail": "zig run main.zig -O ReleaseFast",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (Safe)",
+    "args": [ "run", "main.zig", "-O", "ReleaseSafe" ], 
+    "detail": "zig run main.zig -O ReleaseSafe",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run main (Small)",
+    "args": [ "run", "main.zig", "-O", "ReleaseSmall" ],
+    "detail": "zig run main.zig -O ReleaseSmall",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Run current file",
+    "args": [ "run", "${file}" ],
+    "detail": "'zig run' active file in the current workspace.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "zTime Zig: Run current file",
+    "args": [ "zig", "run", "${file}" ],
+    "detail": "'zTime zig run' active file in the current workspace.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "zTime", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  },
+  {
+    "label": "Zig: Docs",
+    "args": [ "run", "-femit-docs", "main.zig" ],
+    "detail": "Generate docs from source comments.",
+    "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
+    "presentation": { "group": "docs", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []
+  }],
+  "version": "2.0.0"
+}

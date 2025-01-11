@@ -43,6 +43,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
+| **[BaseWasm](/BaseWasm/)** | Template with [BaseWasm](https://webassembly.org/). | Web |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
 | **[BaseLua](/BaseLua/)** | Template with [Lua](https://www.lua.org/home.html) scripting language. | Console |
 | **[BaseSQLite](/BaseSQLite/)** | Template with [SQLite](https://www.sqlite.org/index.html) database. | Console |
@@ -361,7 +362,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [LVGL](https://github.com/lvgl/lvgl) from LVGL Kft.<br/>
 [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) from Mike Shah.<br/>
 [RayLib](https://github.com/raysan5/raylib) and [RayGUI](https://github.com/raysan5/raygui) from Ramon Santamaria (@raysan5).<br/>
-[WebGPU](https://www.w3.org/TR/webgpu/) from World Wide Web Consortium.<br/>
+[WebGPU](https://www.w3.org/TR/webgpu/) and [Wasm](https://webassembly.org/) from World Wide Web Consortium.<br/>
 [Dawn](https://dawn.googlesource.com/dawn) from Google.<br/>
 [Sokol](https://github.com/floooh/sokol/) from Floooh.<br/>
 [cimgui](https://github.com/cimgui/cimgui) from Sonoro1234.<br/>
@@ -390,29 +391,30 @@ https://github.com/DarknessFX/zig_workbench
 <details>
   <summary><sub><sub>SEO Helper</sub></sub></summary>
 <pre>Giving Google a little help pairing Zig + LIB words, because it find my twitter posts easier than this repo:
-BaseWinEx   = Zig Windows program template with Windows API as submodule.
-BaseImGui   = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer.
-BaseLVGL    = Zig LVGL Windows program template.
-Basemicroui = Zig microui Windows program template with renderers: SDL2, Windows GDI.
-BaseRayLib  = Zig RayLib and RayGUI Windows program template.
-BaseSDL2    = Zig SDL2 Windows program template.
-BaseSDL3    = Zig SDL3 Windows program template.
-BaseOpenGL  = Zig OpenGL GL.h Windows program template.
-BaseGLFW    = Zig GLFW GLAD Windows program template.
-BaseDX11    = Zig DirectX Direct3D 11 DX11 Windows program template.
-BaseWebGPU  = Zig WebGPU WASM program template.
-BaseSokol   = Zig Sokol Dear ImGui Nuklear UI program template.
-BaseNuklear = Zig Nuklear UI program template.
-BaseClay    = Zig Clay UI program template.
-BaseAllegro = Zig Allegro5 program template.
-BaseNanoVG  = Zig NanoVG program template.
-BaseWebview = Zig Webview program template.
-BaseLua     = Zig Lua scripting language program template.
-BaseSQLite  = Zig SQLite database program template.
-BaseLMDB    = Zig LMDB transactional database program template.
-BaseODE     = Zig ODE Open Dynamics Engine physics program template.
-Chipmunk2D  = Zig Chipmunk2D physics program template.
-Box2D       = Zig Box2D physics program template.
-zstd        = Zig Zstd fast lossless compression program template.
+WinEx       = Zig Windows program template with Windows API as submodule sample example.
+ImGui       = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer sample example.
+LVGL        = Zig LVGL Windows program template sample example.
+microui     = Zig microui Windows program template with renderers: SDL2, Windows GDI sample example.
+RayLib      = Zig RayLib and RayGUI Windows program template sample example.
+SDL2        = Zig SDL2 Windows program template sample example.
+SDL3        = Zig SDL3 Windows program template sample example.
+OpenGL      = Zig OpenGL GL.h Windows program template sample example.
+GLFW        = Zig GLFW GLAD Windows program template sample example.
+DX11        = Zig DirectX Direct3D 11 DX11 Windows program template sample example.
+Wasm        = Zig WASM program template sample example.
+WebGPU      = Zig WebGPU WASM program template sample example.
+Sokol       = Zig Sokol Dear ImGui Nuklear UI program template sample example.
+Nuklear     = Zig Nuklear UI program template sample example.
+Clay        = Zig Clay UI program template sample example.
+Allegro     = Zig Allegro5 program template sample example.
+NanoVG      = Zig NanoVG program template sample example.
+Webview     = Zig Webview program template sample example.
+Lua         = Zig Lua scripting language program template sample example.
+SQLite      = Zig SQLite database program template sample example.
+LMDB        = Zig LMDB transactional database program template sample example.
+ODE         = Zig ODE Open Dynamics Engine physics program template sample example.
+Chipmunk2D  = Zig Chipmunk2D physics program template sample example.
+Box2D       = Zig Box2D physics program template sample example.
+zstd        = Zig Zstd fast lossless compression program template sample example.
 </pre>
 </details>
