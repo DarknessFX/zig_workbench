@@ -10,8 +10,10 @@ const win = struct {
 };
 const WINAPI = win.WINAPI;
 
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseSDL2/lib/SDL2/include/SDL.h");
 pub const sdl = @cImport({
-  // NOTE: Need full path to SDL2/include
   @cInclude("SDL.h");
 });
 

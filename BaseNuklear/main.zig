@@ -6,6 +6,10 @@
 const std = @import("std");
 const win = std.os.windows;
 pub inline fn fmt(comptime format: []const u8, args: anytype) []u8 {  return std.fmt.allocPrint(std.heap.page_allocator, format, args) catch unreachable; }
+
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseNuklear/lib/nuklear/nuklear.h");
 const nk = @cImport({
   @cDefine("NK_INCLUDE_FIXED_TYPES", "");
   @cDefine("NK_INCLUDE_STANDARD_IO", "");

@@ -6,6 +6,9 @@
 const std = @import("std");
 pub extern fn main() void; // Skip Zig Maig in favor of Sokol_Main.
 
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseSokol/lib/sokol/include/sokol_app.h");
 const sk = @cImport({
   @cDefine("SOKOL_GLCORE", "");
   @cInclude("sokol_app.h");

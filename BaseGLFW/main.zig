@@ -10,8 +10,10 @@ const win = struct {
   usingnamespace std.os.windows.kernel32;
 };
 
-// Remember to copy lib/GLFW/glfw3.dll to Zig.exe Folder PATH
-// Change @cInclude to full path
+
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseGLFW/lib/glad/include/glfw3.h");
 const glfw = @cImport({
   @cInclude("lib/glad/include/glad.h");
   @cInclude("lib/glfw/include/glfw3.h");

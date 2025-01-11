@@ -4,6 +4,10 @@
 // Build using Zig 0.13.0
 
 const std = @import("std");
+
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseAllegro/lib/allegro5/allegro.h");
 const all = @cImport({
 // Necessary to fix :
 // error: cannot combine with previous 

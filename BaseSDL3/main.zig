@@ -6,9 +6,10 @@
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseSDL3/lib/SDL3/include/SDL.h");
 const sdl = @cImport({
-  // NOTE: Need full path to SDL3/include
-  // Remember to copy SDL3.dll to Zig.exe folder PATH
   @cDefine("SDL_MAIN_USE_CALLBACKS", "1");
   @cInclude("SDL.h");
   @cInclude("SDL_main.h");

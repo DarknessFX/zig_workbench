@@ -16,6 +16,9 @@ const win = struct {
 const WINAPI = win.WINAPI;
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseOpenGL/lib/opengl/gl.h");
 const gl = @cImport({
   @cInclude("lib/opengl/gl.h");
   @cInclude("lib/opengl/glu.h");

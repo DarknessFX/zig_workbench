@@ -5,8 +5,9 @@
 
 const std = @import("std");
 
-// Remember to copy lib/GLFW/glfw3.dll to Zig.exe Folder PATH
-// Change @cInclude to full path
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseNanoVG/lib/nanovg/nanovg.h");
 const nvg = @cImport({
   @cDefine("GLFW_INCLUDE_NONE", "1");  // ? Must have, without it the template crashes. 
   @cInclude("lib/glad/include/glad.h");

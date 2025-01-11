@@ -4,6 +4,10 @@
 // Build using Zig 0.13.0
 
 const std = @import("std");
+
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseSQLite/lib/sqlite/sqlite3.h");
 const sqlite = @cImport({
   @cInclude("sqlite3.h");
 });

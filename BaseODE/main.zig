@@ -4,6 +4,10 @@
 // Build using Zig 0.13.0
 
 const std = @import("std");
+
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseODE/lib/ode/ode.h");
 const ode = @cImport({
   @cInclude("lib/ode/ode.h");
 });

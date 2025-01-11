@@ -13,7 +13,7 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
-//   @cInclude("C:/zig_workbench/lib/DX11/DX11.h");
+//   @cInclude("C:/zig_workbench/BaseDX11/lib/DX11/DX11.h");
 const dx = @cImport({
   @cInclude("lib/DX11/DX11.h");
 });

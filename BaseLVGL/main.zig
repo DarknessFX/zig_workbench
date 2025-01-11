@@ -5,7 +5,9 @@
 
 const std = @import("std");
 
-// NOTE: Need full path to lib/lvgl
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseLVGL/lib/lvgl/lvgl.h");
 pub const lv = @cImport({
   @cInclude("lib/lvgl/lvgl.h");
   @cInclude("lib/lvgl_drv/win32drv.h");

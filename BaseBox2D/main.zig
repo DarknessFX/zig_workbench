@@ -4,6 +4,10 @@
 // Build using Zig 0.13.0
 
 const std = @import("std");
+
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseBox2D/lib/box2d/box2d.h");
 const box = @cImport({
   @cInclude("lib/box2d/box2d.h");
 });

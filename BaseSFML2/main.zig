@@ -5,8 +5,9 @@
 
 const std = @import("std");
 
-// Remember to copy lib/GLFW/glfw3.dll to Zig.exe Folder PATH
-// Change @cInclude to full path
+// NOTE ABOUT VSCODE + ZLS:
+// Use full path for all cIncludes:
+//   @cInclude("C:/zig_workbench/BaseCSFML2/lib/CSFML2/include/graphics.h");
 const sfml = @cImport({
   @cInclude("lib/CSFML2/include/Graphics.h");
   @cInclude("lib/CSFML2/include/Window.h");
