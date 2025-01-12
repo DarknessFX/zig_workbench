@@ -18,6 +18,7 @@ pub fn build(b: *std.Build) !void {
     "core",
     "text",
     "shapes",
+    "textures",
   };
 
   // Loop each folder to build
