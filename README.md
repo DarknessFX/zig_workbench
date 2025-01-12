@@ -43,8 +43,8 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
-| **[BaseWasm](/BaseWasm/)** | Template with [BaseWasm](https://webassembly.org/). | Web |
-| **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/). | Windows + Web |
+| **[BaseWasm](/BaseWasm/)** | Template with [BaseWasm](https://webassembly.org/) using Emscripten. | Web |
+| **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/) using Emscripten and Dawn. | Windows + Web |
 | **[BaseLua](/BaseLua/)** | Template with [Lua](https://www.lua.org/home.html) scripting language. | Console |
 | **[BaseSQLite](/BaseSQLite/)** | Template with [SQLite](https://www.sqlite.org/index.html) database. | Console |
 | **[BaseLMDB](/BaseLMDB/)** | Template with [LMDB](https://www.symas.com/mdb) database. | Console |
