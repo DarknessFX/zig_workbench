@@ -199,6 +199,8 @@ ToSystray.exe "C:\Windows\System32\Notepad.exe" "Notepad"</pre>
 | Folder | Description |
 | ------------- | ------------- |
 |  **ModernOpenGL**  |  [Mike Shah](https://github.com/MikeShah) [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) Youtube Tutorials ported to Zig + SDL3.1.2 OpenGL 4.6. |
+|  **zig_raylib_examples**  | [RayLib](https://www.raylib.com/examples.html) examples ported to Zig. |
+|  **zTinyRasterizer**  |  [Lisitsa Nikita](https://github.com/lisyarus) tiny CPU rasterization engine ported to Zig. |
 
 <details>
   <summary><ins>ModernOpenGL Info</ins></summary>
@@ -380,6 +382,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Chipmunk2D](https://chipmunk-physics.net/) from Howling Moon Software.<br/>
 [Box2D](https://box2d.org/) from Erin Catto.<br/>
 [zstd](https://github.com/facebook/zstd) from Meta.<br/>
+[Lisitsa Nikita](https://github.com/lisyarus) for [TinyRasterizer](https://github.com/lisyarus/tiny-rasterizer).<br/>
 <br/>
 
 ## License

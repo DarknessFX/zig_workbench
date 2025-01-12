@@ -4,6 +4,10 @@ zig-cache/
 .zig-cache/
 #.vscode/
 
+# windows stuff
+*.url
+*.lnk
+
 # User-specific files
 *.rsuser
 *.suo
