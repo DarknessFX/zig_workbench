@@ -18,7 +18,7 @@ const web = if (@import("builtin").target.os.tag == .emscripten) {
 } else undefined;
 
 pub fn main() !void {
-  ray.InitWindow(512, 512, "Raylib WASM Example");
+  ray.InitWindow(512, 512, "Raylib Windows+Web Example");
 
   while (!ray.WindowShouldClose()) {
     ray.BeginDrawing();
