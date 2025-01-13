@@ -171,7 +171,7 @@ Sharing here for anyone interested.</pre>
 
 | Folder | Description | /Subsystem |
 | ------------- | ------------- | ------------- |
-| **ToSystray** | Give other Windows programs ability to "Minimize to Systray". | Windows
+| **ToSystray** | Give other Windows programs ability to "Minimize to Systray".<br/> Binary version ready to use is available to download at [Releases Page - ToSystray_v.1.0.0](https://github.com/DarknessFX/zig_workbench/releases/tag/ToSystray_v.1.0.0) | Windows
 | **zTime** | Similar to Linux TIME command, add zTime in front of your command to get the time it took to execute.<br/> Binary version ready to use is available to download at [Releases Page - zTime v1.0.1](https://github.com/DarknessFX/zig_workbench/releases/tag/zTime_v1.0.1). | Console
 
 <details>
@@ -199,8 +199,8 @@ ToSystray.exe "C:\Windows\System32\Notepad.exe" "Notepad"</pre>
 | Folder | Description |
 | ------------- | ------------- |
 |  **ModernOpenGL**  |  [Mike Shah](https://github.com/MikeShah) [ModernOpenGL](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox) Youtube Tutorials ported to Zig + SDL3.1.2 OpenGL 4.6. |
-|  **zig_raylib_examples**  | [RayLib](https://www.raylib.com/examples.html) examples ported to Zig. |
-|  **zTinyRasterizer**  |  [Lisitsa Nikita](https://github.com/lisyarus) tiny CPU rasterization engine ported to Zig. |
+|  **zig_raylib_examples**  | WIP [RayLib](https://www.raylib.com/examples.html) examples ported to Zig. |
+|  **zTinyRasterizer**  | WIP [Lisitsa Nikita](https://github.com/lisyarus) tiny CPU rasterization engine ported to Zig. |
 
 <details>
   <summary><ins>ModernOpenGL Info</ins></summary>
