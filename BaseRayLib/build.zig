@@ -92,6 +92,7 @@ pub fn buildHTML(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
   lib.linkLibC();
   lib.addIncludePath( b.path(".") );
   lib.addIncludePath( b.path("lib/raylib/include") );
+  lib.addIncludePath( .{ .cwd_relative = emscripten_include_path } );
   lib.addLibraryPath( b.path("lib/raylib") );
   //lib.linkSystemLibrary("raylib");
 
@@ -118,9 +119,8 @@ pub fn buildHTML(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
     "-sFULL_ES3=1",
     "-sUSE_WEBGL2=1",
     "-sUSE_GLFW=3",
-    "-sASYNCIFY",
-    "-sNO_EXIT_RUNTIME=1",
-    "-sWARN_ON_UNDEFINED_SYMBOLS=0",
+    "-sFILESYSTEM=0",
+    "-sUSE_OFFSET_CONVERTER=1",
   });
 
   b.getInstallStep().dependOn(&lib.step);

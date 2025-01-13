@@ -1,2 +1,0 @@
-Raylib.lib built with only RayCore, RayShapes and RayTextures.
-Audio and Models support not built for this template.

@@ -11,21 +11,33 @@ const std = @import("std");
 const ray = @cImport({ 
   @cInclude("lib/raylib/include/raylib.h");
 });
-const web = if (@import("builtin").target.os.tag == .emscripten) {
-  @cImport({
-    @cInclude("emscripten/emscripten.h");
-  });
-} else undefined;
 
 pub fn main() !void {
-  ray.InitWindow(512, 512, "Raylib Windows+Web Example");
+  ray.InitWindow(1280, 720, "Raylib");
 
+  switch (@import("builtin").target.cpu.arch) {
+    .wasm32 => { 
+      const web = @cImport({ @cInclude("emscripten/emscripten.h"); });
+      web.emscripten_set_main_loop(webLoop, 60, true); 
+    },
+    else => { loop(); },
+  }
+
+  ray.CloseWindow();
+}
+
+fn loop() callconv(.C) void {
   while (!ray.WindowShouldClose()) {
     ray.BeginDrawing();
     ray.ClearBackground(ray.BLACK);
     ray.DrawText("Hello Raylib Windows+Web", 10, 10, 32, ray.GREEN);
     ray.EndDrawing();
   }
+}
 
-  ray.CloseWindow();
+fn webLoop() callconv(.C) void {
+  ray.BeginDrawing();
+  ray.ClearBackground(ray.BLACK);
+  ray.DrawText("Hello Raylib Windows+Web", 10, 10, 32, ray.GREEN);
+  ray.EndDrawing();
 }
