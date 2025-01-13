@@ -15,7 +15,7 @@ pub const ColorOptions_Color = enum(u8) {
   BLACK_LIGHT, RED_LIGHT, GREEN_LIGHT, YELLOW_LIGHT, BLUE_LIGHT, MAGENTA_LIGHT, CYAN_LIGHT,
   WHITE,
 };
-
+  
 /// List of text decorations.
 pub const ColorOptions_Text = enum(u8) {
   BOLD, UNDERLINE, NOUNDERLINE, REVERSE, NOREVERSE, 
