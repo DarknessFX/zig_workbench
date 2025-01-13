@@ -7,7 +7,7 @@ If %errorlevel% NEQ 0 goto:eof
 
 REM CONSTANTS
 SET _ExitSub=EXIT /b
-
+ 
 REM COLOR HELPERS
 SET _bBlack=[40m
 SET _fGreen=[92m
