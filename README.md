@@ -397,13 +397,13 @@ Reason: Because this key binding try to reload the current document or display a
 
 ### Copy your libraries DLL to Zig folder
 
-When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run Main will fail because it cannot find the DLL and the exe was built somewhere in zig-cache, the error is "The terminal process ... terminated with exit code: 53.". The easier way to fix this error is to copy the library DLL to your Zig folder.
+When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run Main will fail because it cannot find the DLL and the exe was built somewhere in zig-cache, the error is "The terminal process ... terminated with exit code: 53.". The easier way to fix this error is to copy the library DLL to your Zig PATH folder.
 
 ### Personal observation about VSCode
 
 I have a Love/Hate relationship with VSCode, I only used it to code for Arduino and ESP32 with [Platform.io](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and the hate is always when the editor try to be "smart and helpful". 
 
-Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reorder because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me. And my favorite gripe: You select a function name in the Intellisense combo, it prints at your source code "YourFunction([cursor here])" BUT it don't display the arguments list, you need to backspace to delete the ( opening parenthesis, type ( and now the tooltip show up with the arguments list.
+Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reordered because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me. And my favorite gripe: You select a function name in the Intellisense combo, it prints at your source code "YourFunction([cursor here])" BUT it don't display the arguments list, you need to backspace to delete the ( opening parenthesis, type ( and now the tooltip show up with the arguments list.
 
 ## Credits
 
