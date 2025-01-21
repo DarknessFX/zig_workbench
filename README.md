@@ -54,6 +54,7 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseChipmunk2D](/BaseChipmunk2D/)** | Template with [Chipmunk2D](https://chipmunk-physics.net/) physics. | Console |
 | **[BaseBox2D](/BaseBox2D/)** | Template with [BaseBox2D](https://box2d.org/) physics. | Console |
 | **[BaseZstd](/BaseZstd/)** | Template with [BaseZstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
+| **[BaseCUDA](/BaseCUDA/)** | Template with [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) . | Console |
 | **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows |
 
 <details>
@@ -162,7 +163,26 @@ Requirements:
 </details>
 
 <details>
-  <summary><ins>About Clay</ins></summary>
+  <summary><ins>About Nvidia Cuda</ins></summary>
+<pre>Requirements:
+- Visual Studio from https://visualstudio.microsoft.com/downloads/ 
+- Nvidia CUDA SDK from https://developer.nvidia.com/cuda-downloads
+ (I'm using Nvidia CUDA SDK 12.6.3)
+
+If you get an error while installing CUDA SDK, use Custom Installation and disable the following:
+  Nsight VSE
+  Visual Studio Integration
+  Nsight Systems
+  Nsight compute
+  Nvidia GeForce Experience
+  Other components
+  Driver components
+
+If you want, you can install Nsight with its own installer.</pre>
+</details>
+
+<details>
+  <summary><ins>Failed: About Clay</ins></summary>
 <pre>Everything is working from the code/template part, but Zig's cImport fails to import Clay's macros with variadic arguments (...) .<br/>
 Sharing here for anyone interested.</pre>
 </details>
@@ -283,6 +303,38 @@ I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and
 &nbsp;&nbsp;<a href="https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme" target="_blank">Material Icon Theme</a> from Philipp Kief. (non-essential, but make VSCode looks better)</pre>
 </details>
 
+### VSCode RADDebugger
+I'm using VSCode with Cppvsdbg for a while but its features are lackluster, recently I tried RadDebugger and it works surprisingly well.
+I "hacked" a custom command into launch.json as a shortcut to start a RadDebugger session with the latest debug build. This is not feature in all .vscode/launch.json templates, if you are interested the additional launch.json settings are:
+<pre>
+    {
+      "name": "Debug with RadDebugger",
+      "type": "cppdbg",
+      "request": "launch",
+      "presentation": {
+        "hidden": false,
+        "group": "",
+        "order": 3
+      },
+      "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "${defaultBuildTask}",
+      "externalConsole": true,
+      "avoidWindowsConsoleRedirection": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/Unreal/RadDebugger/raddbg.exe",
+      "miDebuggerArgs": "-q -auto_step -project ${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+      "logging": {
+        "engineLogging": true,
+        "trace": true,
+        "traceResponse": true
+      }
+    },
+</pre>
+Remember to fix the hard-coded paths (at miDebuggerPath) to reflect your local folder path to RADDebugger.
+
 ### Ctrl+R is the new F5
 
 I changed a few VSCode keybindings for better use, mostly because Zig offer multiple options for Build, Run, Test, Generate Docs, and I setup VSCode Tasks.json with all available options.
@@ -385,6 +437,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [zstd](https://github.com/facebook/zstd) from Meta.<br/>
 [TinyRasterizer](https://github.com/lisyarus/tiny-rasterizer) from [Lisitsa Nikita](https://github.com/lisyarus).<br/>
 [Vulkan](https://www.vulkan.org/) from Khronos Group.<br/>
+[Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) from Nvidia.<br/>
 <br/>
 
 ## License
@@ -422,5 +475,6 @@ ODE         = Zig ODE Open Dynamics Engine physics program template sample examp
 Chipmunk2D  = Zig Chipmunk2D physics program template sample example.
 Box2D       = Zig Box2D physics program template sample example.
 zstd        = Zig Zstd fast lossless compression program template sample example.
+CUDA        = Zig NVIDIA CUDA program template sample example.
 </pre>
 </details>

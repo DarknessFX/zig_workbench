@@ -1,0 +1,61 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "presentation": {
+        "hidden": false,
+        "group": "",
+        "order": 1
+      },
+      "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+      "args": [ ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "preLaunchTask": "${defaultBuildTask}",
+      "console": "integratedTerminal",
+      "symbolSearchPath": "${workspaceFolder}/bin/Debug/",
+    },
+    {
+      "name": "Debug Attach",
+      "type": "cppvsdbg",
+      "request":  "attach",
+      "presentation": {
+        "hidden": true,
+        "group": "",
+        "order": 2
+      },
+      "preLaunchTask": "Zig: Run main",
+      "internalConsoleOptions": "openOnFirstSessionStart",
+      "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "Debug with RadDebugger",
+      "type": "cppdbg",
+      "request": "launch",
+      "presentation": {
+        "hidden": false,
+        "group": "",
+        "order": 3
+      },
+      "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "${defaultBuildTask}",
+      "externalConsole": true,
+      "avoidWindowsConsoleRedirection": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/Unreal/RadDebugger/raddbg.exe",
+      "miDebuggerArgs": "-q -auto_step -project ${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+      "logging": {
+        "engineLogging": false,
+        "trace": false,
+        "traceResponse": false
+      }
+    },
+  ]
+}
