@@ -305,33 +305,33 @@ I'm using [VSCode](https://code.visualstudio.com/download) to program in Zig and
 
 ### VSCode RADDebugger
 I'm using VSCode with Cppvsdbg for a while but its features are lackluster, recently I tried RadDebugger and it works surprisingly well.
-I "hacked" a custom command into launch.json as a shortcut to start a RadDebugger session with the latest debug build. This is not feature in all .vscode/launch.json templates, if you are interested the additional launch.json settings are:
+I "hacked" a custom command into launch.json as a shortcut to start a RadDebugger session with the latest debug build.<br/>This is not feature in all .vscode/launch.json templates, if you are interested the additional launch.json settings are:
 <pre>
-    {
-      "name": "Debug with RadDebugger",
-      "type": "cppdbg",
-      "request": "launch",
-      "presentation": {
-        "hidden": false,
-        "group": "",
-        "order": 3
-      },
-      "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "preLaunchTask": "${defaultBuildTask}",
-      "externalConsole": true,
-      "avoidWindowsConsoleRedirection": true,
-      "MIMode": "gdb",
-      "miDebuggerPath": "C:/Unreal/RadDebugger/raddbg.exe",
-      "miDebuggerArgs": "-q -auto_step -project ${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
-      "logging": {
-        "engineLogging": true,
-        "trace": true,
-        "traceResponse": true
-      }
-    },
+{
+  "name": "Debug with RadDebugger",
+  "type": "cppdbg",
+  "request": "launch",
+  "presentation": {
+    "hidden": false,
+    "group": "",
+    "order": 3
+  },
+  "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+  "args": [],
+  "stopAtEntry": false,
+  "cwd": "${workspaceFolder}",
+  "preLaunchTask": "${defaultBuildTask}",
+  "externalConsole": true,
+  "avoidWindowsConsoleRedirection": true,
+  "MIMode": "gdb",
+  "miDebuggerPath": "C:/Unreal/RadDebugger/raddbg.exe",
+  "miDebuggerArgs": "-q -auto_step -project ${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+  "logging": {
+    "engineLogging": true,
+    "trace": true,
+    "traceResponse": true
+  }
+},
 </pre>
 Remember to fix the hard-coded paths (at miDebuggerPath) to reflect your local folder path to RADDebugger.
 
