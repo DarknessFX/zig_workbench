@@ -333,7 +333,7 @@ I "hacked" a custom command into launch.json as a shortcut to start a RadDebugge
   }
 },
 </pre>
-Remember to fix the hard-coded paths (at miDebuggerPath) to reflect your local folder path to RADDebugger.
+Remember to fix the hard-coded paths (at miDebuggerPath) to reflect your local folder to RADDebugger path.
 
 ### Ctrl+R is the new F5
 
