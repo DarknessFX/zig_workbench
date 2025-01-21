@@ -1,4 +1,4 @@
-@ECHO OFF
+@ECHO OFF 
 TITLE ZIG %1 %2
 CD /D "%~dp2"
 IF /I "%1"=="build" (
