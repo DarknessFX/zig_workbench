@@ -339,7 +339,7 @@ Remember to fix the hard-coded paths (at miDebuggerPath) to reflect your local f
 
 I changed a few VSCode keybindings for better use, mostly because Zig offer multiple options for Build, Run, Test, Generate Docs, and I setup VSCode Tasks.json with all available options.
 
-The most important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last ask. 
+The most important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last task. 
 
 Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. **CTRL+T, Enter** became one of my most used keyboard shortcut inside VSCode and **CTRL+R** to repeat the last task.<br/>
 
