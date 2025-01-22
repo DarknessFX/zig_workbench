@@ -13,7 +13,7 @@ REM
 REM Full extra_args sample of a project that use SDL2 + OpenGL + microui :
 REM  SET extra_args=-lSDL2 -lOpenGL32 -L "%CD%\lib\SDL2" -I "%CD%\lib\microui" -I "%CD%\lib\SDL2\include"
 
-SET extra_args=-lSDL3 -lOpenGL32 -luser32 -lole32 -lgdi32 -limm32 -lwinmm -lsetupapi -lversion -loleaut32 -L"%CD%\lib\SDL3\static" -I"%CD%\lib\SDL3\include"
+SET extra_args=-lSDL3 -L"%CD%\lib\SDL3\shared" -I"%CD%\lib" -I"%CD%\lib\SDL3"
 
 REM AddCSource
 REM ==========

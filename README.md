@@ -135,7 +135,8 @@ I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it
 
 <details>
   <summary><ins>About SDL3</ins></summary>
-<pre>&nbsp;&nbsp;Built from source in 20241216, version 3.1.6.</pre>
+<pre>&nbsp;&nbsp;Built from source in 20250122, version 3.2.1.
+Options to build using Shared or Static library.</pre>
 </details>
 
 <details>
