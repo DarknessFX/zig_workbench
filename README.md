@@ -52,8 +52,8 @@ Using Windows 10, Zig x86_64 Version : **0.13.0**
 | **[BaseDuckDB](/BaseDuckDB/)** | Template with [DuckDB](https://duckdb.org/) database. | Console |
 | **[BaseODE](/BaseODE/)** | Template with [ODE](https://www.ode.org/) Open Dynamics Engine physics. | Console |
 | **[BaseChipmunk2D](/BaseChipmunk2D/)** | Template with [Chipmunk2D](https://chipmunk-physics.net/) physics. | Console |
-| **[BaseBox2D](/BaseBox2D/)** | Template with [BaseBox2D](https://box2d.org/) physics. | Console |
-| **[BaseZstd](/BaseZstd/)** | Template with [BaseZstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
+| **[BaseBox2D](/BaseBox2D/)** | Template with [Box2D](https://box2d.org/) physics. | Console |
+| **[BaseZstd](/BaseZstd/)** | Template with [Zstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
 | **[BaseCUDA](/BaseCUDA/)** | Template with [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) . | Console |
 | **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows |
 
