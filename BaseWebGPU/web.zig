@@ -1,7 +1,11 @@
 //!zig-autodoc-section: BaseWebGPU\\web.zig
 //! web.zig :
-//!	  HTML5 WASM WebGPU source code (portable and offline).
-// Build using Zig 0.13.0
+//!  HTML5 WASM WebGPU source code (portable and offline).
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const wsm = @import("shared.zig");
 const log = wsm.log;
@@ -38,9 +42,9 @@ const web = struct {
 };
 
 
-// ============================================================================
-// Main
-//
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !void {
   web.canvas.name = "canvas";
   web.instance = gpu.wgpuCreateInstance(null);
@@ -97,9 +101,9 @@ fn main_continue() void {
 }
 
 
-// ============================================================================
-// Functions
-//
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn RenderFrame() callconv(.C) void {
   web.vars_rot += 0.1;
   web.vars_rot = if (web.vars_rot >= 360) 0.0 else web.vars_rot;
@@ -261,10 +265,9 @@ fn stopAll() void {
   gpu.wgpuInstanceRelease(web.instance);
 }
 
-
-//--------------------------------------------------
-// Callbacks
-//--------------------------------------------------
+//#endregion ==================================================================
+//#region MARK: CALLBACKS
+//=============================================================================
 export fn onWindowResize(callback: ?*anyopaque) void {
   _ = callback;
 
@@ -280,9 +283,9 @@ export fn onWindowResize(callback: ?*anyopaque) void {
 }
 
 
-// ============================================================================
-// Tools
-//
+//#endregion ==================================================================
+//#region MARK: TOOLS
+//=============================================================================
 fn createSwapchain() gpu.WGPUSwapChain {
   const surface = gpu.wgpuInstanceCreateSurface(web.instance, &gpu.WGPUSurfaceDescriptor{
     .nextInChain = @ptrCast(&gpu.WGPUSurfaceDescriptorFromCanvasHTMLSelector{
@@ -322,9 +325,9 @@ fn createBuffer(data: ?*const anyopaque, size: usize, usage: gpu.WGPUBufferUsage
 }
 
 
-//--------------------------------------------------
-// vertex and fragment shaders
-//--------------------------------------------------
+//#endregion ==================================================================
+//#region MARK: SHADER
+//=============================================================================
 const wgsl_triangle = 
 \\  /* attribute/uniform decls */
 \\  
@@ -365,3 +368,14 @@ const wgsl_triangle =
 \\      return vec4<f32>(vCol, 1.0);
 \\  }
 ;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

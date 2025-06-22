@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseImGui.Main
 //! BaseImGui//main.zig :
 //!   Template using Dear ImGui with OpenGL3 renderer.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -48,6 +51,9 @@ const ImVec4 = struct {
   z: f32
 };
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hPrevInstance;
@@ -196,7 +202,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = gl.wglDeleteContext(g_hRC);
   return 0;
 }
-
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 pub extern fn cImGui_ImplWin32_WndProcHandler(
   hWnd: win.HWND,
   msg: win.UINT,
@@ -348,6 +356,9 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
@@ -460,6 +471,39 @@ pub const MSG = extern struct {
   lPrivate: win.DWORD,
 };
 
+pub const PM_REMOVE = 0x0001;
+pub const PIXELFORMATDESCRIPTOR = extern struct {
+    nSize: win.WORD = @sizeOf(PIXELFORMATDESCRIPTOR),
+    nVersion: win.WORD,
+    dwFlags: win.DWORD,
+    iPixelType: win.BYTE,
+    cColorBits: win.BYTE,
+    cRedBits: win.BYTE,
+    cRedShift: win.BYTE,
+    cGreenBits: win.BYTE,
+    cGreenShift: win.BYTE,
+    cBlueBits: win.BYTE,
+    cBlueShift: win.BYTE,
+    cAlphaBits: win.BYTE,
+    cAlphaShift: win.BYTE,
+    cAccumBits: win.BYTE,
+    cAccumRedBits: win.BYTE,
+    cAccumGreenBits: win.BYTE,
+    cAccumBlueBits: win.BYTE,
+    cAccumAlphaBits: win.BYTE,
+    cDepthBits: win.BYTE,
+    cStencilBits: win.BYTE,
+    cAuxBuffers: win.BYTE,
+    iLayerType: win.BYTE,
+    bReserved: win.BYTE,
+    dwLayerMask: win.DWORD,
+    dwVisibleMask: win.DWORD,
+    dwDamageMask: win.DWORD,
+};
+
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 pub extern "user32" fn BeginPaint(
   hWnd: ?win.HWND,
   lpPaint: ?*PAINTSTRUCT,
@@ -555,7 +599,6 @@ pub extern "user32" fn UpdateWindow(
   hWnd: win.HWND
 ) callconv(WINAPI) win.BOOL;
 
-pub const PM_REMOVE = 0x0001;
 pub extern "user32" fn PeekMessageA(lpMsg: *MSG, hWnd: ?win.HWND, wMsgFilterMin: win.UINT, wMsgFilterMax: win.UINT, wRemoveMsg: win.UINT) callconv(WINAPI) win.BOOL;
 pub extern "user32" fn TranslateMessage(lpMsg: *const MSG) callconv(WINAPI) win.BOOL;
 pub extern "user32" fn DispatchMessageW(lpMsg: *const MSG) callconv(WINAPI) win.LRESULT;
@@ -565,34 +608,6 @@ pub extern "user32" fn AdjustWindowRectEx(lpRect: *win.RECT, dwStyle: win.DWORD,
 pub extern "user32" fn CreateWindowExW(dwExStyle: win.DWORD, lpClassName: [*:0]const u16, lpWindowName: [*:0]const u16, dwStyle: win.DWORD, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWindParent: ?win.HWND, hMenu: ?win.HMENU, hInstance: win.HINSTANCE, lpParam: ?win.LPVOID) callconv(WINAPI) ?win.HWND;
 pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
 pub extern "user32" fn GetDC(hWnd: ?win.HWND) callconv(WINAPI) ?win.HDC;
-pub const PIXELFORMATDESCRIPTOR = extern struct {
-    nSize: win.WORD = @sizeOf(PIXELFORMATDESCRIPTOR),
-    nVersion: win.WORD,
-    dwFlags: win.DWORD,
-    iPixelType: win.BYTE,
-    cColorBits: win.BYTE,
-    cRedBits: win.BYTE,
-    cRedShift: win.BYTE,
-    cGreenBits: win.BYTE,
-    cGreenShift: win.BYTE,
-    cBlueBits: win.BYTE,
-    cBlueShift: win.BYTE,
-    cAlphaBits: win.BYTE,
-    cAlphaShift: win.BYTE,
-    cAccumBits: win.BYTE,
-    cAccumRedBits: win.BYTE,
-    cAccumGreenBits: win.BYTE,
-    cAccumBlueBits: win.BYTE,
-    cAccumAlphaBits: win.BYTE,
-    cDepthBits: win.BYTE,
-    cStencilBits: win.BYTE,
-    cAuxBuffers: win.BYTE,
-    iLayerType: win.BYTE,
-    bReserved: win.BYTE,
-    dwLayerMask: win.DWORD,
-    dwVisibleMask: win.DWORD,
-    dwDamageMask: win.DWORD,
-};
 
 pub extern "gdi32" fn SetPixelFormat(
     hdc: ?win.HDC,
@@ -605,3 +620,12 @@ pub extern "gdi32" fn ChoosePixelFormat(
     ppfd: ?*const PIXELFORMATDESCRIPTOR,
 ) callconv(WINAPI) win.INT;
 pub extern "gdi32" fn SwapBuffers(hdc: ?win.HDC) callconv(WINAPI) bool;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================

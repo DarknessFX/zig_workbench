@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseImGui.Main
 //! BaseImGui//main.zig :
 //!   Template using Dear ImGui with DirectX11 renderer.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -49,7 +52,9 @@ const ImVec4 = struct {
   w: f32,
   z: f32
 };
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hPrevInstance;
@@ -195,6 +200,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   return 0;
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 // DIRECTX 11
 fn CreateDeviceD3D(hWnd: win.HWND) bool { 
   var sd = std.mem.zeroes(dx.DXGI_SWAP_CHAIN_DESC);
@@ -358,6 +366,9 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
@@ -470,6 +481,9 @@ pub const MSG = extern struct {
   lPrivate: win.DWORD,
 };
 
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 pub extern "user32" fn BeginPaint(
   hWnd: ?win.HWND,
   lpPaint: ?*PAINTSTRUCT,
@@ -615,3 +629,11 @@ pub extern "gdi32" fn ChoosePixelFormat(
   ppfd: ?*const PIXELFORMATDESCRIPTOR,
 ) callconv(WINAPI) win.INT;
 pub extern "gdi32" fn SwapBuffers(hdc: ?win.HDC) callconv(WINAPI) bool;
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================

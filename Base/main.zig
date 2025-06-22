@@ -1,17 +1,26 @@
 //!zig-autodoc-section: Base.Main
 //! Base\\main.zig :
 //!   Template for a console program.
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 
 const std = @import("std");
 
-/// Main function
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
+
 pub fn main() void {
+  printLine("Base Template :");
   print("All your {s} are belong to us.\n", .{"codebase"});
 }
 
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 /// Print to standard out.
 fn print(comptime fmt: []const u8, args: anytype) void {
@@ -22,16 +31,21 @@ fn print(comptime fmt: []const u8, args: anytype) void {
 }
 
 /// Print line directly when text don't need formating.
-fn printLine(line: []const u8) void {
-  print("{s}\n", .{ line });
-}
+inline fn printLine(line: []const u8) void { print("{s}\n", .{ line }); }
 
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
 
-// ============================================================================
-// Tests
-//
-test " Print" {
+test " print" {
   print("\nTest print(): Hello {s}!", .{" world"});
   try std.testing.expect(true);
-  print("\nNo error is good.\n", .{});
 }
+
+test " printLine" {
+  printLine("\nTest printLine(): No error is good.");
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

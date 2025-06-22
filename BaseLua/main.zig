@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseLua\\main.zig
 //! main.zig :
-//!	  Template for Lua program.
-// Build using Zig 0.13.0
+//!  Template for Lua program.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -15,6 +18,9 @@ const lua = @cImport({
   @cInclude("stdio.h");    
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() u8 {
   //HideConsoleWindow();
   const stderr = std.io.getStdErr().writer();
@@ -60,9 +66,9 @@ fn lua_cont(lua_state: ?*lua.lua_State, status: c_int, ctx: lua.lua_KContext) ca
 }
 
 
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
@@ -102,8 +108,13 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
-test " " {
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

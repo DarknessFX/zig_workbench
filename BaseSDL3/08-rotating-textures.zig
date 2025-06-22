@@ -1,3 +1,8 @@
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 
@@ -18,6 +23,9 @@ var texture_height: c_int = 0;
 const WINDOW_WIDTH = 640;
 const WINDOW_HEIGHT = 480;
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 //* This function runs once at startup. */
 pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sdl.SDL_AppResult {
   _ = appstate; _ = argc; _ = argv;
@@ -87,6 +95,10 @@ pub export fn SDL_AppEvent(appstate: ?*anyopaque, event: *sdl.SDL_Event) sdl.SDL
   return sdl.SDL_APP_CONTINUE; // carry on with the program
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
+
 //* This function runs once per frame, and is the heart of the program. */
 pub export fn SDL_AppIterate(appstate: ?*anyopaque) sdl.SDL_AppResult {
   _ = appstate;
@@ -137,3 +149,13 @@ pub export fn SDL_AppQuit(appstate: ?*anyopaque, result: sdl.SDL_AppResult) void
   sdl.SDL_DestroyTexture(texture);
   //* SDL will clean up the window/renderer for us. */
 }
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

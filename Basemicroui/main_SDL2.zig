@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseMicroui.Main
 //! BaseMicroui//main.zig :
-//!   Template using Microui and SDL2.
-// Build using Zig 0.13.0
+//!  Template using Microui and SDL2.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -34,9 +37,7 @@ const atlas = @import("atlas.zig");
 //   gui_demo.zig - microui default SDL2 demo sample.
 const gui = @import("gui.zig");
 
-//
-// MAIN
-//
+
 var winhWnd: win.HWND = undefined;
 var window: *(sdl.SDL_Window) = undefined;
 var glctx: sdl.SDL_GLContext = undefined;
@@ -52,6 +53,10 @@ var  vert_buf:  [16384 *  6]sdl.GLfloat = std.mem.zeroes([16384 *  6]sdl.GLfloat
 var color_buf:  [16384 *  6]sdl.GLubyte = std.mem.zeroes([16384 *  6]sdl.GLubyte);
 var  index_buf: [16384 *  6]sdl.GLuint  = std.mem.zeroes([16384 *  6]sdl.GLuint );
 
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hInstance;
@@ -124,7 +129,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 
   return 0;
 }
-
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 //Fix when using subsystem Windows and linking Libc
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
@@ -299,3 +306,15 @@ pub fn r_set_clip_rect(rect: mu.mu_Rect) void {
   flush();
   sdl.glScissor(rect.x, height - (rect.y + rect.h), rect.w, rect.h);
 }
+
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

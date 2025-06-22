@@ -1,9 +1,15 @@
 //!zig-autodoc-section: BaseSFML2.Main
 //! BaseSFML2//main.zig :
-//!   Template using SFML2.6.
-// Build using Zig 0.13.0
+//!  Template using SFML2.6.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
+
+// NOTE Download https://www.sfml-dev.org/download/csfml/ 
+// NOTE and copy all .DLL to your ZIG PATH.
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
@@ -14,6 +20,9 @@ const sfml = @cImport({
   @cInclude("lib/CSFML2/include/System.h");
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() u8  {
   HideConsoleWindow();
   
@@ -69,9 +78,10 @@ pub fn main() u8  {
   return 0;
 }
 
-// ============================================================================
-// Helpers
-//
+
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
@@ -110,3 +120,14 @@ pub extern "user32" fn MessageBoxA(
   lpCaption: [*:0]const u8,
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

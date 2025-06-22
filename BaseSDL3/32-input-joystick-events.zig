@@ -1,3 +1,8 @@
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 
@@ -64,7 +69,9 @@ fn add_message(jid: sdl.SDL_JoystickID, comptime fmt: []const u8, args: anytype)
     .start_ticks = sdl.SDL_GetTicks(),
   }) catch unreachable;
 }
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 //* This function runs once at startup. */
 pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sdl.SDL_AppResult {
   _ = appstate; _ = argc; _ = argv;
@@ -92,7 +99,9 @@ pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sd
 
   return sdl.SDL_APP_CONTINUE; // carry on with the program!
 }
-
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 //* This function runs when a new event (mouse input, keypresses, etc) occurs. */
 pub export fn SDL_AppEvent(appstate: ?*anyopaque, event: *sdl.SDL_Event) sdl.SDL_AppResult {
   _ = appstate;
@@ -228,3 +237,14 @@ pub export fn SDL_AppQuit(appstate: ?*anyopaque, result: sdl.SDL_AppResult) void
 
   //* SDL will clean up the window/renderer for us. */
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

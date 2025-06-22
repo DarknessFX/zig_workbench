@@ -1,8 +1,12 @@
 //!zig-autodoc-section: BaseWebGPU\\app.zig
 //! app.zig :
-//!	  Platform application source code (Windows/Linux/Mac).
-//!   Using SDL2 and Dawn WebGPU.
-// Build using Zig 0.13.0
+//!  Platform application source code (Windows/Linux/Mac).
+//!  Using SDL2 and Dawn WebGPU.
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -34,9 +38,9 @@ const app = struct {
 };
 
 
-// ============================================================================
-// Main
-//
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() void {
   HideConsoleWindow();
 
@@ -65,9 +69,9 @@ pub fn main() void {
 }
 
 
-// ============================================================================
-// Functions
-//
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn ProcessInput() void {
 	var event: gpu.SDL_Event = undefined;
   while (gpu.SDL_PollEvent(&event) != 0) {
@@ -345,9 +349,9 @@ fn stopWindow() void {
 }
 
 
-// ============================================================================
-// Callbacks
-//
+//#endregion ==================================================================
+//#region MARK: CALLBACKS
+//=============================================================================
 pub fn requestAdapterCallback (
   status: gpu.WGPURequestAdapterStatus, 
   adapter: gpu.WGPUAdapter, 
@@ -385,9 +389,9 @@ pub fn requestDeviceCallback (
 }
 
 
-// ============================================================================
-// Tools
-//
+//#endregion ==================================================================
+//#region MARK: TOOLS
+//=============================================================================
 fn createShader(code: [*:0]const u8, label: [*:0]const u8) gpu.WGPUShaderModule {
   const wgsl = gpu.WGPUShaderModuleWGSLDescriptor{
     .chain = .{ .sType = gpu.WGPUSType_ShaderSourceWGSL },
@@ -444,9 +448,9 @@ fn HideConsoleWindow() void {
 }
 
 
-// ============================================================================
-// Shaders
-//
+//#endregion ==================================================================
+//#region MARK: SHADERS
+//=============================================================================
 const wgsl_triangle = 
 \\  /* attribute/uniform decls */
 \\  
@@ -489,9 +493,9 @@ const wgsl_triangle =
 ;
 
 
-// ============================================================================
-// Win32API
-//
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 pub extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: win.LPSTR,
   nSize: win.DWORD,
@@ -520,8 +524,13 @@ extern "kernel32" fn GetModuleHandleA(
   lpModuleName: ?[*:0]const u8
 ) callconv(win.WINAPI) win.HINSTANCE;
 
-// ============================================================================
-// Tests
-//
-test " " {
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

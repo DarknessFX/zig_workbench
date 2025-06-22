@@ -1,3 +1,8 @@
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 
@@ -22,6 +27,11 @@ const CLIPRECT_SPEED = 200;   //* pixels per second */
 var cliprect_position: sdl.SDL_FPoint  = undefined;
 var cliprect_direction: sdl.SDL_FPoint = undefined;
 var last_time: f32  = 0.0;
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
+
 
 //* This function runs once at startup. */
 pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sdl.SDL_AppResult {
@@ -76,6 +86,9 @@ pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sd
 
   return sdl.SDL_APP_CONTINUE; // carry on with the program!
 }
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 //* This function runs when a new event (mouse input, keypresses, etc) occurs. */
 pub export fn SDL_AppEvent(appstate: ?*anyopaque, event: *sdl.SDL_Event) sdl.SDL_AppResult {
@@ -149,3 +162,14 @@ pub export fn SDL_AppQuit(appstate: ?*anyopaque, result: sdl.SDL_AppResult) void
   sdl.SDL_DestroyTexture(texture);
   //* SDL will clean up the window/renderer for us. */
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

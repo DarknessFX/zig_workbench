@@ -1,13 +1,16 @@
 //!zig-autodoc-section: BaseOpenGL.Main
 //! BaseOpenGL//main.zig :
 //!   Template using OpenGL and Windows GDI.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
 // Port from https://www.opengl.org/archives/resources/code/samples/win32_tutorial/animate.c
 // An example of an OpenGL animation loop using the Win32 API. Also
 // demonstrates palette management for RGB and color index modes and
 // general strategies for message handling.
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -33,7 +36,7 @@ const wnd_classname = wnd_title ++ L("_class");
 var wnd_size: win.RECT = .{ .left=0, .top=0, .right=1280, .bottom=720 };
 var wnd_dc: win.HDC = undefined;
 var wnd_dpi: win.UINT = 96;
-var wnd_palette: HPALETTE = undefined;
+var wnd_palette: ?HPALETTE = null;
 
 var gl_HWND: gl.HWND = undefined;
 var gl_HDC : gl.HDC = undefined;
@@ -42,6 +45,10 @@ var gl_RC : gl.HGLRC = undefined;
 var gl_anim: gl.GLboolean = gl.GL_TRUE;
 var gl_buffer: c_int = gl.PFD_DOUBLEBUFFER;
 var gl_coloridx: c_int = gl.PFD_TYPE_RGBA;
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
@@ -79,11 +86,15 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     glDisplay();
   }
 
-  if (wnd_palette != undefined) { 
+  if (wnd_palette != null) { 
     _ = DeleteObject(ToWinObj(HGDIOBJ, &wnd_palette)); }
 
   return 0;
 }
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 fn glDisplay() void {
   gl.glClear(gl.GL_COLOR_BUFFER_BIT);
@@ -145,7 +156,7 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
     },
     WM_PALETTECHANGED,
     WM_QUERYNEWPALETTE => {
-      if (wnd_palette != undefined) {
+      if (wnd_palette != null) {
         _ = UnrealizeObject(ToWinObj(HGDIOBJ, &wnd_palette));
         _ = SelectPalette(wnd_dc, ToWinObj(HPALETTE, &wnd_palette), win.FALSE);
         _ = RealizePalette(wnd_dc);
@@ -237,6 +248,9 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 const VK_ESCAPE = 27;
 const VK_LSHIFT = 160;
 const PM_REMOVE = 0x0001;
@@ -319,6 +333,9 @@ const WNDPROC = *const fn (
   lParam: win.LPARAM
 ) callconv(WINAPI) win.LRESULT;
 
+//#endregion ==================================================================
+//#region MARK: WNIAPI
+//=============================================================================
 extern "user32" fn RegisterClassExW(
   *const WNDCLASSEXW
 ) callconv(WINAPI) win.ATOM;
@@ -559,3 +576,14 @@ pub extern "gdi32" fn wglCreateContext(hdc: ?win.HDC) callconv(WINAPI) ?win.HGLR
 pub extern "gdi32" fn wglMakeCurrent(hdc: ?win.HDC, hglrc: ?win.HGLRC) callconv(WINAPI) bool;
 pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(WINAPI) void;
 pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

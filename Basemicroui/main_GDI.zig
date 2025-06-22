@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseMicroui.Main
 //! BaseMicroui//main.zig :
-//!   Template using Microui and Windows GDI.
-// Build using Zig 0.13.0
+//!  Template using Microui and Windows GDI.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -28,10 +31,6 @@ pub const mu = @cImport({
 //   gui_demo.zig - microui default SDL2 demo sample.
 const gui = @import("gui.zig");
 
-
-//
-// MAIN
-//
 var wnd: win.HWND = undefined;
 var hFont: ?HFONT = undefined;
 var mHDC: win.HDC = undefined;
@@ -48,6 +47,10 @@ var height: c_int = 768;
 var buf_idx: c_int = 0;
 var bg: [3]c_int = [3]c_int { 50, 50, 50 };
 
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hPrevInstance;
@@ -124,7 +127,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 
   return 0;
 }
-
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(WINAPI) win.LRESULT {
   switch (uMsg) {
     WM_DESTROY => {
@@ -308,8 +313,7 @@ pub fn r_draw_icon(id: c_int, rect: mu.mu_Rect, color: mu.mu_Color) void {
     mu.MU_ICON_CLOSE=> { c = 'x'; },
     mu.MU_ICON_CHECK=> { c = 'X'; },
     mu.MU_ICON_COLLAPSED=> {c = '>'; },
-    mu.MU_ICON_EXPANDED=> {c = 'v'; },
-    //case MU_ICON_RESIZE:	c = '+'; break;
+    mu.MU_ICON_EXPANDED=> {c = 'v'; }, 
     else => {}
   }
   buf[0] = @as(u8, @intCast(c));
@@ -326,19 +330,16 @@ pub fn r_set_clip_rect(rect: mu.mu_Rect) void {
   _ = IntersectClipRect(mHDC, rect.x, rect.y, rect.x + rect.w, rect.y + rect.h);
 }
 
-
-
-//
-// WINAPI
-//
-
-
 // Fix for libc linking error.
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
+
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 fn LOWORD(l: win.LONG_PTR) win.INT { return @as(i32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.INT { return (@as(i32, @intCast(l)) >> 16) & 0xFFFF; }
 
@@ -435,6 +436,10 @@ const WNDCLASSEXW = extern struct {
   lpszClassName: [*:0]const u16,
   hIconSm: ?win.HICON,
 };
+
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 
 const WNDPROC = *const fn (
   hwnd: win.HWND, 
@@ -847,6 +852,10 @@ pub extern "user32" fn SetCapture(
 pub extern "user32" fn ReleaseCapture(
 ) callconv(WINAPI) win.BOOL;
 
+
+//#endregion ==================================================================
+//#region MARK: VIRTUALKEYS
+//=============================================================================
 
 // VIRTUAL_KEYS
 // Copied from marlersoft zigwin32 
@@ -1314,3 +1323,15 @@ pub const VK_ZOOM = @intFromEnum(VIRTUAL_KEY.ZOOM);
 pub const VK_NONAME = @intFromEnum(VIRTUAL_KEY.NONAME);
 pub const VK_PA1 = @intFromEnum(VIRTUAL_KEY.PA1);
 pub const VK_OEM_CLEAR = @intFromEnum(VIRTUAL_KEY.OEM_CLEAR);
+
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

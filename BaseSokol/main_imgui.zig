@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseSokol\\main.zig
 //! main.zig :
-//!	  Template using Sokol framework and Dear ImGui.
-// Build using Zig 0.13.0
+//!  Template using Sokol framework and Dear ImGui.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 pub extern fn main() void; // Skip Zig Maig in favor of Sokol_Main.
 
@@ -21,6 +24,27 @@ const sk = @cImport({
 const state = struct {
   var pass_action: sk.sg_pass_action = undefined;
 };
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
+pub export fn sokol_main() sk.sapp_desc {
+  return sk.sapp_desc{
+    .init_cb = init,
+    .frame_cb = frame,
+    .cleanup_cb = cleanup,
+    .event_cb = event,
+    .window_title = "Hello Sokol + Dear ImGui",
+    .width = 1280,
+    .height = 720,
+    .icon = .{ .sokol_default = true },
+    .logger = .{ .func = sk.slog_func },
+  };
+}
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 fn init() callconv(.C) void {
   sk.sg_setup(&sk.sg_desc{
@@ -72,16 +96,13 @@ fn event(ev: [*c]const sk.sapp_event) callconv(.C) void {
   _ = sk.simgui_handle_event(ev);
 }
 
-pub export fn sokol_main() sk.sapp_desc {
-  return sk.sapp_desc{
-    .init_cb = init,
-    .frame_cb = frame,
-    .cleanup_cb = cleanup,
-    .event_cb = event,
-    .window_title = "Hello Sokol + Dear ImGui",
-    .width = 1280,
-    .height = 720,
-    .icon = .{ .sokol_default = true },
-    .logger = .{ .func = sk.slog_func },
-  };
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

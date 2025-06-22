@@ -1,8 +1,12 @@
 //!zig-autodoc-section: BaseWebGPU\\shared.zig
 //! shared.zig :
-//!	  Library of functions that are accessible and 
-//!   shared by Web + Wasm and Platforms binaries.
-// Build using Zig 0.13.0
+//!  Library of functions that are accessible and 
+//!  shared by Web + Wasm and Platforms binaries.
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const Title: []const u8 = "Shared";
 
@@ -37,3 +41,6 @@ pub export fn sub(a: i32, b: i32) i32 {
   log("{s}: Sub result {d}.", .{ Title, a - b });
   return a - b;
 }
+
+//#endregion ==================================================================
+//=============================================================================

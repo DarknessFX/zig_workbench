@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseNanoVG.Main
 //! BaseNanoVG//main.zig :
-//!   Template using NanoVG and GLFW3.
-// Build using Zig 0.13.0
+//!  Template using NanoVG and GLFW3.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -17,6 +20,9 @@ const nvg = @cImport({
   @cInclude("lib/nanovg/nanovg_gl.h");
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() u8 {
   HideConsoleWindow();
 
@@ -83,10 +89,9 @@ pub fn main() u8 {
   return 0;
 }
 
-
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
@@ -125,3 +130,14 @@ pub extern "user32" fn MessageBoxA(
   lpCaption: [*:0]const u8,
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

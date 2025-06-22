@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseBox2D\\main.zig
 //! main.zig :
-//!	  Template for a console program that hide the console window.
-// Build using Zig 0.13.0
+//!  Template for a console program that hide the console window.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -22,6 +25,9 @@ const height: c_int = 1080;
 const GROUND_COUNT: c_int = 14;
 const BOX_COUNT: c_int = 10;
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() u8 {
   //HideConsoleWindow();
   const lengthUnitsPerMeter = 128.0;
@@ -79,9 +85,9 @@ pub fn main() u8 {
   return 0;
 }
 
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 //  _ = MessageBoxA(null, "Console window is hide.", "BaseBox2D", MB_OK);
 const win = struct {
   usingnamespace std.os.windows;
@@ -122,8 +128,13 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
-test " " {
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

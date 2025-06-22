@@ -15,7 +15,7 @@
 ## About
 I'm studying and learning [Zig Language](https://ziglearn.org/chapter-0/) (started Nov 19, 2023), sharing here my Zig projects, templates, libs and tools.
 
-Using Windows 10, Zig x86_64 Version : **0.13.0**
+Using Windows 10, Zig x86_64 Version : **0.14.1**
 
 > [!NOTE]
 > This is a student project, code will run and build without errors (mostly because I just throw away errors), it is not a reference of "*best coding practices*". Suggestions or contributions changing the code to the "*right way and best practices*" are welcome.

@@ -1,5 +1,10 @@
 //!zig-autodoc-section: Windows API
 //! Windows API
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 pub const win = @This();
 const std = @import("std");
 usingnamespace std.os.windows;
@@ -31,6 +36,9 @@ pub const wnd_type = struct {
 };
 pub var wnd: wnd_type = .{};
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: INT) void {
   _ = nCmdShow;
 
@@ -125,6 +133,9 @@ pub fn Destroy() void {
   _ = DestroyWindow(wnd.hWnd);
 }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 const TRUE = std.os.windows.TRUE;
 const FALSE = std.os.windows.FALSE;
 
@@ -382,7 +393,9 @@ const NOTIFYICONDATAA = extern struct {
   hBalloonIcon: HICON
 };
 
-
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 fn LOWORD(l: LONG_PTR) UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: LONG_PTR) UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
@@ -628,3 +641,14 @@ extern "user32" fn SetWindowPos(
   cy: INT,
   uFlags: UINT,        
 ) callconv(WINAPI) BOOL;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

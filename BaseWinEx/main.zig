@@ -1,18 +1,17 @@
 //!zig-autodoc-section: BaseWinEX
 //!  Template for a Windows program, Windows API as submodule.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
-// ============================================================================
-// Globals.
-//
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = @import("winapi.zig");
 var wnd: win.wnd_type = undefined;
 
-// ============================================================================
-// Main core and app flow.
-//
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
   _ = &hPrevInstance; _ = &pCmdLine;
@@ -46,6 +45,9 @@ fn MainLoop() void {
   }
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 // Fix for libc linking error.
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
@@ -54,8 +56,11 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 }
 
 
-// ============================================================================
-// Tests 
-//
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
 test " " {
 }
+
+//#endregion ==================================================================
+//=============================================================================

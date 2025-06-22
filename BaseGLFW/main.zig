@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseGLFW.Main
 //! BaseGLFW//main.zig :
 //!   Template using GLFW3.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 const win = struct {
@@ -19,7 +22,9 @@ const glfw = @cImport({
   @cInclude("lib/glfw/include/glfw3.h");
 });
 
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() void {
   // Hide console window
   const BUF_TITLE = 1024;
@@ -45,6 +50,9 @@ pub fn main() void {
   glfw.glfwTerminate();
 }
 
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 pub extern "kernel32" fn GetConsoleTitleA(
     lpConsoleTitle: win.LPSTR,
     nSize: win.DWORD,
@@ -63,3 +71,14 @@ pub extern "user32" fn ShowWindow(hWnd: win.HWND, nCmdShow: i32) callconv(win.WI
 //
 test " " {
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseWebview\\main.zig
 //! main.zig :
-//!	  Template for Webview program.
-// Build using Zig 0.13.0
+//!  Template for Webview program.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -19,6 +22,11 @@ const context_t = struct{
   window: web.webview_t,
   count: i32,
 };
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
+
 pub fn main() u8 {
   HideConsoleWindow();
   const window: web.webview_t = web.webview_create(0, null);
@@ -35,6 +43,10 @@ pub fn main() u8 {
   _ = web.webview_destroy(window);
   return 0;
 }
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 pub fn count(id: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {
   if (arg == null) return;
@@ -70,9 +82,11 @@ const html: [*c]const u8 =
 \\</script>
 ;
 
-// ============================================================================
-// Helpers
-//
+
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
+
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
@@ -112,8 +126,14 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
-test " " {
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

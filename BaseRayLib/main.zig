@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseRayLib.Main
 //! BaseRayLib//main.zig :
 //!   Template using RayLib and RayGUI.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -12,6 +15,9 @@ const ray = @cImport({
   @cInclude("lib/raylib/include/raylib.h");
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !void {
   ray.InitWindow(1280, 720, "Raylib");
 
@@ -26,6 +32,9 @@ pub fn main() !void {
   ray.CloseWindow();
 }
 
+//#endregion ==================================================================
+//#region MARK: LOOP
+//=============================================================================
 fn loop() callconv(.C) void {
   while (!ray.WindowShouldClose()) {
     ray.BeginDrawing();
@@ -41,3 +50,12 @@ fn webLoop() callconv(.C) void {
   ray.DrawText("Hello Raylib Windows+Web", 10, 10, 32, ray.GREEN);
   ray.EndDrawing();
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================

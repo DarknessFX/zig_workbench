@@ -1,18 +1,31 @@
 //!zig-autodoc-section: BaseEx\\main.zig
 //! main.zig :
-//!	  Template for a console program that hide the console window.
-// Build using Zig 0.13.0
+//!     Template for a console program that hide the console window.
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
 };
+const appTitle = "BaseEx";
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 
 pub fn main() void {
   HideConsoleWindow();
-  _ = MessageBoxA(null, "Console window is hide.", "BaseEx", MB_OK);
+  _ = MessageBoxA(null, "Console window is hide.", appTitle, MB_OK);
 }
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 fn HideConsoleWindow() void {
   const BUF_TITLE = 1024;
@@ -24,9 +37,6 @@ fn HideConsoleWindow() void {
   _ = ShowWindow(hwndFound, SW_HIDE);
 }
 
-// ============================================================================
-// Helpers
-//
 pub extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: win.LPSTR,
   nSize: win.DWORD,
@@ -51,8 +61,12 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
 test " " {
 }
+
+//#endregion ==================================================================
+//=============================================================================

@@ -1,12 +1,12 @@
 //!zig-autodoc-section: BaseVulkan
 //!  Template for a Vulkan program using only Win32 Api, without GLFW3.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
 // NOTE: Edit tasks.json and build.zig replacing hard coded paths to Vulkan SDK folder.
 
-// ============================================================================
-// Globals.
-//
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = @import("winapi.zig");
 const vk = @cImport({
@@ -56,6 +56,13 @@ const SwapChainSupportDetails = struct {
   presentModes: []vk.VkPresentModeKHR,
 };
 
+// Debug module
+const vkdebug_mode = if (@import("builtin").mode == .Debug) true else false;
+const vkdebug = if (vkdebug_mode) @import("vulkan_debug.zig") else null;
+
+//=============================================================================
+//#region MARK: SHADER
+//=============================================================================
 const frag_shader =
 \\#version 450
 \\
@@ -91,10 +98,9 @@ const vertex_shader =
 \\}
 ;
 
-// Debug module
-const vkdebug_mode = if (@import("builtin").mode == .Debug) true else false;
-const vkdebug = if (vkdebug_mode) @import("vulkan_debug.zig") else null;
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
   _ = &hPrevInstance; _ = &pCmdLine;
@@ -112,12 +118,6 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   deinit();
   win.Destroy();
   return 0;
-}
-
-// Fix for libc linking error.
-pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
-  return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
 fn MainLoop() void {
@@ -149,6 +149,16 @@ pub fn initVulkan() !void {
   try createCommandPool();
   try createCommandBuffer();
   try createSyncObjects();
+}
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
+
+// Fix for libc linking error.
+pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
+  return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
 fn createInstance() !void {
@@ -814,3 +824,14 @@ fn readFile(filename: []const u8) ![]u8{
     std.heap.page_allocator, filename, std.math.maxInt(usize));
   return code;
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

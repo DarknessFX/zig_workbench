@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseSDL2\\main.zig
 //! main.zig :
-//!	  Template using SDL2 framework.
-// Build using Zig 0.13.0
+//!  Template using SDL2 framework.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -16,7 +19,9 @@ const WINAPI = win.WINAPI;
 pub const sdl = @cImport({
   @cInclude("SDL.h");
 });
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hInstance;
@@ -34,9 +39,19 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 
   return 0;    
 }
-
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 // Fix for libc linking error.
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================

@@ -10,11 +10,11 @@ pub fn build(b: *std.Build) void {
   }
   build_context = b;
 
-  const wasm_target = std.zig.CrossTarget{
+  const wasm_target = std.Target.Query{
     .cpu_arch = .wasm32,
     .os_tag = .emscripten,
   };
-  const target = b.resolveTargetQuery(wasm_target);
+  const target = b.standardTargetOptions(.{ .default_target = wasm_target });
   const optimize = b.standardOptimizeOption(.{});
 
   const lib = b.addStaticLibrary(.{

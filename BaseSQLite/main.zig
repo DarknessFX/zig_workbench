@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseEx\\main.zig
 //! main.zig :
-//!	  Template for a console program that hide the console window.
-// Build using Zig 0.13.0
+//!  Template for a console program that hide the console window.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -12,7 +15,9 @@ const sqlite = @cImport({
   @cInclude("sqlite3.h");
 });
 
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() u8 {
   //HideConsoleWindow();
   var db: ?*sqlite.sqlite3 = null;
@@ -37,9 +42,9 @@ pub fn main() u8 {
   return 0;  
 }
 
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
@@ -79,8 +84,14 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
-test " " {
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

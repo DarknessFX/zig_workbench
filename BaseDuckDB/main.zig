@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseDuckDB\\main.zig
 //! main.zig :
-//!	  Template for a DuckDB database program.
-// Build using Zig 0.13.0
+//!  Template for a DuckDB database program.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 
@@ -13,6 +16,9 @@ const duk = @cImport({
   @cInclude("lib/DuckDB/duckdb.h");
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !u8 {
   var db: duk.duckdb_database = undefined;
   var con: duk.duckdb_connection = undefined;
@@ -124,9 +130,9 @@ pub fn main1() !u8 {
   return 0;
 }
 
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 const win = struct {
   usingnamespace std.os.windows;
   usingnamespace std.os.windows.kernel32;
@@ -166,8 +172,14 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
-test " " {
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

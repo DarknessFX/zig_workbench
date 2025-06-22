@@ -1,7 +1,11 @@
 //!zig-autodoc-section: BaseNuklear.Main
 //! BaseNuklear//main.zig :
-//!   Template using Nuklear UI.
-// Build using Zig 0.13.0
+//!  Template using Nuklear UI.
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 
 const std = @import("std");
 const win = std.os.windows;
@@ -23,6 +27,59 @@ const nk = @cImport({
   @cInclude("window.h");
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
+pub fn wWinMain(
+    hInstance: win.HINSTANCE,
+    hPrevInstance: ?win.HINSTANCE,
+    cmdArgs: win.PWSTR,
+    cmdShow: win.INT,
+) win.INT {
+  _ = hInstance; _ = hPrevInstance; _ = cmdArgs; _ = cmdShow;
+
+  // Setup all required prerequisites
+  nk.nkgdi_window_init();
+
+  // Prepare two window contexts
+  var w1: nk.struct_nkgdi_window = std.mem.zeroes(nk.struct_nkgdi_window);
+  var w2: nk.struct_nkgdi_window = std.mem.zeroes(nk.struct_nkgdi_window);
+
+  // Configure and create window 1
+  w1.allow_sizing = 0;
+  w1.allow_maximize = 0;
+  w1.allow_move = 1;
+  w1.has_titlebar = 1;
+  w1.cb_on_draw = @ptrCast(&drawCallback);
+  nk.nkgdi_window_create(&w1, 500, 500, "F1", 10, 10);
+
+  // Configure and create window 2
+  w2.allow_sizing = 1;
+  w2.allow_maximize = 1;
+  w2.allow_move = 1;
+  w2.has_titlebar = 1;
+  w2.cb_on_draw = @ptrCast(&drawCallback);
+  nk.nkgdi_window_create(&w2, 500, 500, "F2", 520, 10);
+
+  // Update both windows as long as valid
+  while (nk.nkgdi_window_update(&w1) != 0 and nk.nkgdi_window_update(&w2) != 0) {
+    std.time.sleep(20);
+  }
+
+  // Destroy both window contexts
+  nk.nkgdi_window_destroy(&w1);
+  nk.nkgdi_window_destroy(&w2);
+
+  // Properly shut down the gdi window framework
+  nk.nkgdi_window_shutdown();
+
+  return 0;
+}
+
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn drawCallback(ctx: *nk.struct_nk_context) callconv(.C) c_int {
   var set: i32 = 0;
   var prev: i32 = 0;
@@ -103,54 +160,19 @@ fn drawCallback(ctx: *nk.struct_nk_context) callconv(.C) c_int {
   return 1;
 }
 
-pub fn wWinMain(
-    hInstance: win.HINSTANCE,
-    hPrevInstance: ?win.HINSTANCE,
-    cmdArgs: win.PWSTR,
-    cmdShow: win.INT,
-) win.INT {
-  _ = hInstance; _ = hPrevInstance; _ = cmdArgs; _ = cmdShow;
-
-  // Setup all required prerequisites
-  nk.nkgdi_window_init();
-
-  // Prepare two window contexts
-  var w1: nk.struct_nkgdi_window = std.mem.zeroes(nk.struct_nkgdi_window);
-  var w2: nk.struct_nkgdi_window = std.mem.zeroes(nk.struct_nkgdi_window);
-
-  // Configure and create window 1
-  w1.allow_sizing = 0;
-  w1.allow_maximize = 0;
-  w1.allow_move = 1;
-  w1.has_titlebar = 1;
-  w1.cb_on_draw = @ptrCast(&drawCallback);
-  nk.nkgdi_window_create(&w1, 500, 500, "F1", 10, 10);
-
-  // Configure and create window 2
-  w2.allow_sizing = 1;
-  w2.allow_maximize = 1;
-  w2.allow_move = 1;
-  w2.has_titlebar = 1;
-  w2.cb_on_draw = @ptrCast(&drawCallback);
-  nk.nkgdi_window_create(&w2, 500, 500, "F2", 520, 10);
-
-  // Update both windows as long as valid
-  while (nk.nkgdi_window_update(&w1) != 0 and nk.nkgdi_window_update(&w2) != 0) {
-    std.time.sleep(20);
-  }
-
-  // Destroy both window contexts
-  nk.nkgdi_window_destroy(&w1);
-  nk.nkgdi_window_destroy(&w2);
-
-  // Properly shut down the gdi window framework
-  nk.nkgdi_window_shutdown();
-
-  return 0;
-}
-
 // Fix for libc linking error.
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
   return wWinMain(hInstance, hPrevInstance, pCmdLine.?, nCmdShow);
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

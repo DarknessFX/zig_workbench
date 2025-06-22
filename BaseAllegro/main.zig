@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseAllegro\\main.zig
 //! main.zig :
-//!	  Template using Allegro5.
-// Build using Zig 0.13.0
+//!  Template using Allegro5.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -18,6 +21,10 @@ const all = @cImport({
   @cInclude("allegro5/allegro.h");
   @cInclude("allegro5/allegro_primitives.h");
 });
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 
 pub fn main() void {
   var display: ?*all.ALLEGRO_DISPLAY = null;
@@ -81,3 +88,14 @@ pub fn main() void {
   all.al_destroy_display(display);
   all.al_destroy_event_queue(event_queue);
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

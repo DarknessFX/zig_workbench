@@ -1,13 +1,17 @@
 //!zig-autodoc-section: BaseOpenGL.Main
 //! BaseOpenGL//main.zig :
 //!   Template using OpenGL and Windows GDI.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
 // Port from https://www.opengl.org/archives/resources/code/samples/win32_tutorial/minimal.c
 // An example of the minimal Win32 & OpenGL program.  It only works in
 // 16 bit color modes or higher (since it doesn't create a
 // palette).
 
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -38,6 +42,9 @@ var gl_HWND: gl.HWND = undefined;
 var gl_HDC : gl.HDC = undefined;
 var gl_RC : gl.HGLRC = undefined;
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hPrevInstance;
@@ -71,7 +78,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   }
   return 0;
 }
-
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn glDisplay() void {
   gl.glClear(gl.GL_COLOR_BUFFER_BIT);
   gl.glBegin(gl.GL_TRIANGLES);
@@ -173,6 +182,9 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
@@ -258,6 +270,9 @@ const WNDPROC = *const fn (
   lParam: win.LPARAM
 ) callconv(WINAPI) win.LRESULT;
 
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 extern "user32" fn RegisterClassExW(
   *const WNDCLASSEXW
 ) callconv(WINAPI) win.ATOM;
@@ -498,3 +513,14 @@ pub extern "gdi32" fn wglCreateContext(hdc: ?win.HDC) callconv(WINAPI) ?win.HGLR
 pub extern "gdi32" fn wglMakeCurrent(hdc: ?win.HDC, hglrc: ?win.HGLRC) callconv(WINAPI) bool;
 pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(WINAPI) void;
 pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

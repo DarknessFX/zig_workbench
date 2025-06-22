@@ -1,10 +1,14 @@
 //!zig-autodoc-section: BaseSokol\\main.zig
 //! main.zig :
-//!	  Template using Sokol framework and Nuklear UI.
-// Build using Zig 0.13.0
+//!  Template using Sokol framework and Nuklear UI.
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 
 const std = @import("std");
-pub extern fn main() void; // Skip Zig Maig in favor of Sokol_Main.
+pub extern fn main() void; // Skip Zig Main in favor of Sokol_Main.
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
@@ -30,7 +34,9 @@ const sk = @cImport({
 const state = struct {
   var pass_action: sk.sg_pass_action = undefined;
 };
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 fn init() callconv(.C) void {
   sk.sg_setup(&sk.sg_desc{
     .environment = sk.sglue_environment(),
@@ -65,6 +71,9 @@ fn frame() callconv(.C) void {
   sk.sg_end_pass();
   sk.sg_commit();
 }
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 fn cleanup() callconv(.C) void {
   sk.snk_shutdown();
@@ -145,9 +154,10 @@ fn draw_demo_ui(ctx: *sk.struct_nk_context) i32 {
   return if (sk.nk_window_is_closed(ctx, "Overview") != 0) 0 else 1;
 }
 
-// ============================================================================
-// Win32API Helpers
-//
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
+
 fn HideConsoleWindow() void {
   const BUF_TITLE = 1024;
   var hwndFound: win.HWND = undefined;
@@ -177,3 +187,15 @@ pub extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: i32
 ) callconv(win.WINAPI) win.BOOL;
+
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

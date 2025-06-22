@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseImGui.Main
 //! BaseImGui//main.zig :
 //!   Template using Dear ImGui with SDL2 renderer.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -36,6 +39,9 @@ const ImVec4 = struct {
   w: f32
 };
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() void {
   HideConsole();
 
@@ -161,6 +167,9 @@ pub fn main() void {
   return;
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn toU8(value: f32) u8 {
   return @as(u8, @intFromFloat(value));
 }
@@ -190,3 +199,12 @@ extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: win.INT
 ) callconv(WINAPI) void;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================

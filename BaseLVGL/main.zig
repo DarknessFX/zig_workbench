@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseLVGL.Main
 //! BaseLVGL//main.zig :
-//!   Template using LVGL.
-// Build using Zig 0.13.0
+//!  Template using LVGL.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -25,7 +28,9 @@ pub const lv = @cImport({
 //   @cInclude("lib/lvgl/demos/lv_demos.h");
 // });
 
-
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() void {
   HideConsole();
 
@@ -47,6 +52,9 @@ pub fn main() void {
 
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn single_display_mode_initialization() bool {
   if (!lv.lv_win32_init(
     lv.GetModuleHandleW(null),
@@ -76,3 +84,13 @@ fn HideConsole() void {
   hwndFound = lv.FindWindowA(null, &pszWindowTitle);
   _ = lv.ShowWindow(hwndFound, lv.SW_HIDE);
 }
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

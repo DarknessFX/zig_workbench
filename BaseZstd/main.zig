@@ -1,7 +1,11 @@
 //!zig-autodoc-section: BaseZstd.Main
 //! BaseZstd\\main.zig :
 //!   Template for a console program.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -11,6 +15,9 @@ const zst = @cImport({
   @cInclude("lib/zstd/zstd.h");
 });
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !void {
 
   // Allocate memory for the source data
@@ -73,3 +80,14 @@ pub fn main() !void {
     return error.DataMismatch;
   }
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

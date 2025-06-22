@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseChipmunk2D\\main.zig
 //! main.zig :
-//!	  Template for Chipmunk2D physics.
-// Build using Zig 0.13.0
+//!  Template for Chipmunk2D physics.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -19,6 +22,9 @@ var collision_detected: bool = false;
 var collision_pos: cp.cpVect = undefined;
 const collision_tolerance: f32 = 0.1;
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !u8 {
   //HideConsoleWindow();
 
@@ -78,6 +84,9 @@ pub fn main() !u8 {
   return 0;
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 export fn ballGroundCollision(arbiter: ?*cp.cpArbiter, space: ?*cp.cpSpace, data: ?*anyopaque) callconv(.C) cp.cpBool {
   _ = arbiter; _ = space; _ = data;
   collision_detected = true;
@@ -85,10 +94,9 @@ export fn ballGroundCollision(arbiter: ?*cp.cpArbiter, space: ?*cp.cpSpace, data
   return cp.cpTrue;
 }
 
-
-// ============================================================================
-// Helpers
-//
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 // _ = MessageBoxA(null, "Console window is hide.", "BaseChipmunk2D", MB_OK);
 const win = struct {
   usingnamespace std.os.windows;
@@ -129,8 +137,13 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(win.WINAPI) win.INT;
 
-// ============================================================================
-// Tests
-//
-test " " {
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
 }
+
+//#endregion ==================================================================
+//=============================================================================

@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseDX11.Main
 //! BaseDX11//main.zig :
-//!   Template using DirectX 11.
-// Build using Zig 0.13.0
+//!  Template using DirectX 11.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -41,6 +44,10 @@ var g_pVertexBuffer: [*c]dx.ID3D11Buffer = undefined;
 const XMFLOAT3 = struct { x: f32, y: f32, z: f32 };
 const XMFLOAT4 = struct { r: f32, g: f32, b: f32, a: f32 };
 const SimpleVertex = struct { position: XMFLOAT3, color: XMFLOAT4 };
+
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
@@ -92,6 +99,10 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   CleanupDeviceD3D();
   return 0;
 }
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 // DIRECTX 11
 fn CreateDeviceD3D(hWnd: win.HWND) bool { 
@@ -304,6 +315,10 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
+
 const WM_QUIT = 0x0012;
 const WM_DESTROY = 0x0002;
 const WM_SIZE = 0x0005;
@@ -408,6 +423,10 @@ pub const MSG = extern struct {
   pt: win.POINT,
   lPrivate: win.DWORD,
 };
+
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 
 pub extern "user32" fn BeginPaint(
   hWnd: ?win.HWND,
@@ -514,3 +533,14 @@ pub extern "user32" fn AdjustWindowRectEx(lpRect: *win.RECT, dwStyle: win.DWORD,
 pub extern "user32" fn CreateWindowExW(dwExStyle: win.DWORD, lpClassName: [*:0]const u16, lpWindowName: [*:0]const u16, dwStyle: win.DWORD, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWindParent: ?win.HWND, hMenu: ?win.HMENU, hInstance: win.HINSTANCE, lpParam: ?win.LPVOID) callconv(WINAPI) ?win.HWND;
 pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
 pub extern "user32" fn GetDC(hWnd: ?win.HWND) callconv(WINAPI) ?win.HDC;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

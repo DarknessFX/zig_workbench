@@ -1,5 +1,9 @@
 //!zig-autodoc-section: Windows API
 //! Windows API
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 pub const win = @This();
 const std = @import("std");
 usingnamespace std.os.windows;
@@ -125,6 +129,9 @@ pub fn Destroy() void {
   _ = DestroyWindow(wnd.hWnd);
 }
 
+//#endregion ==================================================================
+//#region MARK: CONST
+//=============================================================================
 const TRUE = std.os.windows.TRUE;
 const FALSE = std.os.windows.FALSE;
 
@@ -383,6 +390,9 @@ const NOTIFYICONDATAA = extern struct {
 };
 
 
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================
 fn LOWORD(l: LONG_PTR) UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 fn HIWORD(l: LONG_PTR) UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
 
@@ -628,3 +638,12 @@ extern "user32" fn SetWindowPos(
   cy: INT,
   uFlags: UINT,        
 ) callconv(WINAPI) BOOL;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================

@@ -1,12 +1,13 @@
 //!zig-autodoc-section: BaseVulkan
 //!  Template for a Vulkan program using GLFW3.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 
 // NOTE: Edit tasks.json and build.zig replacing hard coded paths to Vulkan SDK folder.
 
-// ============================================================================
-// Globals.
-//
 const std = @import("std");
 const win = struct {
   usingnamespace std.os.windows;
@@ -14,9 +15,9 @@ const win = struct {
 };
 const vk = @import("vulkan.zig");
 
-// ============================================================================
-// Main.
-//
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !void {
 
   vk.initWindow();
@@ -25,6 +26,10 @@ pub fn main() !void {
   vk.deinit();
   
 }
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 
 // Functions to switch to /Subsystem Windows instead of console.
 // 
@@ -39,3 +44,14 @@ pub fn main() !void {
 //   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
 //   return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 // }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

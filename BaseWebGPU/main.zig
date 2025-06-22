@@ -1,10 +1,16 @@
 //!zig-autodoc-section: BaseWebGPU\\main.zig
 //! main.zig :
-//!	  Template for a WebGPU project that build both bin/.exe and HTML5 WebGPU and Wasm.
-// Build using Zig 0.13.0
+//!  Template for a WebGPU project that build both bin/.exe and HTML5 WebGPU and Wasm.
+// Build using Zig 0.14.1
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() void {
   const builtin = @import("builtin");
   platform: {
@@ -16,3 +22,14 @@ pub fn main() void {
     break :platform;
   }  
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " empty" {
+  try std.testing.expect(true);
+}
+
+//#endregion ==================================================================
+//=============================================================================

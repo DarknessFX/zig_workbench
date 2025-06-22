@@ -1,6 +1,10 @@
 //!zig-autodoc-section: BaseWin
 //!  Template for a Windows program.
-// Build using Zig 0.13.0
+// Build using Zig 0.14.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 
 const std = @import("std");
 const win = struct {
@@ -47,6 +51,9 @@ var wnd_dc: win.HDC = undefined;
 var wnd_dpi: win.UINT = 96;
 var wnd_color: COLORREF = 0x001E1E1E;  //0x00RRGGBB;
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
   _ = hPrevInstance;
@@ -72,6 +79,9 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   return 0;
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(WINAPI) win.LRESULT {
   switch (uMsg) {
     WM_DESTROY,
@@ -595,3 +605,12 @@ pub extern "user32" fn CreateWindowExW(
   hInstance: win.HINSTANCE,
   lpParam: ?win.LPVOID
 ) callconv(WINAPI) ?win.HWND;
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+
+//#endregion ==================================================================
+//=============================================================================
