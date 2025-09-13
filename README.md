@@ -32,7 +32,7 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console + Web |
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
-| **[BaseSDL3ImGui](/BaseSDL3ImGui/)** | Template with [SDL3](https://libsdl.org/) and [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings), because BaseImGui grow in complexity with multiple renderes and BaseSDL3 have examples, this is a clean and ready to use template that I use as default for new applications/projects. | Windows |
+| **[BaseSDL3ImGui](/BaseSDL3ImGui/)** | Template with [SDL3](https://libsdl.org/) and [Dear ImGui](https://github.com/ocornut/imgui), because BaseImGui grew in complexity with multiple renderers and BaseSDL3 has examples, this is a clean and ready-to-use template that I use as default for new applications/projects. | Windows |
 | **[BaseSFML2](/BaseSFML2/)** | Template with [SFML2](https://www.sfml-dev.org/) via [CSFML2](https://www.sfml-dev.org/download/csfml/) C bindings. | Console |
 | **[BaseSokol](/BaseSokol/)** | Template with [Sokol](https://github.com/floooh/sokol/). Extras UI: [Dear ImGui](https://github.com/ocornut/imgui) via [cimgui](https://github.com/cimgui/cimgui), [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear). | Windows |
 | **[BaseAllegro](/BaseAllegro/)** | Template with [Allegro5](https://liballeg.org/). | Console |
