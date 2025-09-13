@@ -34,12 +34,12 @@
 #ifndef SDL_system_h_
 #define SDL_system_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_keyboard.h>
-#include <SDL3/SDL_video.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
+#include <SDL_keyboard.h>
+#include <SDL_video.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -247,14 +247,14 @@ typedef void (SDLCALL *SDL_iOSAnimationCallback)(void *userdata);
  *
  * For more information see:
  *
- * https://wiki.libsdl.org/SDL3/README/ios
+ * https://wiki.libsdl.org/README/ios
  *
  * Note that if you use the "main callbacks" instead of a standard C `main`
  * function, you don't have to use this API, as SDL will manage this for you.
  *
  * Details on main callbacks are here:
  *
- * https://wiki.libsdl.org/SDL3/README/main-functions
+ * https://wiki.libsdl.org/README/main-functions
  *
  * \param window the window for which the animation callback should be set.
  * \param interval the number of frames after which **callback** will be
@@ -813,6 +813,6 @@ extern SDL_DECLSPEC bool SDLCALL SDL_GetGDKDefaultUser(XUserHandle *outUserHandl
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_system_h_ */

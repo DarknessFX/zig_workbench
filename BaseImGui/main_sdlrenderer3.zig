@@ -1,17 +1,14 @@
 //!zig-autodoc-section: BaseImGui.Main
 //! BaseImGui//main.zig :
 //!   Template using Dear ImGui with SDL3 renderer.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-const WINAPI = win.WINAPI;
+const win = std.os.windows;
+
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -19,10 +16,10 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   //lib/imgui/
-  @cInclude("cimgui.h");
-  @cInclude("cimgui_impl_sdl3.h");
-  @cInclude("cimgui_impl_sdlrenderer3.h");
-  @cInclude("cimgui_memory_editor.h");
+  @cInclude("dcimgui.h");
+  @cInclude("dcimgui_impl_sdl3.h");
+  @cInclude("dcimgui_impl_sdlrenderer3.h");
+  @cInclude("dcimgui_memory_editor.h");
 });
 
 const sdl = @cImport({
@@ -44,12 +41,12 @@ const ImVec4 = struct {
 pub fn main() void {
   HideConsole();
 
-  _ = sdl.SDL_Init(sdl.SDL_INIT_VIDEO | sdl.SDL_INIT_TIMER | sdl.SDL_INIT_GAMEPAD);
-  _ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
+  _ = sdl.SDL_Init(sdl.SDL_INIT_VIDEO | sdl.SDL_INIT_GAMEPAD);
+  //_ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
 
   const window_flags: sdl.SDL_WindowFlags = sdl.SDL_WINDOW_RESIZABLE | sdl.SDL_WINDOW_HIGH_PIXEL_DENSITY | sdl.SDL_WINDOW_HIDDEN;
   const window: *sdl.SDL_Window = sdl.SDL_CreateWindow("Dear ImGui SDL3_SDLRenderer example", 1280, 720, window_flags).?;
-  const renderer: *sdl.SDL_Renderer = sdl.SDL_CreateRenderer(window, null, sdl.SDL_RENDERER_PRESENTVSYNC | sdl.SDL_RENDERER_ACCELERATED).?;
+  const renderer: *sdl.SDL_Renderer = sdl.SDL_CreateRenderer(window, null).?;
   _ = sdl.SDL_SetWindowPosition(window, sdl.SDL_WINDOWPOS_CENTERED, sdl.SDL_WINDOWPOS_CENTERED);
   _ = sdl.SDL_ShowWindow(window);
 
@@ -94,10 +91,10 @@ pub fn main() void {
   var counter: u16 = 0;
 
   var event: sdl.SDL_Event = undefined;
-  const cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
+  const cevent = @as(*im.SDL_Event , @ptrCast(&event));
   var done: bool = false;
   while (!done) {
-    while (sdl.SDL_PollEvent(&event) == 1) {
+    while (sdl.SDL_PollEvent(&event) == true) {
       _ = im.cImGui_ImplSDL3_ProcessEvent(cevent);
       if (event.type == sdl.SDL_EVENT_QUIT) {
         done = true; }
@@ -185,18 +182,18 @@ fn HideConsole() void {
 extern "kernel32" fn GetConsoleTitleA(
     lpConsoleTitle: win.LPSTR,
     nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 extern "kernel32" fn FindWindowA(
     lpClassName: ?win.LPSTR,
     lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 const SW_HIDE = 0;
 extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: win.INT
-) callconv(WINAPI) void;
+) callconv(.winapi) void;
 
 //#endregion ==================================================================
 //#region MARK: TEST

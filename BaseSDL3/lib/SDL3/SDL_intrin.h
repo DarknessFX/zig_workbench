@@ -34,7 +34,7 @@
  * specific CPU architecture. This check only tells you that the compiler is
  * capable of using those intrinsics; at runtime, you should still check if
  * they are available on the current system with the
- * [CPU info functions](https://wiki.libsdl.org/SDL3/CategoryCPUInfo)
+ * [CPU info functions](https://wiki.libsdl.org/CategoryCPUInfo)
  * , such as SDL_HasSSE() or SDL_HasNEON(). Otherwise, the process might crash
  * for using an unsupported CPU instruction.
  *
@@ -49,7 +49,7 @@
 #ifndef SDL_intrin_h_
 #define SDL_intrin_h_
 
-#include <SDL3/SDL_stdinc.h>
+#include <SDL_stdinc.h>
 
 #ifdef SDL_WIKI_DOCUMENTATION_SECTION
 

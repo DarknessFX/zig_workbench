@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseODE\\main.zig
 //! main.zig :
 //!  Template ODE physics.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -92,7 +92,7 @@ pub fn main() !u8 {
 //#region MARK: UTIL
 //=============================================================================
 // Near callback function for handling collisions
-export fn nearCallback(data: ?*anyopaque, o1: ode.dGeomID, o2: ode.dGeomID) callconv(.C) void {
+export fn nearCallback(data: ?*anyopaque, o1: ode.dGeomID, o2: ode.dGeomID) callconv(.c) void {
   _ = data;
   var contact: [10]ode.dContact = undefined;
   const numc = ode.dCollide(o1, o2, 10, &contact[0].geom, @sizeOf(ode.dContact));
@@ -118,10 +118,7 @@ export fn nearCallback(data: ?*anyopaque, o1: ode.dGeomID, o2: ode.dGeomID) call
 //#region MARK: WINAPI
 //=============================================================================
 //  _ = MessageBoxA(null, "Console window is hide.", "BaseODE", MB_OK);
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
+const win = std.os.windows;
 
 fn HideConsoleWindow() void {
   const BUF_TITLE = 1024;
@@ -136,18 +133,18 @@ fn HideConsoleWindow() void {
 pub extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: win.LPSTR,
   nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 pub extern "kernel32" fn FindWindowA(
   lpClassName: ?win.LPSTR,
   lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 pub const SW_HIDE = 0;
 pub extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: i32
-) callconv(win.WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub const MB_OK = 0x00000000;
 pub extern "user32" fn MessageBoxA(
@@ -155,7 +152,7 @@ pub extern "user32" fn MessageBoxA(
   lpText: [*:0]const u8,
   lpCaption: [*:0]const u8,
   uType: win.UINT
-) callconv(win.WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 //#endregion ==================================================================
 //#region MARK: TEST

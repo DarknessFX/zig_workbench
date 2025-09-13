@@ -20,7 +20,7 @@ REM
 REM Full extra_args sample of a project that use SDL3 + OpenGL :
 REM  SET extra_args=-lSDL3 -lOpenGL32 -L "%CD%\lib\SDL3" -I"%CD%" -I"%CD%\lib" -I"%CD%\lib\SDL3"
 
-SET extra_args=-I"%CD%" -I"%CD%\lib" -I"%CD%\lib\chipmunk" -I"%CD%\lib\chipmunk\include"
+SET extra_args=-I"%CD%" -I"%CD%\lib\chipmunk\include"
 
 REM AddCSource
 REM ==========
@@ -28,7 +28,7 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\SDL3\glad.c"
 
-SET addCSourceFile=lib/chipmunk/src/chipmunk.c lib/chipmunk/src/cpArbiter.c lib/chipmunk/src/cpArray.c lib/chipmunk/src/cpBBTree.c lib/chipmunk/src/cpBody.c lib/chipmunk/src/cpCollision.c lib/chipmunk/src/cpConstraint.c lib/chipmunk/src/cpDampedRotarySpring.c lib/chipmunk/src/cpDampedSpring.c lib/chipmunk/src/cpGearJoint.c lib/chipmunk/src/cpGrooveJoint.c lib/chipmunk/src/cpHashSet.c lib/chipmunk/src/cpHastySpace.c lib/chipmunk/src/cpMarch.c lib/chipmunk/src/cpPinJoint.c lib/chipmunk/src/cpPivotJoint.c lib/chipmunk/src/cpPolyline.c lib/chipmunk/src/cpPolyShape.c lib/chipmunk/src/cpRatchetJoint.c lib/chipmunk/src/cpRobust.c lib/chipmunk/src/cpRotaryLimitJoint.c lib/chipmunk/src/cpShape.c lib/chipmunk/src/cpSimpleMotor.c lib/chipmunk/src/cpSlideJoint.c lib/chipmunk/src/cpSpace.c lib/chipmunk/src/cpSpaceComponent.c lib/chipmunk/src/cpSpaceDebug.c lib/chipmunk/src/cpSpaceHash.c lib/chipmunk/src/cpSpaceQuery.c lib/chipmunk/src/cpSpaceStep.c lib/chipmunk/src/cpSpatialIndex.c lib/chipmunk/src/cpSweep1D.c 
+SET addCSourceFile=lib/chipmunk/src/chipmunk.c lib/chipmunk/src/cpArbiter.c lib/chipmunk/src/cpArray.c lib/chipmunk/src/cpBBTree.c lib/chipmunk/src/cpBody.c lib/chipmunk/src/cpCollision.c lib/chipmunk/src/cpConstraint.c lib/chipmunk/src/cpDampedRotarySpring.c lib/chipmunk/src/cpDampedSpring.c lib/chipmunk/src/cpGearJoint.c lib/chipmunk/src/cpGrooveJoint.c lib/chipmunk/src/cpHashSet.c lib/chipmunk/src/cpHastySpace.c lib/chipmunk/src/cpMarch.c lib/chipmunk/src/cpPinJoint.c lib/chipmunk/src/cpPivotJoint.c lib/chipmunk/src/cpPolyline.c lib/chipmunk/src/cpPolyShape.c lib/chipmunk/src/cpRatchetJoint.c lib/chipmunk/src/cpRobust.c lib/chipmunk/src/cpRotaryLimitJoint.c lib/chipmunk/src/cpShape.c lib/chipmunk/src/cpSimpleMotor.c lib/chipmunk/src/cpSlideJoint.c lib/chipmunk/src/cpSpace.c lib/chipmunk/src/cpSpaceComponent.c lib/chipmunk/src/cpSpaceDebug.c lib/chipmunk/src/cpSpaceHash.c lib/chipmunk/src/cpSpaceQuery.c lib/chipmunk/src/cpSpaceStep.c lib/chipmunk/src/cpSpatialIndex.c lib/chipmunk/src/cpSweep1D.c
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
   MKDIR %CD%\bin\ReleaseStrip 
@@ -58,13 +58,19 @@ FINDSTR /L linkLibCpp build.zig > NUL && (
 
 REM OUTPUT TO ZIG_REPORT.TXT
 > bin/ReleaseStrip/obj/zig_report.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
 
 REM OUTPUT BUILD COMMAND LINE TO ZIG_BUILD_CMD.TXT
 > bin/ReleaseStrip/obj/zig_build_cmd.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  ECHO zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
+
+REM Somehow -femit-bin=bin/ReleaseStrip/%ProjectName%.exe causes an error lld-link: No such file or directory
+REM so I'm just building the binary at root folder then moving to bin/ReleaseStrip
+IF EXIST "%CD%\%ProjectName%.exe" (
+  MOVE %CD%\%ProjectName%.exe %CD%\bin\ReleaseStrip > NUL
+)
 
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (
   MOVE %CD%\bin\ReleaseStrip\%ProjectName%.exe.obj %CD%\bin\ReleaseStrip\obj > NUL

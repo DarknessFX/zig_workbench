@@ -41,24 +41,24 @@
 #ifndef SDL_vulkan_h_
 #define SDL_vulkan_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_video.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
+#include <SDL_video.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Avoid including vulkan.h, don't define VkInstance if it's already included */
-#ifdef VULKAN_H_
+/* Avoid including vulkan_core.h, don't define VkInstance if it's already included */
+#ifdef VULKAN_CORE_H_
 #define NO_SDL_VULKAN_TYPEDEFS
 #endif
 #ifndef NO_SDL_VULKAN_TYPEDEFS
 #define VK_DEFINE_HANDLE(object) typedef struct object##_T* object;
 
-#if defined(__LP64__) || defined(_WIN64) || defined(__x86_64__) || defined(_M_X64) || defined(__ia64) || defined (_M_IA64) || defined(__aarch64__) || defined(__powerpc64__)
+#if defined(__LP64__) || defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__)) || defined(_M_X64) || defined(__ia64) || defined (_M_IA64) || defined(__aarch64__) || defined(__powerpc64__) || (defined(__riscv) && __riscv_xlen == 64)
 #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef struct object##_T *object;
 #else
 #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef uint64_t object;
@@ -226,7 +226,7 @@ extern SDL_DECLSPEC char const * const * SDLCALL SDL_Vulkan_GetInstanceExtension
 extern SDL_DECLSPEC bool SDLCALL SDL_Vulkan_CreateSurface(SDL_Window *window,
                                                               VkInstance instance,
                                                               const struct VkAllocationCallbacks *allocator,
-                                                              VkSurfaceKHR* surface);
+                                                              VkSurfaceKHR *surface);
 
 /**
  * Destroy the Vulkan rendering surface of a window.
@@ -282,6 +282,6 @@ extern SDL_DECLSPEC bool SDLCALL SDL_Vulkan_GetPresentationSupport(VkInstance in
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_vulkan_h_ */

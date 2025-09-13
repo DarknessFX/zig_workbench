@@ -1,17 +1,14 @@
 //!zig-autodoc-section: BaseImGui.Main
 //! BaseImGui//main.zig :
 //!   Template using Dear ImGui with SDL2 OpenGL2 renderer.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-const WINAPI = win.WINAPI;
+const win = std.os.windows;
+
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE Rename .vscode/Tasks_SDL2_OpenGL2.json to .vscode/Tasks.json before use this renderer.
@@ -20,10 +17,10 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   //lib/imgui/
-  @cInclude("cimgui.h");
-  @cInclude("cimgui_impl_sdl2.h");
-  @cInclude("cimgui_impl_opengl2.h");
-  @cInclude("cimgui_memory_editor.h");
+  @cInclude("dcimgui.h");
+  @cInclude("dcimgui_impl_sdl2.h");
+  @cInclude("dcimgui_impl_opengl2.h");
+  @cInclude("dcimgui_memory_editor.h");
 });
 
 const sdl = @cImport({
@@ -108,7 +105,7 @@ pub fn main() void {
   var counter: u16 = 0;
 
   var event: sdl.SDL_Event = undefined;
-  const cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
+  const cevent = @as(*im.SDL_Event , @ptrCast(&event));
   var done: bool = false;
   while (!done) {
     while (sdl.SDL_PollEvent(&event) == 1) {
@@ -212,18 +209,18 @@ fn HideConsole() void {
 extern "kernel32" fn GetConsoleTitleA(
     lpConsoleTitle: win.LPSTR,
     nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 extern "kernel32" fn FindWindowA(
     lpClassName: ?win.LPSTR,
     lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 const SW_HIDE = 0;
 extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: win.INT
-) callconv(WINAPI) void;
+) callconv(.winapi) void;
 //#endregion ==================================================================
 //#region MARK: TEST
 //=============================================================================

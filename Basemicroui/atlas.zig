@@ -1,6 +1,4 @@
-pub const mu = @cImport({
-  @cInclude("microui.h");
-});
+pub const mu =  @import("microui.zig").mu;
 
 pub const MU_ICON_CLOSE: c_int = 1;
 pub const MU_ICON_CHECK: c_int = 2;

@@ -40,18 +40,18 @@
  * good understanding of [CategoryMutex](CategoryMutex) as well.
  */
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_properties.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
+#include <SDL_properties.h>
 
 /* Thread synchronization primitives */
-#include <SDL3/SDL_atomic.h>
+#include <SDL_atomic.h>
 
 #if defined(SDL_PLATFORM_WINDOWS)
 #include <process.h> /* _beginthreadex() and _endthreadex() */
 #endif
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -139,7 +139,7 @@ typedef enum SDL_ThreadState
  *
  * \since This datatype is available since SDL 3.2.0.
  */
-typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
+typedef int (SDLCALL *SDL_ThreadFunction) (void *data);
 
 
 #ifdef SDL_WIKI_DOCUMENTATION_SECTION
@@ -573,6 +573,6 @@ extern SDL_DECLSPEC void SDLCALL SDL_CleanupTLS(void);
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_thread_h_ */

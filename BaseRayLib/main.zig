@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseRayLib.Main
 //! BaseRayLib//main.zig :
 //!   Template using RayLib and RayGUI.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -35,7 +35,7 @@ pub fn main() !void {
 //#endregion ==================================================================
 //#region MARK: LOOP
 //=============================================================================
-fn loop() callconv(.C) void {
+fn loop() callconv(.c) void {
   while (!ray.WindowShouldClose()) {
     ray.BeginDrawing();
     ray.ClearBackground(ray.BLACK);
@@ -44,7 +44,7 @@ fn loop() callconv(.C) void {
   }
 }
 
-fn webLoop() callconv(.C) void {
+fn webLoop() callconv(.c) void {
   ray.BeginDrawing();
   ray.ClearBackground(ray.BLACK);
   ray.DrawText("Hello Raylib Windows+Web", 10, 10, 32, ray.GREEN);

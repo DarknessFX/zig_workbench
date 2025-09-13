@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseLVGL.Main
 //! BaseLVGL//main.zig :
 //!  Template using LVGL.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -71,7 +71,7 @@ fn single_display_mode_initialization() bool {
   return true;
 }
 
-fn tick_count_callback() callconv(.C) u32 {
+fn tick_count_callback() callconv(.c) u32 {
     return lv.GetTickCount();
 }
 

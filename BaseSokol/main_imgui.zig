@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseSokol\\main.zig
 //! main.zig :
 //!  Template using Sokol framework and Dear ImGui.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -46,7 +46,7 @@ pub export fn sokol_main() sk.sapp_desc {
 //#region MARK: UTIL
 //=============================================================================
 
-fn init() callconv(.C) void {
+fn init() callconv(.c) void {
   sk.sg_setup(&sk.sg_desc{
     .environment = sk.sglue_environment(),
     .logger = .{ .func = sk.slog_func },
@@ -63,7 +63,7 @@ fn init() callconv(.C) void {
   };
 }
 
-fn frame() callconv(.C) void {
+fn frame() callconv(.c) void {
   sk.simgui_new_frame(&sk.simgui_frame_desc_t{
     .width = sk.sapp_width(),
     .height = sk.sapp_height(),
@@ -87,12 +87,12 @@ fn frame() callconv(.C) void {
   sk.sg_commit();
 }
 
-fn cleanup() callconv(.C) void {
+fn cleanup() callconv(.c) void {
   sk.simgui_shutdown();
   sk.sg_shutdown();
 }
 
-fn event(ev: [*c]const sk.sapp_event) callconv(.C) void {
+fn event(ev: [*c]const sk.sapp_event) callconv(.c) void {
   _ = sk.simgui_handle_event(ev);
 }
 

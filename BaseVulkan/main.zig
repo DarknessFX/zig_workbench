@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseVulkan
 //!  Template for a Vulkan program using GLFW3.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -9,10 +9,7 @@
 // NOTE: Edit tasks.json and build.zig replacing hard coded paths to Vulkan SDK folder.
 
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
+const win = std.os.windows;
 const vk = @import("vulkan.zig");
 
 //#endregion ==================================================================

@@ -49,11 +49,11 @@
 #ifndef SDL_init_h_
 #define SDL_init_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_events.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
+#include <SDL_events.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -79,7 +79,7 @@ typedef Uint32 SDL_InitFlags;
 
 #define SDL_INIT_AUDIO      0x00000010u /**< `SDL_INIT_AUDIO` implies `SDL_INIT_EVENTS` */
 #define SDL_INIT_VIDEO      0x00000020u /**< `SDL_INIT_VIDEO` implies `SDL_INIT_EVENTS`, should be initialized on the main thread */
-#define SDL_INIT_JOYSTICK   0x00000200u /**< `SDL_INIT_JOYSTICK` implies `SDL_INIT_EVENTS`, should be initialized on the same thread as SDL_INIT_VIDEO on Windows if you don't set SDL_HINT_JOYSTICK_THREAD */
+#define SDL_INIT_JOYSTICK   0x00000200u /**< `SDL_INIT_JOYSTICK` implies `SDL_INIT_EVENTS` */
 #define SDL_INIT_HAPTIC     0x00001000u
 #define SDL_INIT_GAMEPAD    0x00002000u /**< `SDL_INIT_GAMEPAD` implies `SDL_INIT_JOYSTICK` */
 #define SDL_INIT_EVENTS     0x00004000u
@@ -101,7 +101,7 @@ typedef Uint32 SDL_InitFlags;
  * to run.
  *
  * See
- * [Main callbacks in SDL3](https://wiki.libsdl.org/SDL3/README/main-functions#main-callbacks-in-sdl3)
+ * [Main callbacks in SDL3](https://wiki.libsdl.org/README/main-functions#main-callbacks-in-sdl3)
  * for complete details.
  *
  * \since This enum is available since SDL 3.2.0.
@@ -492,6 +492,6 @@ extern SDL_DECLSPEC const char * SDLCALL SDL_GetAppMetadataProperty(const char *
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_init_h_ */

@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseSDL3\\main.zig
 //! main.zig :
 //!  Template using SDL3 framework.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL

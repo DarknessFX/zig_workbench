@@ -1,4 +1,4 @@
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -63,7 +63,7 @@ fn add_message(jid: sdl.SDL_JoystickID, comptime fmt: []const u8, args: anytype)
   var buf_str: [512]u8 = std.mem.zeroes([512]u8);
   const buf_len = (std.fmt.bufPrint(&buf_str, fmt, args) catch unreachable).len;
 
-  messages.append(EventMessage{
+  messages.append(std.heap.page_allocator, EventMessage{
     .str = std.heap.page_allocator.dupeZ(u8, buf_str[0..buf_len]) catch unreachable,
     .color = color.*,
     .start_ticks = sdl.SDL_GetTicks(),
@@ -94,7 +94,7 @@ pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sd
     colors[i].b = @as(u8, @intCast(sdl.SDL_rand(255)));
     colors[i].a = 255;
   }
-  messages = std.ArrayList(EventMessage).init(std.heap.page_allocator);
+  messages = std.ArrayList(EventMessage).initCapacity(std.heap.page_allocator, 0) catch unreachable;
   add_message(0, "Please plug in a joystick.", .{ });
 
   return sdl.SDL_APP_CONTINUE; // carry on with the program!
@@ -190,7 +190,7 @@ pub export fn SDL_AppIterate(appstate: ?*anyopaque) sdl.SDL_AppResult {
   _ = sdl.SDL_RenderClear(renderer);
   //sdl.SDL_GetWindowSize(window, &fwinw, &fwinh);
 
-  var messages_remove = std.ArrayList(u8).init(std.heap.page_allocator);
+  var messages_remove = std.ArrayList(u8).initCapacity(std.heap.page_allocator, 0) catch unreachable;
 
   for (messages.items, 0..) |*msg1, i| {
     const msg_len = msg1.str.len;
@@ -200,7 +200,7 @@ pub export fn SDL_AppIterate(appstate: ?*anyopaque) sdl.SDL_AppResult {
     var x: f32 = 0; var y: f32 = 0;
     const life_percent = @as(f32, @floatFromInt(@as(u32, @intCast(now - msg1.start_ticks)))) / msg_lifetime;
     if (life_percent >= 1.0) { // msg is done.
-      messages_remove.append(@intCast(i)) catch unreachable;
+      messages_remove.append(std.heap.page_allocator, @intCast(i)) catch unreachable;
       continue;
     }
 
@@ -233,7 +233,7 @@ pub export fn SDL_AppIterate(appstate: ?*anyopaque) sdl.SDL_AppResult {
 pub export fn SDL_AppQuit(appstate: ?*anyopaque, result: sdl.SDL_AppResult) void {
   _ = appstate; _ = result;
 
-  messages.deinit();
+  messages.deinit(std.heap.page_allocator);
 
   //* SDL will clean up the window/renderer for us. */
 }

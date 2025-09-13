@@ -28,7 +28,7 @@ REM If your project use C Source Files, add here the list of files you want to a
 REM 
 REM SET addCSourceFile="%CD%\lib\microui\microui.c"
 
-SET addCSourceFile=lib/imgui/cimgui.cpp lib/imgui/cimgui_impl_sdl3.cpp lib/imgui/cimgui_impl_sdlrenderer3.cpp lib/imgui/cimgui_memory_editor.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_sdl3.cpp lib/imgui/imgui_impl_sdlrenderer3.cpp
+SET addCSourceFile=lib/imgui/dcimgui.cpp lib/imgui/dcimgui_impl_sdl3.cpp lib/imgui/dcimgui_impl_sdlrenderer3.cpp lib/imgui/dcimgui_memory_editor.cpp lib/imgui/imgui.cpp lib/imgui/imgui_widgets.cpp lib/imgui/imgui_draw.cpp lib/imgui/imgui_tables.cpp lib/imgui/imgui_demo.cpp lib/imgui/imgui_impl_sdl3.cpp lib/imgui/imgui_impl_sdlrenderer3.cpp
 
 
 IF NOT EXIST %CD%\bin\ReleaseStrip (
@@ -59,7 +59,7 @@ FINDSTR /L linkLibCpp build.zig > NUL && (
 
 REM OUTPUT TO ZIG_REPORT.EXE
 > bin/ReleaseStrip/obj/zig_report.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
 
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (

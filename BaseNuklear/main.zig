@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseNuklear.Main
 //! BaseNuklear//main.zig :
 //!  Template using Nuklear UI.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -9,6 +9,7 @@
 
 const std = @import("std");
 const win = std.os.windows;
+
 pub inline fn fmt(comptime format: []const u8, args: anytype) []u8 {  return std.fmt.allocPrint(std.heap.page_allocator, format, args) catch unreachable; }
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -63,7 +64,7 @@ pub fn wWinMain(
 
   // Update both windows as long as valid
   while (nk.nkgdi_window_update(&w1) != 0 and nk.nkgdi_window_update(&w2) != 0) {
-    std.time.sleep(20);
+    win.kernel32.Sleep(10);
   }
 
   // Destroy both window contexts
@@ -80,7 +81,7 @@ pub fn wWinMain(
 //#endregion ==================================================================
 //#region MARK: UTIL
 //=============================================================================
-fn drawCallback(ctx: *nk.struct_nk_context) callconv(.C) c_int {
+fn drawCallback(ctx: *nk.struct_nk_context) callconv(.c) c_int {
   var set: i32 = 0;
   var prev: i32 = 0;
   var op: i32 = 0;
@@ -162,7 +163,7 @@ fn drawCallback(ctx: *nk.struct_nk_context) callconv(.C) c_int {
 
 // Fix for libc linking error.
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return wWinMain(hInstance, hPrevInstance, pCmdLine.?, nCmdShow);
 }
 

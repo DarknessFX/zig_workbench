@@ -34,11 +34,11 @@
 #ifndef SDL_sensor_h_
 #define SDL_sensor_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_properties.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
+#include <SDL_properties.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 /* *INDENT-OFF* */
@@ -138,7 +138,8 @@ typedef enum SDL_SensorType
     SDL_SENSOR_ACCEL_L,         /**< Accelerometer for left Joy-Con controller and Wii nunchuk */
     SDL_SENSOR_GYRO_L,          /**< Gyroscope for left Joy-Con controller */
     SDL_SENSOR_ACCEL_R,         /**< Accelerometer for right Joy-Con controller */
-    SDL_SENSOR_GYRO_R           /**< Gyroscope for right Joy-Con controller */
+    SDL_SENSOR_GYRO_R,          /**< Gyroscope for right Joy-Con controller */
+    SDL_SENSOR_COUNT
 } SDL_SensorType;
 
 
@@ -315,6 +316,6 @@ extern SDL_DECLSPEC void SDLCALL SDL_UpdateSensors(void);
 }
 /* *INDENT-ON* */
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_sensor_h_ */

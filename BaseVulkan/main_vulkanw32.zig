@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseVulkan
 //!  Template for a Vulkan program using only Win32 Api, without GLFW3.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 // NOTE: Edit tasks.json and build.zig replacing hard coded paths to Vulkan SDK folder.
 
@@ -9,10 +9,7 @@
 //=============================================================================
 const std = @import("std");
 const win = @import("winapi.zig");
-const vk = @cImport({
-  @cDefine("VK_USE_PLATFORM_WIN32_KHR", "1");
-  @cInclude("vulkan.h");
-});
+const vk = @import("vulkan_imp_w32.zig").vk;
 
 var wnd: win.wnd_type = undefined;
 
@@ -102,7 +99,7 @@ const vertex_shader =
 //#region MARK: MAIN
 //=============================================================================
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = &hPrevInstance; _ = &pCmdLine;
 
   win.CreateWindow("BaseVulkan", hInstance, nCmdShow);
@@ -157,7 +154,7 @@ pub fn initVulkan() !void {
 
 // Fix for libc linking error.
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
@@ -702,13 +699,13 @@ fn getRequiredExtensions(info: *vk.VkInstanceCreateInfo) !void {
   info.enabledExtensionCount = extension_count;
   info.ppEnabledExtensionNames = extensions;
   if (vkdebug_mode) {
-    var extension_list = std.ArrayList([*c]const u8).init(std.heap.page_allocator);
+    var extension_list = std.ArrayList([*c]const u8).initCapacity(std.heap.page_allocator, 0) catch unreachable;
     for (requiredExtensions[0..extension_count]) |ext| {
-      try extension_list.append(ext);
+      try extension_list.append(std.heap.page_allocator, ext);
     }
-    try extension_list.append(vk.VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    try extension_list.append(std.heap.page_allocator, vk.VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     info.enabledExtensionCount = @intCast(extension_list.items.len);
-    const extensions_ = try extension_list.toOwnedSlice();
+    const extensions_ = try extension_list.toOwnedSlice(std.heap.page_allocator);
     const pp_enabled_layer_names: [*][*c]const u8 = extensions_.ptr;
     info.ppEnabledExtensionNames = pp_enabled_layer_names;
   }

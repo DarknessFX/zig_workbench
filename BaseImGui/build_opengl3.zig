@@ -10,9 +10,11 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   exe.addWin32ResourceFile(.{
     .file  = b.path(projectname ++ ".rc"),
@@ -23,14 +25,14 @@ pub fn build(b: *std.Build) void {
   exe.linkSystemLibrary("dwmapi");
   exe.linkSystemLibrary("opengl32");
 
-  exe.addIncludePath( b.path("lib/cimgui") );
-  exe.addIncludePath( b.path("lib/cimgui/imgui") );
+  exe.addIncludePath( b.path("lib/opengl") );
+  exe.addIncludePath( b.path("lib/imgui") );
 
   const c_srcs = .{
-    "lib/imgui/cimgui.cpp",
-    "lib/imgui/cimgui_impl_opengl3.cpp",
-    "lib/imgui/cimgui_impl_win32.cpp",
-    "lib/imgui/cimgui_memory_editor.cpp",
+    "lib/imgui/dcimgui.cpp",
+    "lib/imgui/dcimgui_impl_opengl3.cpp",
+    "lib/imgui/dcimgui_impl_win32.cpp",
+    "lib/imgui/dcimgui_memory_editor.cpp",
     "lib/imgui/imgui.cpp",
     "lib/imgui/imgui_widgets.cpp",
     "lib/imgui/imgui_draw.cpp",
@@ -68,9 +70,11 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = b.path(rootfile),
-    .target = target,
-   .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");

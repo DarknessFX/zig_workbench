@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseWinEX
 //!  Template for a Windows program, Windows API as submodule.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -13,7 +13,7 @@ var wnd: win.wnd_type = undefined;
 //#region MARK: MAIN
 //=============================================================================
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = &hPrevInstance; _ = &pCmdLine;
 
   win.CreateWindow("BaseWinEx", hInstance, nCmdShow);
@@ -51,7 +51,7 @@ fn MainLoop() void {
 
 // Fix for libc linking error.
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(win.WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 

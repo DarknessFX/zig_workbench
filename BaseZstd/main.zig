@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseZstd.Main
 //! BaseZstd\\main.zig :
 //!   Template for a console program.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL

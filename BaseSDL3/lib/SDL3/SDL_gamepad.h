@@ -29,7 +29,7 @@
  * "joysticks" now are actually console-style gamepads. So SDL provides the
  * gamepad API on top of the lower-level joystick functionality.
  *
- * The difference betweena joystick and a gamepad is that a gamepad tells you
+ * The difference between a joystick and a gamepad is that a gamepad tells you
  * _where_ a button or axis is on the device. You don't speak to gamepads in
  * terms of arbitrary numbers like "button 3" or "axis 2" but in standard
  * locations: the d-pad, the shoulder buttons, triggers, A/B/X/Y (or
@@ -74,16 +74,16 @@
 #ifndef SDL_gamepad_h_
 #define SDL_gamepad_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_guid.h>
-#include <SDL3/SDL_iostream.h>
-#include <SDL3/SDL_joystick.h>
-#include <SDL3/SDL_power.h>
-#include <SDL3/SDL_properties.h>
-#include <SDL3/SDL_sensor.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
+#include <SDL_guid.h>
+#include <SDL_iostream.h>
+#include <SDL_joystick.h>
+#include <SDL_power.h>
+#include <SDL_properties.h>
+#include <SDL_sensor.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -1504,6 +1504,6 @@ extern SDL_DECLSPEC const char * SDLCALL SDL_GetGamepadAppleSFSymbolsNameForAxis
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_gamepad_h_ */

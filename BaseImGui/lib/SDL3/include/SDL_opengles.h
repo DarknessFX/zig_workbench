@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,19 +19,18 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
- *  \file SDL_opengles.h
- *
- *  \brief This is a simple file to encapsulate the OpenGL ES 1.X API headers.
+/*
+ * This is a simple file to encapsulate the OpenGL ES 1.X API headers.
  */
-#include "SDL_platform_defines.h"
 
-#ifdef __IOS__
-#include <OpenGLES/ES1/gl.h"
-#include <OpenGLES/ES1/glext.h"
+#include <SDL_platform_defines.h>
+
+#ifdef SDL_PLATFORM_IOS
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
 #else
-#include <GLES/gl.h"
-#include <GLES/glext.h"
+#include <GLES/gl.h>
+#include <GLES/glext.h>
 #endif
 
 #ifndef APIENTRY

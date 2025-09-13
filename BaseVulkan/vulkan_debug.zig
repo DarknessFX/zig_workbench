@@ -2,16 +2,14 @@
 //   I mess up when porting the callbacks and is not working.
 
 const std = @import("std");
-const vk = @cImport({
-  @cInclude("vulkan.h");
-});
+const vk = @import("vulkan_imp.zig").vk;
 
 pub const validation_layers = [_][*c]const u8{ "VK_LAYER_KHRONOS_validation" };
 pub var debug_messenger: vk.VkDebugUtilsMessengerEXT = undefined;
 
 fn vkcheck(result: vk.VkResult, comptime err_msg: []const u8) !void {
   if (result != vk.VK_SUCCESS) {
-    std.io.getStdOut().writer().print("Vulkan error : {s}\n",  .{ err_msg }) catch unreachable;
+    //std.fs.File.stdout().writer().print("Vulkan error : {s}\n",  .{ err_msg }) catch unreachable;
     std.debug.print("Vulkan error : {s}\n", .{ err_msg });
     @panic(err_msg);
     //return error.VulkanError;

@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseWebGPU\\main.zig
 //! main.zig :
 //!  Template for a WebGPU project that build both bin/.exe and HTML5 WebGPU and Wasm.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL

@@ -40,9 +40,11 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   exe.addWin32ResourceFile(.{
     .file  = b.path(projectname ++ ".rc"),
@@ -72,11 +74,13 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
 pub fn buildHTML(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
   const rootfile = "main.zig";
 
-  const lib = b.addStaticLibrary(.{
+  const lib = b.addLibrary(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
 
   lib.root_module.addCMacro("PLATFORM_WEB", "");
@@ -120,7 +124,7 @@ pub fn buildHTML(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
     "-sUSE_WEBGL2=1",
     "-sUSE_GLFW=3",
     "-sFILESYSTEM=0",
-    "-sUSE_OFFSET_CONVERTER=1",
+    //"-sUSE_OFFSET_CONVERTER=1",
   });
 
   b.getInstallStep().dependOn(&lib.step);

@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseLua\\main.zig
 //! main.zig :
 //!  Template for Lua program.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -23,14 +23,14 @@ const lua = @cImport({
 //=============================================================================
 pub fn main() u8 {
   //HideConsoleWindow();
-  const stderr = std.io.getStdErr().writer();
+  const stderr = std.log.err;
   const lua_state = lua.luaL_newstate();
   defer lua.lua_close(lua_state);
 
   lua.luaL_openlibs(lua_state);
 
   if (lua.luaL_loadfilex(lua_state, "script.lua", null) != 0) {
-    stderr.print("Couldn't load file: {s}\n", .{lua.lua_tolstring(lua_state, -1, null)}) catch unreachable;
+    stderr("Couldn't load file: {s}\n", .{lua.lua_tolstring(lua_state, -1, null)});
     return 1; // "Failed to load Lua script"
   }
 
@@ -47,7 +47,7 @@ pub fn main() u8 {
 
   if (lua.lua_pcallk(lua_state, 0, lua.LUA_MULTRET, 0, 0, lua_cont) != 0) {
     // Error handling
-    stderr.print("Failed to run script: {s}\n", .{lua.lua_tolstring(lua_state, -1, null)}) catch unreachable;
+    stderr("Failed to run script: {s}\n", .{lua.lua_tolstring(lua_state, -1, null)});
     return 2; // "Failed to run Lua script"
   }
 
@@ -60,7 +60,7 @@ pub fn main() u8 {
   return 0;
 }
 
-fn lua_cont(lua_state: ?*lua.lua_State, status: c_int, ctx: lua.lua_KContext) callconv(.C) c_int {
+fn lua_cont(lua_state: ?*lua.lua_State, status: c_int, ctx: lua.lua_KContext) callconv(.c) c_int {
   _ = lua_state; _ = status; _ = ctx;
   return 0;
 }
@@ -69,10 +69,7 @@ fn lua_cont(lua_state: ?*lua.lua_State, status: c_int, ctx: lua.lua_KContext) ca
 //#endregion ==================================================================
 //#region MARK: WINAPI
 //=============================================================================
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
+const win = std.os.windows;
 
 fn HideConsoleWindow() void {
   const BUF_TITLE = 1024;
@@ -87,18 +84,18 @@ fn HideConsoleWindow() void {
 pub extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: win.LPSTR,
   nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 pub extern "kernel32" fn FindWindowA(
   lpClassName: ?win.LPSTR,
   lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 pub const SW_HIDE = 0;
 pub extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: i32
-) callconv(win.WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub const MB_OK = 0x00000000;
 pub extern "user32" fn MessageBoxA(
@@ -106,7 +103,7 @@ pub extern "user32" fn MessageBoxA(
   lpText: [*:0]const u8,
   lpCaption: [*:0]const u8,
   uType: win.UINT
-) callconv(win.WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 //#endregion ==================================================================
 //#region MARK: TEST

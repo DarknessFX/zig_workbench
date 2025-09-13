@@ -17,11 +17,17 @@ pub fn build(b: *std.Build) void {
   const target = b.standardTargetOptions(.{ .default_target = wasm_target });
   const optimize = b.standardOptimizeOption(.{});
 
-  const lib = b.addStaticLibrary(.{
-    .name = "WASM",
-    .root_source_file = b.path("main.zig"),
-    .target = target,
-    .optimize = optimize,
+  const current_path = std.fs.realpathAlloc(std.heap.page_allocator, ".") catch unreachable;
+  const projectname: []const u8 = "BaseRayLib";
+  const rootfile: []const u8 = "main.zig";
+
+  const lib = b.addLibrary(.{
+    .name = projectname,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
 
   switch (optimize) {
@@ -32,6 +38,11 @@ pub fn build(b: *std.Build) void {
   }
 
   lib.linkLibC();
+
+  const shared_exports = &.{ "Print", "printFlush" };
+  lib.root_module.export_symbol_names = shared_exports;
+  lib.entry = .disabled;
+  lib.rdynamic = true;
   b.installArtifact(lib);
 
   // Emscripten - Build HTML, JS, WASM
@@ -41,9 +52,18 @@ pub fn build(b: *std.Build) void {
     "-o",
     b.fmt("{s}/BaseWasm.html", .{ b.lib_dir }),
     "-Oz",
+    "--shell-file=web.html",
+    "--pre-js",
+    b.fmt("{s}\\{s}", .{ current_path, "web.js"}),   
     "-sWASM=1",
     "-sSINGLE_FILE=1",
     "-sEXIT_RUNTIME=1",
+    "-sEXPORTED_FUNCTIONS=_Init,_Update",
+    "-sEXPORTED_RUNTIME_METHODS=ccall,cwrap,wasmExports",
+    // Fix error of missing print
+    "-Wno-js-compiler",
+    "-sWARN_ON_UNDEFINED_SYMBOLS=0",
+    "-sERROR_ON_UNDEFINED_SYMBOLS=0",      
   });
 
   b.getInstallStep().dependOn(&lib.step);

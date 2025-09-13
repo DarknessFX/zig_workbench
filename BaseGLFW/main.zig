@@ -1,18 +1,13 @@
 //!zig-autodoc-section: BaseGLFW.Main
 //! BaseGLFW//main.zig :
 //!   Template using GLFW3.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-
+const win = std.os.windows;
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
@@ -56,15 +51,15 @@ pub fn main() void {
 pub extern "kernel32" fn GetConsoleTitleA(
     lpConsoleTitle: win.LPSTR,
     nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 pub extern "kernel32" fn FindWindowA(
     lpClassName: ?win.LPSTR,
     lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 const SW_HIDE = 0;
-pub extern "user32" fn ShowWindow(hWnd: win.HWND, nCmdShow: i32) callconv(win.WINAPI) win.BOOL;
+pub extern "user32" fn ShowWindow(hWnd: win.HWND, nCmdShow: i32) callconv(.winapi) win.BOOL;
 
 //
 // Tests section

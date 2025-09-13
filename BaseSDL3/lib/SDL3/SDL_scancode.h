@@ -27,13 +27,13 @@
  * Please refer to the Best Keyboard Practices document for details on what
  * this information means and how best to use it.
  *
- * https://wiki.libsdl.org/SDL3/BestKeyboardPractices
+ * https://wiki.libsdl.org/BestKeyboardPractices
  */
 
 #ifndef SDL_scancode_h_
 #define SDL_scancode_h_
 
-#include <SDL3/SDL_stdinc.h>
+#include <SDL_stdinc.h>
 
 /**
  * The SDL keyboard scancode representation.
@@ -208,7 +208,7 @@ typedef enum SDL_Scancode
 
     SDL_SCANCODE_NONUSBACKSLASH = 100, /**< This is the additional key that ISO
                                         *   keyboards have over ANSI ones,
-                                        *   located between left shift and Y.
+                                        *   located between left shift and Z.
                                         *   Produces GRAVE ACCENT and TILDE in a
                                         *   US or UK Mac layout, REVERSE SOLIDUS
                                         *   (backslash) and VERTICAL LINE in a

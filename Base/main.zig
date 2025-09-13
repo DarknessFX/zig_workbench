@@ -1,7 +1,7 @@
 //!zig-autodoc-section: Base.Main
 //! Base\\main.zig :
 //!   Template for a console program.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -27,7 +27,12 @@ fn print(comptime fmt: []const u8, args: anytype) void {
   // debug.print output to StdErr ( is a shortcut to
   // std.io.getStdErr() ), changed to a custom warper
   // to StdOut ignoring any error.
-  std.io.getStdOut().writer().print(fmt, args) catch unreachable;
+
+  var stdout_buffer: [1024]u8 = undefined;
+  var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+  const stdout = &stdout_writer.interface;
+  stdout.print(fmt, args) catch unreachable;
+  stdout.flush() catch unreachable;
 }
 
 /// Print line directly when text don't need formating.

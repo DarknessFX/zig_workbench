@@ -1,17 +1,14 @@
 //!zig-autodoc-section: BaseDX11.Main
 //! BaseDX11//main.zig :
 //!  Template using DirectX 11.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-const WINAPI = win.WINAPI;
+const win = std.os.windows;
+
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -50,7 +47,7 @@ const SimpleVertex = struct { position: XMFLOAT3, color: XMFLOAT4 };
 //=============================================================================
 
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = hPrevInstance;
   _ = pCmdLine;
 
@@ -239,7 +236,7 @@ fn CleanupRenderTarget() void {
   }
 }
 
-fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(WINAPI) win.LRESULT {
+fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(.winapi) win.LRESULT {
   switch (uMsg) {
     WM_DESTROY => {
       PostQuitMessage(0);
@@ -308,7 +305,7 @@ fn CreateWindow(hInstance: win.HINSTANCE) void {
 
 // Fix for libc linking error.
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
@@ -412,7 +409,7 @@ pub const WNDPROC = *const fn (
   uMsg: win.UINT,
   wParam: win.WPARAM,
   lParam: win.LPARAM
-) callconv(WINAPI) win.LRESULT;
+) callconv(.winapi) win.LRESULT;
 
 pub const MSG = extern struct {
   hWnd: ?win.HWND,
@@ -431,18 +428,18 @@ pub const MSG = extern struct {
 pub extern "user32" fn BeginPaint(
   hWnd: ?win.HWND,
   lpPaint: ?*PAINTSTRUCT,
-) callconv(WINAPI) ?HDC;
+) callconv(.winapi) ?HDC;
 
 pub extern "user32" fn FillRect(
   hDC: ?HDC,
   lprc: ?*const win.RECT,
   hbr: ?HBRUSH
-) callconv(WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 pub extern "user32" fn EndPaint(
   hWnd: win.HWND,
   lpPaint: *const PAINTSTRUCT
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub extern "gdi32" fn TextOutW(
   hDC: ?HDC,
@@ -450,39 +447,39 @@ pub extern "gdi32" fn TextOutW(
   y: win.INT,
   lpString: win.LPCWSTR,
   c: win.INT
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn GetAsyncKeyState(
   nKey: c_int
-) callconv(WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 const IDC_ARROW: win.LONG = 32512;
 pub extern "user32" fn LoadCursorW(
   hInstance: ?win.HINSTANCE,
   lpCursorName: win.LONG,
-) callconv(WINAPI) win.HCURSOR;
+) callconv(.winapi) win.HCURSOR;
 
 //   _ = win.MessageBoxA(null, "Sample text.", "Title", win.MB_OK);
 //  _ = OutputDebugStringA("\x1b[31mRed\x1b[0m");
 pub extern "kernel32" fn OutputDebugStringA(
   lpOutputString: win.LPCSTR
-) callconv(WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 pub extern "user32" fn GetWindowRect(
   hWnd: win.HWND,
   lpRect: *win.RECT
-) callconv(WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 pub const SM_CXSCREEN = 0;
 pub const SM_CYSCREEN = 1;
 pub extern "user32" fn GetSystemMetricsForDpi(
   nIndex: win.INT,
   dpi: win.UINT
-) callconv(WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 pub extern "user32" fn GetDpiForWindow(
   hWnd: win.HWND,
-) callconv(WINAPI) win.UINT;
+) callconv(.winapi) win.UINT;
 
 pub const SWP_NOCOPYBITS = 0x0100;
 pub extern "user32" fn SetWindowPos(
@@ -493,46 +490,46 @@ pub extern "user32" fn SetWindowPos(
   cx: win.INT,
   cy: win.INT,
   uFlags: win.UINT,        
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn GetClientRect(
   hWnd: win.HWND,
   lpRect: *win.RECT
-) callconv(WINAPI) win.UINT;
+) callconv(.winapi) win.UINT;
 
 pub extern "user32" fn DestroyWindow(
   hWnd: win.HWND
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn UnregisterClassW(
   lpClassName: [*:0]const u16,
   hInstance: win.HINSTANCE
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn ReleaseDC(
   hWnd: ?win.HWND,
   hDC: win.HDC
-) callconv(WINAPI) i32;
+) callconv(.winapi) i32;
 
 pub extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: i32
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn UpdateWindow(
   hWnd: win.HWND
-) callconv(WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub const PM_REMOVE = 0x0001;
-pub extern "user32" fn PeekMessageA(lpMsg: *MSG, hWnd: ?win.HWND, wMsgFilterMin: win.UINT, wMsgFilterMax: win.UINT, wRemoveMsg: win.UINT) callconv(WINAPI) win.BOOL;
-pub extern "user32" fn TranslateMessage(lpMsg: *const MSG) callconv(WINAPI) win.BOOL;
-pub extern "user32" fn DispatchMessageW(lpMsg: *const MSG) callconv(WINAPI) win.LRESULT;
-pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(WINAPI) void;
-pub extern "user32" fn RegisterClassExW(*const WNDCLASSEXW) callconv(WINAPI) win.ATOM;
-pub extern "user32" fn AdjustWindowRectEx(lpRect: *win.RECT, dwStyle: win.DWORD, bMenu: win.BOOL, dwExStyle: win.DWORD) callconv(WINAPI) win.BOOL;
-pub extern "user32" fn CreateWindowExW(dwExStyle: win.DWORD, lpClassName: [*:0]const u16, lpWindowName: [*:0]const u16, dwStyle: win.DWORD, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWindParent: ?win.HWND, hMenu: ?win.HMENU, hInstance: win.HINSTANCE, lpParam: ?win.LPVOID) callconv(WINAPI) ?win.HWND;
-pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(WINAPI) win.LRESULT;
-pub extern "user32" fn GetDC(hWnd: ?win.HWND) callconv(WINAPI) ?win.HDC;
+pub extern "user32" fn PeekMessageA(lpMsg: *MSG, hWnd: ?win.HWND, wMsgFilterMin: win.UINT, wMsgFilterMax: win.UINT, wRemoveMsg: win.UINT) callconv(.winapi) win.BOOL;
+pub extern "user32" fn TranslateMessage(lpMsg: *const MSG) callconv(.winapi) win.BOOL;
+pub extern "user32" fn DispatchMessageW(lpMsg: *const MSG) callconv(.winapi) win.LRESULT;
+pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(.winapi) void;
+pub extern "user32" fn RegisterClassExW(*const WNDCLASSEXW) callconv(.winapi) win.ATOM;
+pub extern "user32" fn AdjustWindowRectEx(lpRect: *win.RECT, dwStyle: win.DWORD, bMenu: win.BOOL, dwExStyle: win.DWORD) callconv(.winapi) win.BOOL;
+pub extern "user32" fn CreateWindowExW(dwExStyle: win.DWORD, lpClassName: [*:0]const u16, lpWindowName: [*:0]const u16, dwStyle: win.DWORD, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWindParent: ?win.HWND, hMenu: ?win.HMENU, hInstance: win.HINSTANCE, lpParam: ?win.LPVOID) callconv(.winapi) ?win.HWND;
+pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(.winapi) win.LRESULT;
+pub extern "user32" fn GetDC(hWnd: ?win.HWND) callconv(.winapi) ?win.HDC;
 
 //#endregion ==================================================================
 //#region MARK: TEST

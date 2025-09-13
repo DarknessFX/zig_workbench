@@ -3,8 +3,8 @@
   {
     "label": "Compile CUDA",
     "args": [
-      "/c", "call \"D:\\Program Files\\VisualStudio\\VC\\Auxiliary\\Build\\vcvars64.bat\"", " & ",
-      "nvcc", "--shared",
+      "/c", "call \"D:\\Program Files\\Visual_Studio\\VC\\Auxiliary\\Build\\vcvars64.bat\"", " & ",
+      "nvcc", "--shared", "-allow-unsupported-compiler", 
       "-odir", "lib",
       "-o", "lib\\cuda.dll",
       "main.cu",

@@ -78,7 +78,7 @@
   },
   {
     "label": "Zig: Run current file",
-    "args": [ "run", "${file}" ],
+    "args": [ "run", "-lc", "-lopengl32", "-I.", "${file}" ],
     "detail": "'zig run' active file in the current workspace.",
     "command": "zig", "type": "shell", "options": { "cwd": "${workspaceRoot}" }, "group": { "kind": "none", "isDefault": false }, 
     "presentation": { "group": "launch", "echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true, "close": false }, "problemMatcher": []

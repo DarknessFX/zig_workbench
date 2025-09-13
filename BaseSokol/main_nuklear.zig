@@ -1,13 +1,14 @@
 //!zig-autodoc-section: BaseSokol\\main.zig
 //! main.zig :
 //!  Template using Sokol framework and Nuklear UI.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
+
 const std = @import("std");
-pub extern fn main() void; // Skip Zig Maig in favor of Sokol_Main.
+pub extern fn main() void; // Skip Zig Main in favor of Sokol_Main.
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
@@ -33,27 +34,10 @@ const sk = @cImport({
 const state = struct {
   var pass_action: sk.sg_pass_action = undefined;
 };
-
 //#endregion ==================================================================
 //#region MARK: MAIN
 //=============================================================================
-
-pub export fn sokol_main() sk.sapp_desc {
-  HideConsoleWindow();
-  return sk.sapp_desc{
-    .init_cb = init,
-    .frame_cb = frame,
-    .cleanup_cb = cleanup,
-    .event_cb = event,
-    .window_title = "Hello Sokol + Nuklear UI",
-    .width = 1280,
-    .height = 720,
-    .icon = .{ .sokol_default = true },
-    .logger = .{ .func = sk.slog_func },
-  };
-}
-
-fn init() callconv(.C) void {
+fn init() callconv(.c) void {
   sk.sg_setup(&sk.sg_desc{
     .environment = sk.sglue_environment(),
     .logger = .{ .func = sk.slog_func },
@@ -75,7 +59,7 @@ fn init() callconv(.C) void {
   };
 }
 
-fn frame() callconv(.C) void {
+fn frame() callconv(.c) void {
   const ctx: *sk.nk_context = sk.snk_new_frame();
   _ = draw_demo_ui(ctx);
 
@@ -91,13 +75,28 @@ fn frame() callconv(.C) void {
 //#region MARK: UTIL
 //=============================================================================
 
-fn cleanup() callconv(.C) void {
+fn cleanup() callconv(.c) void {
   sk.snk_shutdown();
   sk.sg_shutdown();
 }
 
-fn event(ev: [*c]const sk.sapp_event) callconv(.C) void {
+fn event(ev: [*c]const sk.sapp_event) callconv(.c) void {
   _ = sk.snk_handle_event(ev);
+}
+
+pub export fn sokol_main() sk.sapp_desc {
+  HideConsoleWindow();
+  return sk.sapp_desc{
+    .init_cb = init,
+    .frame_cb = frame,
+    .cleanup_cb = cleanup,
+    .event_cb = event,
+    .window_title = "Hello Sokol + Nuklear UI",
+    .width = 1280,
+    .height = 720,
+    .icon = .{ .sokol_default = true },
+    .logger = .{ .func = sk.slog_func },
+  };
 }
 
 // Nuklear
@@ -169,25 +168,23 @@ fn HideConsoleWindow() void {
   _ = ShowWindow(hwndFound, SW_HIDE);
 }
 
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
+const win = std.os.windows;
 pub extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: win.LPSTR,
   nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 pub extern "kernel32" fn FindWindowA(
   lpClassName: ?win.LPSTR,
   lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 pub const SW_HIDE = 0;
 pub extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: i32
-) callconv(win.WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
+
 
 //#endregion ==================================================================
 //#region MARK: TEST

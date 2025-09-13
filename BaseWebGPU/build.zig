@@ -40,9 +40,11 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   exe.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
@@ -94,9 +96,11 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = b.path(rootfile),
-    .target = target,
-   .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
@@ -109,11 +113,13 @@ pub fn buildWasm(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
   const rootfile = "shared.zig";
 
   // Build WebGPU as stand-alone wasm.
-  const wasm = b.addStaticLibrary(.{
+  const wasm = b.addLibrary(.{
     .name = "shared",
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   wasm.linkLibC();
 
@@ -193,7 +199,7 @@ pub fn buildWasm(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
     wasm_cmd.addArgs(&[_][]const u8{
       "-Wall",
       "-jsDWEBGPU_DEBUG=1",
-      "-sUSE_OFFSET_CONVERTER",
+      //"-sUSE_OFFSET_CONVERTER",
       "-sASSERTIONS=2",
       "-sSTACK_OVERFLOW_CHECK=2",
       "-sRUNTIME_DEBUG",
@@ -261,11 +267,13 @@ pub fn buildWebGPU(b: *std.Build, target: std.Build.ResolvedTarget, optimize: st
   const rootfile = "web.zig";
 
   // Build as WebGPU as static library .a
-  const lib = b.addStaticLibrary(.{
-      .name = projectname,
+  const lib = b.addLibrary(.{
+    .name = projectname,
+    .root_module = b.createModule(.{
       .root_source_file = b.path(rootfile),
       .target = target,
       .optimize = optimize,
+    }),
   });
   lib.linkLibC();
 
@@ -345,7 +353,7 @@ pub fn buildWebGPU(b: *std.Build, target: std.Build.ResolvedTarget, optimize: st
     emcc_cmd.addArgs(&[_][]const u8{
       "-Wall",
       "-jsDWEBGPU_DEBUG=1",
-      "-sUSE_OFFSET_CONVERTER",
+      //"-sUSE_OFFSET_CONVERTER",
       "-sASSERTIONS=2",
       "-sSTACK_OVERFLOW_CHECK=2",
       "-sRUNTIME_DEBUG",

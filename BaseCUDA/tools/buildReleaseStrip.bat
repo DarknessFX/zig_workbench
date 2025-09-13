@@ -2,7 +2,7 @@
 CD ..
 
 IF NOT EXIST lib (mkdir lib>nul)
-CMD /S /C "CALL "D:\Program Files\VisualStudio\VC\Auxiliary\Build\vcvars64.bat" & nvcc --shared -odir "D:\workbench\Zig\inProgress\zCUDA\lib" -o lib\cuda.dll main.cu " 
+CMD /S /C "CALL "D:\Program Files\Visual_Studio\VC\Auxiliary\Build\vcvars64.bat" & nvcc --shared -allow-unsupported-compiler -odir "D:\workbench\Zig\inProgress\zCUDA\lib" -o lib\cuda.dll main.cu " 
 
 REM EXTRA ARGS SHORTCUT
 REM ===================
@@ -56,7 +56,7 @@ FINDSTR /L linkLibCpp build.zig > NUL && (
 
 REM OUTPUT TO ZIG_REPORT.EXE
 > bin/ReleaseStrip/obj/zig_report.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  zig build-exe -O ReleaseSmall %rcmd% %libc% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
 
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (

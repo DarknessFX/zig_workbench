@@ -1,17 +1,14 @@
 //!zig-autodoc-section: BaseImGui.Main
 //! BaseImGui//main.zig :
 //!   Template using Dear ImGui with SDL3 OpenGL3 renderer.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-const WINAPI = win.WINAPI;
+const win = std.os.windows;
+
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -19,10 +16,10 @@ const L = std.unicode.utf8ToUtf16LeStringLiteral;
 //   @cInclude("C:/zig_microui/lib/SDL2/include/SDL.h"); 
 const im = @cImport({
   //lib/imgui/
-  @cInclude("cimgui.h");
-  @cInclude("cimgui_impl_sdl3.h");
-  @cInclude("cimgui_impl_opengl3.h");
-  @cInclude("cimgui_memory_editor.h");
+  @cInclude("dcimgui.h");
+  @cInclude("dcimgui_impl_sdl3.h");
+  @cInclude("dcimgui_impl_opengl3.h");
+  @cInclude("dcimgui_memory_editor.h");
 });
 
 const sdl = @cImport({
@@ -42,7 +39,7 @@ const ImVec4 = struct {
 //#region MARK: MAIN
 //=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = hInstance;
   _ = hPrevInstance;
   _ = pCmdLine;
@@ -53,7 +50,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_PROFILE_MASK, sdl.SDL_GL_CONTEXT_PROFILE_CORE);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_CONTEXT_MINOR_VERSION, 2);
-  _ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
+  //_ = sdl.SDL_SetHint(sdl.SDL_HINT_IME_SHOW_UI, "1");
 
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DOUBLEBUFFER, 1);
   _ = sdl.SDL_GL_SetAttribute(sdl.SDL_GL_DEPTH_SIZE, 24);
@@ -118,10 +115,10 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   var counter: u16 = 0;
 
   var event: sdl.SDL_Event = undefined;
-  const cevent = @as([*c]const im.SDL_Event , @ptrCast(&event));
+  const cevent = @as(*im.SDL_Event , @ptrCast(&event));
   var done: bool = false;
   while (!done) {
-    while (sdl.SDL_PollEvent(&event) == 1) {
+    while (sdl.SDL_PollEvent(&event) == true) {
       _ = im.cImGui_ImplSDL3_ProcessEvent(cevent);
       if (event.type == sdl.SDL_EVENT_QUIT) {
         done = true; }
@@ -190,7 +187,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   im.cImGui_ImplSDL3_Shutdown();
   im.ImGui_DestroyContext(null);
 
-  _ = sdl.SDL_GL_DeleteContext(gl_context);
+  _ = sdl.SDL_GL_DestroyContext(gl_context);
   sdl.SDL_DestroyWindow(window);
   sdl.SDL_Quit();
 
@@ -202,7 +199,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 //=============================================================================
 // Fix for libc linking error.
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 

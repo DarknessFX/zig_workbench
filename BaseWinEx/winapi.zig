@@ -4,11 +4,8 @@
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-pub const win = @This();
 const std = @import("std");
-usingnamespace std.os.windows;
-usingnamespace std.os.windows.kernel32;
-pub const WINAPI = std.os.windows.WINAPI;
+pub const win = std.os.windows;
 
 const SIZE = struct {
   width: i16,
@@ -31,7 +28,8 @@ pub const wnd_type = struct {
     .bottom = 720
   },
   hdc: HDC = undefined,
-  dpi: UINT = 96
+  dpi: UINT = 96,
+  color: COLORREF = 0x001E1E1E,  //0x00RRGGBB;  
 };
 pub var wnd: wnd_type = .{};
 
@@ -41,29 +39,29 @@ pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: 
   wnd.hInstance = hInstance;
   wnd.name = @as([*:0]const u8, @ptrCast(title));
   wnd.classname = title ++ "_class";
-  const wnd_class: win.WNDCLASSEXA = .{
-    .cbSize = @sizeOf(win.WNDCLASSEXA),
-    .style = win.CS_CLASSDC | win.CS_HREDRAW | win.CS_VREDRAW,
+  const wnd_class: WNDCLASSEXA = .{
+    .cbSize = @sizeOf(WNDCLASSEXA),
+    .style = CS_CLASSDC | CS_HREDRAW | CS_VREDRAW,
     .lpfnWndProc = WindowProc,
     .cbClsExtra = 0, 
     .cbWndExtra = 0,
     .hInstance = hInstance,
     .hIcon = null, 
-    .hCursor = win.LoadCursorA(null, win.IDC_ARROW),
+    .hCursor = LoadCursorA(null, IDC_ARROW),
     .hbrBackground = null, 
     .lpszMenuName = null,
     .lpszClassName = wnd.classname,
     .hIconSm = null,
   };
 
-  _ = win.RegisterClassExA(&wnd_class);
+  _ = RegisterClassExA(&wnd_class);
 
-  wnd.hWnd = win.CreateWindowExA(
-    0, wnd.classname, wnd.name, win.WS_OVERLAPPEDWINDOW,
-    win.CW_USEDEFAULT, win.CW_USEDEFAULT, win.CW_USEDEFAULT, win.CW_USEDEFAULT, 
+  wnd.hWnd = CreateWindowExA(
+    0, wnd.classname, wnd.name, WS_OVERLAPPEDWINDOW,
+    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
     null, null, hInstance, null) orelse undefined;
 
-  std.debug.print("{d}\n", .{ wnd.hWnd });
+  std.debug.print("{any}\n", .{ wnd.hWnd });
 
   wnd.hdc = GetDC(wnd.hWnd).?;
   wnd.dpi = GetDpiForWindow(wnd.hWnd);
@@ -77,8 +75,8 @@ pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: 
   wnd.pos.bottom = wnd.pos.top + div_h;
   _ = SetWindowPos( wnd.hWnd, null, wnd.pos.left, wnd.pos.top, wnd.pos.right, wnd.pos.bottom, SWP_NOCOPYBITS );
 
-  std.debug.print("{d}\n", .{ wnd.hdc });
-  std.debug.print("{d}\n", .{ wnd.dpi });
+  std.debug.print("{any}\n", .{ wnd.hdc });
+  std.debug.print("{any}\n", .{ wnd.dpi });
 
 }
 
@@ -90,27 +88,28 @@ pub fn ProcessMsg() void {
   }
 }
 
-pub fn WindowProc( hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM ) callconv(WINAPI) LRESULT {
+pub fn WindowProc( hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM ) callconv(.winapi) LRESULT {
   switch (uMsg) {
-    win.WM_DESTROY => {
-      win.PostQuitMessage(0);
+    WM_DESTROY => {
+      PostQuitMessage(0);
       return 0;
     },
-    win.WM_PAINT => {
-      const hdc: HDC = BeginPaint(hWnd, &ps) orelse undefined;
-      _ = FillRect(hdc, &ps.rcPaint, @ptrFromInt(COLOR_WINDOW + 1));
+    WM_PAINT => {
+      _ = BeginPaint(hWnd, &ps).?;
+      _ = FillRect(wnd.hdc, &ps.rcPaint, CreateSolidBrush(wnd.color));
       _ = EndPaint(hWnd, &ps);
     },
-    win.WM_SIZE => {
+    WM_SIZE => {
       wnd.size.width = @as(i16, @intCast(LOWORD(lParam)));
       wnd.size.height = @as(i16, @intCast(HIWORD(lParam)));
+      _ = PostMessageW(hWnd, WM_PAINT, 0, 0);      
     },
-		win.WM_KEYDOWN,
-		win.WM_SYSKEYDOWN => {
+		WM_KEYDOWN,
+		WM_SYSKEYDOWN => {
 			switch (wParam) {
 				VK_ESCAPE => { //SHIFT+ESC = EXIT
 					if (GetAsyncKeyState(VK_LSHIFT) & 0x01 == 1) {
-						win.PostQuitMessage(0);
+						PostQuitMessage(0);
 						return 0;
 					}
         },
@@ -120,7 +119,7 @@ pub fn WindowProc( hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM ) call
     else => _=.{},
   }
 
-  return win.DefWindowProcA(hWnd, uMsg, wParam, lParam);
+  return DefWindowProcA(hWnd, uMsg, wParam, lParam);
 }
 
 pub fn Destroy() void {
@@ -312,7 +311,7 @@ const WNDPROC = *const fn (
   uMsg: UINT, 
   wParam: WPARAM, 
   lParam: LPARAM
-) callconv(WINAPI) LRESULT;
+) callconv(.winapi) LRESULT;
 
 pub const MSG = extern struct {
   hWnd: ?HWND,
@@ -406,39 +405,39 @@ pub fn toUtf8(any: LPWSTR) []u8 {
 }
 
 pub extern "kernel32" fn GetCommandLineA(
-) callconv(WINAPI) ?LPSTR;
+) callconv(.winapi) ?LPSTR;
 
 pub extern "user32" fn MessageBoxA(
   hWnd: ?HWND, 
   lpText: [*:0]const u8, 
   lpCaption: [*:0]const u8, 
   uType: UINT
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 pub extern "user32" fn UpdateWindow(
   hWnd: HWND
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn LoadCursorA(
   hInstance: ?HINSTANCE,
   lpCursorName: LONG,
-) callconv(WINAPI) HCURSOR;
+) callconv(.winapi) HCURSOR;
 
 extern "user32" fn RegisterClassExA(
   *const WNDCLASSEXA
-) callconv(WINAPI) ATOM;
+) callconv(.winapi) ATOM;
 
 extern "user32" fn UnregisterClassA(
   lpClassName: [*:0]const u8, 
   hInstance: HINSTANCE
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn AdjustWindowRectEx(
   lpRect: *RECT, 
   dwStyle: DWORD,
   bMenu: BOOL,
   dwExStyle: DWORD
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn CreateWindowExA(
   dwExStyle: DWORD,
@@ -453,24 +452,24 @@ extern "user32" fn CreateWindowExA(
   hMenu: ?HMENU,
   hInstance: HINSTANCE,
   lpParam: ?LPVOID
-) callconv(WINAPI) ?HWND;
+) callconv(.winapi) ?HWND;
 
 pub extern "user32" fn DestroyWindow(
   hWnd: HWND
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn GetDC(
   hWnd: ?HWND
-) callconv(WINAPI) ?HDC;
+) callconv(.winapi) ?HDC;
 
 extern "user32" fn ReleaseDC(
   hWnd: ?HWND, 
   hDC: HDC
-) callconv(WINAPI) i32;
+) callconv(.winapi) i32;
 
 extern "user32" fn PostQuitMessage(
   nExitCode: i32
-) callconv(WINAPI) void;
+) callconv(.winapi) void;
 
 pub extern "user32" fn PeekMessageA(
   lpMsg: *MSG,
@@ -478,42 +477,54 @@ pub extern "user32" fn PeekMessageA(
   wMsgFilterMin: UINT, 
   wMsgFilterMax: UINT, 
   wRemoveMsg: UINT
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 pub extern "user32" fn TranslateMessage(
   lpMsg: *const MSG
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 pub extern "user32" fn DispatchMessageA(
   lpMsg: *const MSG
-) callconv(WINAPI) LRESULT;
+) callconv(.winapi) LRESULT;
 
 extern "user32" fn DefWindowProcA(
   hWnd: HWND,
   Msg: UINT,
   wParam: WPARAM,
   lParam: LPARAM
-) callconv(WINAPI) LRESULT;
+) callconv(.winapi) LRESULT;
+
+pub extern "user32" fn PostMessageW(
+  hWnd: ?HWND,
+  Msg: UINT,
+  wParam: WPARAM,
+  lParam: LPARAM
+) callconv(.winapi) win.BOOL;
 
 extern "user32" fn BeginPaint(
   hWnd: ?HWND,
   lpPaint: ?*PAINTSTRUCT,
-) callconv(WINAPI) ?HDC;
+) callconv(.winapi) ?HDC;
+
+pub const COLORREF = DWORD;
+pub extern "gdi32" fn CreateSolidBrush(
+  color: COLORREF
+) callconv(.winapi) HBRUSH;
 
 extern "user32" fn FillRect(
   hDC: ?HDC,
   lprc: ?*const RECT,
   hbr: ?HBRUSH
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 extern "user32" fn EndPaint(
   hWnd: HWND,
   lpPaint: *const PAINTSTRUCT
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn GetAsyncKeyState(
   nKey: c_int
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 extern "kernel32" fn CreateProcessA(
   lpApplicationName: ?LPCSTR,
@@ -526,107 +537,107 @@ extern "kernel32" fn CreateProcessA(
   lpCurrentDirectory: ?LPCSTR,
   lpStartupInfo: *STARTUPINFOA,
   lpProcessInformation: *PROCESS_INFORMATION,
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 pub extern "shell32" fn ExtractIconA(
   hInst: HINSTANCE,
   pszExeFileName: LPCSTR,
   nIconIndex: UINT
-) callconv(WINAPI) ?HICON;
+) callconv(.winapi) ?HICON;
 
 extern "shell32" fn Shell_NotifyIconA(
   dwMessage: DWORD,
   lpData: *NOTIFYICONDATAA
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn DestroyIcon(
   hIcon: HICON,
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "comctl32" fn LoadIconMetric(
   hInst: ?HINSTANCE,
   pszName: LPCSTR,
   lims: INT,
   phico: *HICON
-) callconv(WINAPI) HRESULT;
+) callconv(.winapi) HRESULT;
 
 extern "user32" fn SetWindowLongA(
   hWnd: HWND,
   nIndex: INT,
   dwNewLong: LONG
-) callconv(WINAPI) HRESULT;
+) callconv(.winapi) HRESULT;
 
 extern "user32" fn GetWindowLongA(
   hWnd: HWND,
   nIndex: INT
-) callconv(WINAPI) LONG ;
+) callconv(.winapi) LONG ;
 
 pub extern "user32" fn ShowWindow(
   hWnd: HWND,
   nCmdShow: INT
-) callconv(WINAPI) void;
+) callconv(.winapi) void;
 
 extern "user32" fn EnumWindows(
   lpEnumFunc: WNDENUMPROC,
   lParam: LPARAM
-) callconv(WINAPI) void;
+) callconv(.winapi) void;
 
 const WNDENUMPROC = *const fn (
   hwnd: HWND, 
   lParam: LPARAM
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 extern "user32" fn IsWindowVisible(
   hwnd: HWND 
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn GetWindowTextA(
   hwnd: HWND,
   lpString: LPSTR,
   nMaxCount: INT
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 extern "user32" fn GetWindowTextLengthA(
   hWnd: ?HWND
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 extern "kernel32" fn SetCurrentDirectoryA(
   lpPathName: LPCSTR
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 extern "user32" fn WaitForInputIdle(
   hProcess: HANDLE,
   dwMilliseconds: DWORD
-) callconv(WINAPI) DWORD;
+) callconv(.winapi) DWORD;
 
 extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: LPSTR,
   nSize: DWORD,
-) callconv(WINAPI) DWORD;
+) callconv(.winapi) DWORD;
 
 extern "kernel32" fn FindWindowA(
   lpClassName: ?LPSTR,
   lpWindowName: ?LPSTR,
-) callconv(WINAPI) HWND;
+) callconv(.winapi) HWND;
 
 extern "user32" fn LoadCursorW(
   hInstance: ?HINSTANCE,
   lpCursorName: LONG,
-) callconv(WINAPI) HCURSOR;
+) callconv(.winapi) HCURSOR;
 
 pub extern "user32" fn WaitMessage(
 ) BOOL;
 
 extern "user32" fn GetDpiForWindow(
   hWnd: HWND,
-) callconv(WINAPI) UINT;
+) callconv(.winapi) UINT;
 
 const SM_CXSCREEN = 0;
 const SM_CYSCREEN = 1;
 extern "user32" fn GetSystemMetricsForDpi(
   nIndex: INT,
   dpi: UINT
-) callconv(WINAPI) INT;
+) callconv(.winapi) INT;
 
 const SWP_NOCOPYBITS = 0x0100;
 extern "user32" fn SetWindowPos(
@@ -637,7 +648,7 @@ extern "user32" fn SetWindowPos(
   cx: INT,
   cy: INT,
   uFlags: UINT,        
-) callconv(WINAPI) BOOL;
+) callconv(.winapi) BOOL;
 
 //#endregion ==================================================================
 //#region MARK: TEST

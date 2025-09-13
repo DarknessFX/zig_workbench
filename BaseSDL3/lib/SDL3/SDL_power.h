@@ -37,10 +37,10 @@
  * they can save their game.
  */
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -79,6 +79,10 @@ typedef enum SDL_PowerState
  * It's possible a platform can only report battery percentage or time left
  * but not both.
  *
+ * On some platforms, retrieving power supply details might be expensive. If
+ * you want to display continuous status you could call this function every
+ * minute or so.
+ *
  * \param seconds a pointer filled in with the seconds of battery life left,
  *                or NULL to ignore. This will be filled in with -1 if we
  *                can't determine a value or there is no battery.
@@ -97,6 +101,6 @@ extern SDL_DECLSPEC SDL_PowerState SDLCALL SDL_GetPowerInfo(int *seconds, int *p
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_power_h_ */

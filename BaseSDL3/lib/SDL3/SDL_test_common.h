@@ -30,7 +30,7 @@
 #ifndef SDL_test_common_h_
 #define SDL_test_common_h_
 
-#include <SDL3/SDL.h>
+#include <SDL.h>
 
 #ifdef SDL_PLATFORM_PSP
 #define DEFAULT_WINDOW_WIDTH  480
@@ -161,7 +161,7 @@ typedef struct
     SDLTest_ArgumentParser *argparser;
 } SDLTest_CommonState;
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -177,7 +177,7 @@ extern "C" {
  *
  * \returns a newly allocated common state object.
  */
-SDLTest_CommonState *SDLCALL SDLTest_CommonCreateState(char **argv, SDL_InitFlags flags);
+SDLTest_CommonState * SDLCALL SDLTest_CommonCreateState(char **argv, SDL_InitFlags flags);
 
 /**
  * Free the common state object.
@@ -284,6 +284,6 @@ void SDLCALL SDLTest_CommonDrawWindowInfo(SDL_Renderer *renderer, SDL_Window *wi
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_test_common_h_ */

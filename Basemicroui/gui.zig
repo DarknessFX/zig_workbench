@@ -1,11 +1,9 @@
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-pub const mu = @cImport({
-  @cInclude("microui.h");
-});
+pub const mu =  @import("microui.zig").mu;
 
 pub extern fn strcat([*c]u8, [*c]const u8) [*c]u8;
 pub extern fn sprintf(__stream: [*c]u8, __format: [*c]const u8, ...) c_int;
@@ -66,7 +64,7 @@ fn style_window(ctx: *mu.mu_Context) void {
   }
 }
 
-pub fn slider(arg_ctx: [*c]mu.mu_Context, arg_value: [*c]u8, arg_low: c_int, arg_high: c_int) callconv(.C) c_int {
+pub fn slider(arg_ctx: [*c]mu.mu_Context, arg_value: [*c]u8, arg_low: c_int, arg_high: c_int) callconv(.c) c_int {
   const ctx = arg_ctx;
   var value = arg_value;
   const low = arg_low;
@@ -81,7 +79,7 @@ pub fn slider(arg_ctx: [*c]mu.mu_Context, arg_value: [*c]u8, arg_low: c_int, arg
   return res;
 }
 
-pub fn log_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
+pub fn log_window(arg_ctx: [*c]mu.mu_Context) callconv(.c) void {
   const ctx = arg_ctx;
   if (mu.mu_begin_window_ex(ctx, "Log Window", mu.mu_rect(@as(c_int, 350), @as(c_int, 40), @as(c_int, 300), @as(c_int, 200)), @as(c_int, 0)) != 0) {
     mu.mu_layout_row(ctx, @as(c_int, 1), @as([*c]c_int, @constCast(@ptrCast(@alignCast(&([1]c_int{
@@ -121,7 +119,7 @@ pub fn log_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
   }
 }
 
-pub fn write_log(arg_text: [*c]const u8) callconv(.C) void {
+pub fn write_log(arg_text: [*c]const u8) callconv(.c) void {
     const text = arg_text;
     if (logbuf[@as(c_uint, @intCast(@as(c_int, 0)))] != 0) {
         _ = strcat(@as([*c]u8, @ptrCast(@alignCast(&logbuf))), "\n");
@@ -130,7 +128,7 @@ pub fn write_log(arg_text: [*c]const u8) callconv(.C) void {
     logbuf_updated = 1;
 }
 
-pub fn test_window(arg_ctx: [*c]mu.mu_Context) callconv(.C) void {
+pub fn test_window(arg_ctx: [*c]mu.mu_Context) callconv(.c) void {
     const ctx = arg_ctx;
     if (mu.mu_begin_window_ex(ctx, "Demo Window", mu.mu_rect(@as(c_int, 40), @as(c_int, 40), @as(c_int, 300), @as(c_int, 450)), @as(c_int, 0)) != 0) {
         const win: [*c]mu.mu_Container = mu.mu_get_current_container(ctx);

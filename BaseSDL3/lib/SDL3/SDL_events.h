@@ -52,23 +52,23 @@
 #ifndef SDL_events_h_
 #define SDL_events_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_audio.h>
-#include <SDL3/SDL_camera.h>
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_gamepad.h>
-#include <SDL3/SDL_joystick.h>
-#include <SDL3/SDL_keyboard.h>
-#include <SDL3/SDL_keycode.h>
-#include <SDL3/SDL_mouse.h>
-#include <SDL3/SDL_pen.h>
-#include <SDL3/SDL_power.h>
-#include <SDL3/SDL_sensor.h>
-#include <SDL3/SDL_scancode.h>
-#include <SDL3/SDL_touch.h>
-#include <SDL3/SDL_video.h>
+#include <SDL_stdinc.h>
+#include <SDL_audio.h>
+#include <SDL_camera.h>
+#include <SDL_error.h>
+#include <SDL_gamepad.h>
+#include <SDL_joystick.h>
+#include <SDL_keyboard.h>
+#include <SDL_keycode.h>
+#include <SDL_mouse.h>
+#include <SDL_pen.h>
+#include <SDL_power.h>
+#include <SDL_sensor.h>
+#include <SDL_scancode.h>
+#include <SDL_touch.h>
+#include <SDL_video.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -132,7 +132,7 @@ typedef enum SDL_EventType
 
     /* Window events */
     /* 0x200 was SDL_WINDOWEVENT, reserve the number for sdl2-compat */
-    /* 0x201 was SDL_EVENT_SYSWM, reserve the number for sdl2-compat */
+    /* 0x201 was SDL_SYSWMEVENT, reserve the number for sdl2-compat */
     SDL_EVENT_WINDOW_SHOWN = 0x202,     /**< Window has been shown */
     SDL_EVENT_WINDOW_HIDDEN,            /**< Window has been hidden */
     SDL_EVENT_WINDOW_EXPOSED,           /**< Window has been exposed and should be redrawn, and can be redrawn directly from event watchers for this event */
@@ -492,6 +492,8 @@ typedef struct SDL_MouseWheelEvent
     SDL_MouseWheelDirection direction; /**< Set to one of the SDL_MOUSEWHEEL_* defines. When FLIPPED the values in X and Y will be opposite. Multiply by -1 to change them back */
     float mouse_x;      /**< X coordinate, relative to window */
     float mouse_y;      /**< Y coordinate, relative to window */
+    Sint32 integer_x;   /**< The amount scrolled horizontally, accumulated to whole scroll "ticks" (added in 3.2.12) */
+    Sint32 integer_y;   /**< The amount scrolled vertically, accumulated to whole scroll "ticks" (added in 3.2.12) */
 } SDL_MouseWheelEvent;
 
 /**
@@ -1108,7 +1110,7 @@ typedef enum SDL_EventAction
  * \param numevents if action is SDL_ADDEVENT, the number of events to add
  *                  back to the event queue; if action is SDL_PEEKEVENT or
  *                  SDL_GETEVENT, the maximum number of events to retrieve.
- * \param action action to take; see [[#action|Remarks]] for details.
+ * \param action action to take; see [Remarks](#remarks) for details.
  * \param minType minimum value of the event type to be considered;
  *                SDL_EVENT_FIRST is a safe choice.
  * \param maxType maximum value of the event type to be considered;
@@ -1569,6 +1571,6 @@ extern SDL_DECLSPEC SDL_Window * SDLCALL SDL_GetWindowFromEvent(const SDL_Event 
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_events_h_ */

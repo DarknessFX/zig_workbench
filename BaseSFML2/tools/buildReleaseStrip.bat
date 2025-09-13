@@ -45,7 +45,7 @@ FINDSTR /L linkLibC build.zig > NUL && (
 
 REM OUTPUT TO ZIG_REPORT.EXE
 > bin/ReleaseStrip/obj/zig_report.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% -fstrip -fsingle-threaded --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -ftime-report -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile% 
+  zig build-exe -O ReleaseSmall %rcmd% %libc% -fstrip -fsingle-threaded --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile% 
 ) 2>&1 
 
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (

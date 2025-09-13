@@ -41,8 +41,8 @@
  * "system", "audio", "video", "render", "input", "test", or `*` for any
  * unspecified category.
  *
- * The level can be a numeric level, one of "verbose", "debug", "info",
- * "warn", "error", "critical", or "quiet" to disable that category.
+ * The level can be a numeric level, one of "trace", "verbose", "debug",
+ * "info", "warn", "error", "critical", or "quiet" to disable that category.
  *
  * You can omit the category if you want to set the logging level for all
  * categories.
@@ -56,14 +56,23 @@
  * - Windows: debug output stream
  * - Android: log output
  * - Others: standard error output (stderr)
+ *
+ * You don't need to have a newline (`\n`) on the end of messages, the
+ * functions will do that for you. For consistent behavior cross-platform, you
+ * shouldn't have any newlines in messages, such as to log multiple lines in
+ * one call; unusual platform-specific behavior can be observed in such usage.
+ * Do one log call per line instead, with no newlines in messages.
+ *
+ * Each log call is atomic, so you won't see log messages cut off one another
+ * when logging from multiple threads.
  */
 
 #ifndef SDL_log_h_
 #define SDL_log_h_
 
-#include <SDL3/SDL_stdinc.h>
+#include <SDL_stdinc.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -524,6 +533,6 @@ extern SDL_DECLSPEC void SDLCALL SDL_SetLogOutputFunction(SDL_LogOutputFunction 
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_log_h_ */

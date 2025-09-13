@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -19,22 +19,22 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
-/**
- *  \file SDL_egl.h
- *
- *  \brief This is a simple file to encapsulate the EGL API headers.
+/*
+ * This is a simple file to encapsulate the EGL API headers.
  */
 
-#if !defined(_MSC_VER) && !defined(__ANDROID__) && !defined(SDL_USE_BUILTIN_OPENGL_DEFINITIONS)
+#include <SDL_platform_defines.h>
 
-#if defined(__vita__) || defined(__psp2__)
-#include <psp2/display.h"
-#include <psp2/gxm.h"
-#include <psp2/types.h"
+#if !defined(_MSC_VER) && !defined(SDL_PLATFORM_ANDROID) && !defined(SDL_USE_BUILTIN_OPENGL_DEFINITIONS)
+
+#if defined(SDL_PLATFORM_VITA)
+#include <psp2/display.h>
+#include <psp2/gxm.h>
+#include <psp2/types.h>
 #endif
 
-#include <EGL/egl.h"
-#include <EGL/eglext.h"
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 
 #else /* _MSC_VER */
 
@@ -85,7 +85,7 @@
  *    http://www.khronos.org/registry/implementers_guide.pdf
  *
  * This file should be included as
- *        #include <KHR/khrplatform.h"
+ *        #include <KHR/khrplatform.h>
  * by Khronos client API header files that use its types and defines.
  *
  * The types in khrplatform.h should only be used to define API-specific types.
@@ -186,9 +186,9 @@
 
 
 /*
- * Using <stdint.h"
+ * Using <stdint.h>
  */
-#include <stdint.h"
+#include <stdint.h>
 typedef int32_t                 khronos_int32_t;
 typedef uint32_t                khronos_uint32_t;
 typedef int64_t                 khronos_int64_t;
@@ -213,9 +213,9 @@ typedef uint64_t                khronos_uint64_t;
 #elif defined(__VMS ) || defined(__sgi)
 
 /*
- * Using <inttypes.h"
+ * Using <inttypes.h>
  */
-#include <inttypes.h"
+#include <inttypes.h>
 typedef int32_t                 khronos_int32_t;
 typedef uint32_t                khronos_uint32_t;
 typedef int64_t                 khronos_int64_t;
@@ -267,7 +267,7 @@ typedef unsigned int            khronos_uint32_t;
 /*
  * Generic fallback
  */
-#include <stdint.h"
+#include <stdint.h>
 typedef int32_t                 khronos_int32_t;
 typedef uint32_t                khronos_uint32_t;
 typedef int64_t                 khronos_int64_t;
@@ -370,7 +370,7 @@ typedef enum {
  * https://www.github.com/KhronosGroup/EGL-Registry/
  */
 
-/*#include <KHR/khrplatform.h"*/
+/*#include <KHR/khrplatform.h>*/
 
 /* Macros used in EGL function prototype declarations.
  *
@@ -413,13 +413,13 @@ typedef void *EGLNativeWindowType;
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN 1
 #endif
-#include <windows.h"
+#include <windows.h>
 
 typedef HDC     EGLNativeDisplayType;
 typedef HBITMAP EGLNativePixmapType;
 typedef HWND    EGLNativeWindowType;
 
-#elif defined(__EMSCRIPTEN__)
+#elif defined(SDL_PLATFORM_EMSCRIPTEN)
 
 typedef int EGLNativeDisplayType;
 typedef int EGLNativePixmapType;
@@ -461,8 +461,8 @@ typedef intptr_t EGLNativeWindowType;
 #elif defined(USE_X11)
 
 /* X11 (tentative)  */
-#include <X11/Xlib.h"
-#include <X11/Xutil.h"
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 typedef Display *EGLNativeDisplayType;
 typedef Pixmap   EGLNativePixmapType;
@@ -482,7 +482,7 @@ typedef void *EGLNativeWindowType;
 
 #elif defined(__HAIKU__)
 
-#include <kernel/image.h"
+#include <kernel/image.h>
 
 typedef void              *EGLNativeDisplayType;
 typedef khronos_uintptr_t  EGLNativePixmapType;
@@ -543,7 +543,7 @@ extern "C" {
 ** Khronos $Git commit SHA1: 6fb1daea15 $ on $Git commit date: 2022-05-25 09:41:13 -0600 $
 */
 
-/*#include <EGL/eglplatform.h"*/
+/*#include <EGL/eglplatform.h>*/
 
 #ifndef EGL_EGL_PROTOTYPES
 #define EGL_EGL_PROTOTYPES 1
@@ -564,8 +564,8 @@ extern "C" {
 #define EGL_VERSION_1_0 1
 typedef unsigned int EGLBoolean;
 typedef void *EGLDisplay;
-/*#include <KHR/khrplatform.h"*/
-/*#include <EGL/eglplatform.h"*/
+/*#include <KHR/khrplatform.h>*/
+/*#include <EGL/eglplatform.h>*/
 typedef void *EGLConfig;
 typedef void *EGLSurface;
 typedef void *EGLContext;
@@ -887,7 +887,7 @@ extern "C" {
 ** Khronos $Git commit SHA1: 6fb1daea15 $ on $Git commit date: 2022-05-25 09:41:13 -0600 $
 */
 
-/*#include <EGL/eglplatform.h"*/
+/*#include <EGL/eglplatform.h>*/
 
 #define EGL_EGLEXT_VERSION 20220525
 

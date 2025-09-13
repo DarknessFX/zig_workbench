@@ -1,17 +1,14 @@
 //!zig-autodoc-section: BaseMicroui.Main
 //! BaseMicroui//main.zig :
 //!  Template using Microui and SDL2.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-const WINAPI = win.WINAPI;
+const win = std.os.windows;
+
 const L = std.unicode.utf8ToUtf16LeStringLiteral;
 
 // NOTE ABOUT VSCODE + ZLS:
@@ -25,9 +22,7 @@ pub const sdl = @cImport({
   @cInclude("SDL_opengl.h");
 });
 
-pub const mu = @cImport({
-  @cInclude("microui.h");
-});
+pub const mu =  @import("microui.zig").mu;
 const atlas = @import("atlas.zig");
 
 // Demos:
@@ -58,7 +53,7 @@ var  index_buf: [16384 *  6]sdl.GLuint  = std.mem.zeroes([16384 *  6]sdl.GLuint 
 //#region MARK: MAIN
 //=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = hInstance;
   _ = hPrevInstance;
   _ = pCmdLine;
@@ -134,7 +129,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 //=============================================================================
 //Fix when using subsystem Windows and linking Libc
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
@@ -147,17 +142,17 @@ pub fn r_present() void {
   sdl.SDL_GL_SwapWindow(window);
 }
 
-pub fn text_width(font: ?*anyopaque, text: [*c]const u8, len: c_int) callconv(.C) c_int {
+pub fn text_width(font: ?*anyopaque, text: [*c]const u8, len: c_int) callconv(.c) c_int {
   _ = font;
   return r_get_text_width(text, len);
 }
 
-pub fn text_height(font: ?*anyopaque) callconv(.C) c_int {
+pub fn text_height(font: ?*anyopaque) callconv(.c) c_int {
   _ = font;
   return r_get_text_height();
 }
 
-pub fn r_get_text_width(text: [*c]const u8, len: c_int) callconv(.C) c_int {
+pub fn r_get_text_width(text: [*c]const u8, len: c_int) callconv(.c) c_int {
   _ = len;
   var res: c_int = 0;
   var p = text;
@@ -168,7 +163,7 @@ pub fn r_get_text_width(text: [*c]const u8, len: c_int) callconv(.C) c_int {
   return res;
 }
 
-pub fn r_get_text_height() callconv(.C) c_int {
+pub fn r_get_text_height() callconv(.c) c_int {
   return 18;
 }
 

@@ -29,9 +29,9 @@
 #ifndef SDL_version_h_
 #define SDL_version_h_
 
-#include <SDL3/SDL_stdinc.h>
+#include <SDL_stdinc.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -62,7 +62,7 @@ extern "C" {
  *
  * \since This macro is available since SDL 3.2.0.
  */
-#define SDL_MICRO_VERSION   1
+#define SDL_MICRO_VERSION   22
 
 /**
  * This macro turns the version numbers into a numeric value.
@@ -178,6 +178,6 @@ extern SDL_DECLSPEC const char * SDLCALL SDL_GetRevision(void);
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_version_h_ */

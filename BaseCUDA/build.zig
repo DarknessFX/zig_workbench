@@ -9,9 +9,11 @@ pub fn build(b: *std.Build) void {
   const rootfile = "main.zig";
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   exe.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
@@ -25,10 +27,10 @@ pub fn build(b: *std.Build) void {
 
   const lib_path = fmt("{s}\\lib", .{ cwd });
   const compileCUDAstep = b.addSystemCommand(&.{ "CMD", "/S", "/C", "CALL",
-    "D:\\Program Files\\VisualStudio\\VC\\Auxiliary\\Build\\vcvars64.bat",
+    "D:\\Program Files\\Visual_Studio\\VC\\Auxiliary\\Build\\vcvars64.bat",
     "&",
     "nvcc",
-    "--shared",
+    "--shared", "-allow-unsupported-compiler", 
     "-odir", lib_path,
     "-o", "lib\\cuda.dll",
     "main.cu"
@@ -73,9 +75,11 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = b.path(rootfile),
-    .target = target,
-   .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");

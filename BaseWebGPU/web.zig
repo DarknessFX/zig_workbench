@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseWebGPU\\web.zig
 //! web.zig :
 //!  HTML5 WASM WebGPU source code (portable and offline).
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -64,7 +64,7 @@ fn obtainedWebGpuAdapter(
   adapter: gpu.WGPUAdapter, 
   message: [*c]const u8, 
   userData: ?*anyopaque
-) callconv(.C) void {
+) callconv(.c) void {
   _ = instance; _ = message; _ = userData;
   web.adapter = adapter;
 
@@ -76,7 +76,7 @@ fn obtainedWebGpuDevice(
   device: gpu.WGPUDevice, 
   message: [*c]const u8, 
   userData: ?*anyopaque
-) callconv(.C) void {
+) callconv(.c) void {
   _ = instance; _ = message; _ = userData;
   web.device = device;
 
@@ -104,7 +104,7 @@ fn main_continue() void {
 //#endregion ==================================================================
 //#region MARK: UTIL
 //=============================================================================
-fn RenderFrame() callconv(.C) void {
+fn RenderFrame() callconv(.c) void {
   web.vars_rot += 0.1;
   web.vars_rot = if (web.vars_rot >= 360) 0.0 else web.vars_rot;
   gpu.wgpuQueueWriteBuffer(web.queue, web.ubuffer, 0, &web.vars_rot, @sizeOf(@TypeOf(web.vars_rot)));

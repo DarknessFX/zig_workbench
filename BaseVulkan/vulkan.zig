@@ -1,7 +1,5 @@
 const std = @import("std");
-const vk = @cImport({
-  @cInclude("vulkan.h");
-});
+const vk = @import("vulkan_imp.zig").vk;
 const glfw = @cImport({
   @cDefine("GLFW_INCLUDE_VULKAN", "1");
   @cInclude("glfw3.h");
@@ -648,7 +646,7 @@ fn centerWindow() void {
   glfw.glfwSetWindowPos(vk_state.window, xpos, ypos);
 }
 
-fn keyCallback(window_: ?*glfw.GLFWwindow, key: c_int, scancode: c_int, action: c_int, mods: c_int) callconv(.C) void {
+fn keyCallback(window_: ?*glfw.GLFWwindow, key: c_int, scancode: c_int, action: c_int, mods: c_int) callconv(.c) void {
   _ = window_; _ = scancode;
   const GLFW_PRESS = glfw.GLFW_PRESS;
   const GLFW_KEY_ESCAPE = glfw.GLFW_KEY_ESCAPE;
@@ -676,13 +674,13 @@ fn getRequiredExtensions(info: *vk.VkInstanceCreateInfo) !void {
   info.enabledExtensionCount = glfw_extension_count;
   info.ppEnabledExtensionNames = glfw_extensions;
   if (vkdebug_mode) {
-    var extension_list = std.ArrayList([*c]const u8).init(std.heap.page_allocator);
+    var extension_list = std.ArrayList([*c]const u8).initCapacity(std.heap.page_allocator, 0) catch unreachable;
     for (glfw_extensions[0..glfw_extension_count]) |ext| {
-      try extension_list.append(ext);
+      try extension_list.append(std.heap.page_allocator, ext);
     }
-    try extension_list.append(vk.VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    try extension_list.append(std.heap.page_allocator, vk.VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     info.enabledExtensionCount = @intCast(extension_list.items.len);
-    const extensions = try extension_list.toOwnedSlice();
+    const extensions = try extension_list.toOwnedSlice(std.heap.page_allocator);
     const pp_enabled_layer_names: [*][*c]const u8 = extensions.ptr;
     info.ppEnabledExtensionNames = pp_enabled_layer_names;
   }

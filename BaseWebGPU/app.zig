@@ -2,16 +2,14 @@
 //! app.zig :
 //!  Platform application source code (Windows/Linux/Mac).
 //!  Using SDL2 and Dawn WebGPU.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
+const win = std.os.windows;
+
 pub const gpu = @cImport({
   // NOTE: May need full path to cIncludes
   @cInclude("SDL.h");
@@ -49,7 +47,7 @@ pub fn main() void {
     startWindow();
     startInstanceSurface();
     startAdapterDevice();
-    win.Sleep(250); // Wait for Get Adapter and Device callbacks to resolve
+    win.kernel32.Sleep(250); // Wait for Get Adapter and Device callbacks to resolve
     startQueueSurfaceConfig();
     startRenderPipeline();
     startShaderData();
@@ -357,7 +355,7 @@ pub fn requestAdapterCallback (
   adapter: gpu.WGPUAdapter, 
   message: gpu.WGPUStringView, 
   userdata: ?*anyopaque,
-) callconv(.C) void {
+) callconv(.c) void {
   if (status == gpu.WGPURequestAdapterStatus_Success) {
     app.adapter = adapter;
     //std.debug.print("Adapter callback message: {}\n", .{message});
@@ -375,7 +373,7 @@ pub fn requestDeviceCallback (
   device: gpu.WGPUDevice, 
   message: gpu.WGPUStringView, 
   userdata: ?*anyopaque,
-) callconv(.C) void {
+) callconv(.c) void {
   if (status == gpu.WGPURequestDeviceStatus_Success) {
     app.device = device;
     //std.debug.print("Device callback message: {}\n", .{message});
@@ -499,18 +497,18 @@ const wgsl_triangle =
 pub extern "kernel32" fn GetConsoleTitleA(
   lpConsoleTitle: win.LPSTR,
   nSize: win.DWORD,
-) callconv(win.WINAPI) win.DWORD;
+) callconv(.winapi) win.DWORD;
 
 pub extern "kernel32" fn FindWindowA(
   lpClassName: ?win.LPSTR,
   lpWindowName: ?win.LPSTR,
-) callconv(win.WINAPI) win.HWND;
+) callconv(.winapi) win.HWND;
 
 pub const SW_HIDE = 0;
 pub extern "user32" fn ShowWindow(
   hWnd: win.HWND,
   nCmdShow: i32
-) callconv(win.WINAPI) win.BOOL;
+) callconv(.winapi) win.BOOL;
 
 pub const MB_OK = 0x00000000;
 pub extern "user32" fn MessageBoxA(
@@ -518,11 +516,11 @@ pub extern "user32" fn MessageBoxA(
   lpText: [*:0]const u8,
   lpCaption: [*:0]const u8,
   uType: win.UINT
-) callconv(win.WINAPI) win.INT;
+) callconv(.winapi) win.INT;
 
 extern "kernel32" fn GetModuleHandleA(
   lpModuleName: ?[*:0]const u8
-) callconv(win.WINAPI) win.HINSTANCE;
+) callconv(.winapi) win.HINSTANCE;
 
 //#endregion ==================================================================
 //#region MARK: TEST

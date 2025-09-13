@@ -29,10 +29,10 @@
 #ifndef SDL_rect_h_
 #define SDL_rect_h_
 
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_error.h>
+#include <SDL_stdinc.h>
+#include <SDL_error.h>
 
-#include <SDL3/SDL_begin_code.h>
+#include <SDL_begin_code.h>
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
@@ -371,7 +371,7 @@ SDL_FORCE_INLINE bool SDL_RectEmptyFloat(const SDL_FRect *r)
  *
  * \sa SDL_RectsEqualFloat
  */
-SDL_FORCE_INLINE bool SDL_RectsEqualEpsilon(const SDL_FRect *a, const SDL_FRect *b, const float epsilon)
+SDL_FORCE_INLINE bool SDL_RectsEqualEpsilon(const SDL_FRect *a, const SDL_FRect *b, float epsilon)
 {
     return (a && b && ((a == b) ||
             ((SDL_fabsf(a->x - b->x) <= epsilon) &&
@@ -502,6 +502,6 @@ extern SDL_DECLSPEC bool SDLCALL SDL_GetRectAndLineIntersectionFloat(const SDL_F
 #ifdef __cplusplus
 }
 #endif
-#include <SDL3/SDL_close_code.h>
+#include <SDL_close_code.h>
 
 #endif /* SDL_rect_h_ */

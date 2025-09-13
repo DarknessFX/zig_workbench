@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseAllegro\\main.zig
 //! main.zig :
 //!  Template using Allegro5.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -72,7 +72,7 @@ pub fn main() void {
 
     // Clear to black
     all.al_clear_to_color(all.al_map_rgb(0, 0, 0));
-
+    
     // FAILING: I can only see the red rectangle while closing the screen...
     // Draw a rectangle (for example)
     const xpos: c_int = 320 * @as(c_int, @intFromFloat(std.math.sin(1.0)));

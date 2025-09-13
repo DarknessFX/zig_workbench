@@ -1,17 +1,13 @@
 //!zig-autodoc-section: BaseSDL2\\main.zig
 //! main.zig :
 //!  Template using SDL2 framework.
-// Build using Zig 0.14.1
+// Build using Zig 0.15.1
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const win = struct {
-  usingnamespace std.os.windows;
-  usingnamespace std.os.windows.kernel32;
-};
-const WINAPI = win.WINAPI;
+const win = std.os.windows;
 
 // NOTE ABOUT VSCODE + ZLS:
 // Use full path for all cIncludes:
@@ -23,7 +19,7 @@ pub const sdl = @cImport({
 //#region MARK: MAIN
 //=============================================================================
 pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = hInstance;
   _ = hPrevInstance;
   _ = pCmdLine;
@@ -35,7 +31,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     orelse undefined;
   defer sdl.SDL_DestroyWindow(window);
 
-  win.Sleep(3000);
+  win.kernel32.Sleep(3000);
 
   return 0;    
 }
@@ -44,7 +40,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 //=============================================================================
 // Fix for libc linking error.
 pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
-  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(WINAPI) win.INT {
+  pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 //#endregion ==================================================================
