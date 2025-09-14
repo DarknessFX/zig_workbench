@@ -81,7 +81,7 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
   <summary><ins>About Dear ImGui</ins></summary>
 <pre>Using Dear ImGui Docking 1.92.3 WIP and Dear Bindings (20250908)
 All necessary libraries are inside the template.
-
+<br/>
 Note:
   When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
   Check tools/RunAll.bat to get a list of **Zig Run** commands to launch rendereres without renaming files.
@@ -113,7 +113,8 @@ error: member access within misaligned address</i> and without the
  <details>
   <summary><ins>About Nuklear</ins></summary>
 <pre>Using Nuklear from source (20241231).
-I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it failed with duplicate symbols (added inline) and later missing functions (removed static).</pre>
+I had to make some changes to the nuklear_gdi.h header to fix cImport errors, 
+it failed with duplicate symbols (added inline) and later missing functions (removed static).</pre>
 </details>
 
 <details>
@@ -128,7 +129,7 @@ I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it
 
 <details>
   <summary><ins>About SDL2</ins></summary>
-<pre>&nbsp;&nbsp;Using SDL2 v2.32.10.
+<pre>Using SDL2 v2.32.10.
 &nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases Page</a>.
 &nbsp;&nbsp;For Windows devs: <a href="https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip" target="_blank">SDL2-devel-2.28.4-VC.zip 2.57 MB</a>.
 &nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description 
@@ -137,13 +138,12 @@ I had to make some changes to the nuklear_gdi.h header to fix cImport errors, it
 
 <details>
   <summary><ins>About SDL3</ins></summary>
-<pre>&nbsp;&nbsp;Built from source in 202500908, version 3.2.22.
-Options to build using Shared or Static library.</pre>
+<pre>Built from source in 202500908, version 3.2.22.</pre>
 </details>
 
 <details>
   <summary><ins>About SFML2</ins></summary>
-<pre>&nbsp;&nbsp;Using CSFML2 v2.6.1 from https://www.sfml-dev.org/download/csfml/ .</pre>
+<pre>Using CSFML2 v2.6.1 from https://www.sfml-dev.org/download/csfml/ .</pre>
 </details>
 
 
@@ -173,23 +173,16 @@ Requirements:
  (I'm using Nvidia CUDA SDK 12.6.3)
 
 If you get an error while installing CUDA SDK, use Custom Installation and disable the following:
-  Nsight VSE
-  Visual Studio Integration
-  Nsight Systems
-  Nsight compute
-  Nvidia GeForce Experience
-  Other components
-  Driver components
+&nbsp;&nbsp;Nsight VSE
+&nbsp;&nbsp;Visual Studio Integration
+&nbsp;&nbsp;Nsight Systems
+&nbsp;&nbsp;Nsight compute
+&nbsp;&nbsp;Nvidia GeForce Experience
+&nbsp;&nbsp;Other components
+&nbsp;&nbsp;Driver components
 
 If you want, you can install Nsight with its own installer.</pre>
 </details>
-
-<details>
-  <summary><ins>Failed: About Clay</ins></summary>
-<pre>Everything is working from the code/template part, but Zig's cImport fails to import Clay's macros with variadic arguments (...) .<br/>
-Sharing here for anyone interested.</pre>
-</details>
-
 
 ## Programs
 
