@@ -41,6 +41,7 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseMicroui](/Basemicroui/)** | Template with [microui](https://github.com/rxi/). Renderers: SDL2, Windows GDI. | Windows |
 | **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
 | **[BaseWebview](/BaseWebview/)** | Template with [Webview](https://github.com/webview/webview). | Console |
+| **[BaseClay](/BaseClay/)** | Template with [Clay](https://github.com/nicbarker/clay) UI and [RayLib](https://www.raylib.com/), using [clay-zigibindings](https://github.com/johan0A/clay-zig-bindings). | Windows |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseVulkan](/BaseVulkan/)** | Template with [Vulkan](https://www.vulkan.org/), versions: Win32API, GLFW3 . | Both |
@@ -440,6 +441,8 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [TinyRasterizer](https://github.com/lisyarus/tiny-rasterizer) from [Lisitsa Nikita](https://github.com/lisyarus).<br/>
 [Vulkan](https://www.vulkan.org/) from Khronos Group.<br/>
 [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) from Nvidia.<br/>
+[Clay](https://github.com/nicbarker/clay) from Nic Barker.<br/>
+[clay-zig-bindings](https://github.com/johan0A/clay-zig-bindings) from johan0A.<br/>
 <br/>
 
 ## License
