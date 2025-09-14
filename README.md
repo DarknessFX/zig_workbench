@@ -57,7 +57,6 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseBox2D](/BaseBox2D/)** | Template with [Box2D](https://box2d.org/) physics. | Console |
 | **[BaseZstd](/BaseZstd/)** | Template with [Zstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
 | **[BaseCUDA](/BaseCUDA/)** | Template with [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) . | Console |
-| **[BaseClay](/failed_BaseClay/)** | FAILED: Template with [Clay](https://github.com/nicbarker/clay/) UI using [RayLib](https://www.raylib.com/) renderer. | Windows |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -83,11 +82,12 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
 <pre>Using Dear ImGui Docking 1.92.3 WIP and Dear Bindings (20250908)
 All necessary libraries are inside the template.<br/>
 
-Note:
-- When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).
-- Check tools/RunAll.bat to get a list of **Zig Run** commands to launch rendereres without renaming files.
+Note:<br/>
+. When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).<br/>
+. Check tools/RunAll.bat to get a list of **Zig Run** commands to launch rendereres without renaming files.
 
-ImGui_Memory_Editor: Edited from Dear Bindings output. Sample inside all ImGui templates and usage details at <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
+ImGui_Memory_Editor: Edited from Dear Bindings output. Sample inside all ImGui templates<br/>
+and usage details at <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
 </details>
 
  <details>
