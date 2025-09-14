@@ -83,8 +83,8 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
 All necessary libraries are inside the template.<br/>
 
 Note:<br/>
-. When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).<br/>
-. Check tools/RunAll.bat to get a list of **Zig Run** commands to launch rendereres without renaming files.
+  When changing renderers, make sure to rename all files (Main.zig, Build.zig, .vscode/Tasks.json).<br/>
+  Check tools/RunAll.bat to get a list of **Zig Run** commands to launch rendereres without renaming files.
 
 ImGui_Memory_Editor: Edited from Dear Bindings output. Sample inside all ImGui templates<br/>
 and usage details at <a href="BaseImGui/lib/imgui/cimgui_memory_editor.h" target="_blank">cimgui_memory_editor.h</a></pre>
