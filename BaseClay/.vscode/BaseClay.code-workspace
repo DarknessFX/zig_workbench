@@ -189,7 +189,8 @@
     "files.associations": {
       "raylib.h": "c",
       "rcamera.h": "c",
-      "raymath.h": "c"
+      "raymath.h": "c",
+      "clay-video-demo.h": "c"
     },
   },
   "extensions": {

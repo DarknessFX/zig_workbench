@@ -10,9 +10,11 @@ pub fn build(b: *std.Build) void {
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
-    .target = target,
-    .optimize = optimize
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   exe.addWin32ResourceFile(.{
     .file  = b.path(projectname ++ ".rc"),
@@ -20,18 +22,18 @@ pub fn build(b: *std.Build) void {
   });
 
   // Clay + RayLib
-  exe.addIncludePath( b.path("lib/clay") );
+  exe.addIncludePath( b.path("lib/zClay") );
   exe.addIncludePath( b.path("lib/raylib") );
   exe.addLibraryPath( b.path("lib/raylib/") );
   exe.linkSystemLibrary("raylib");
 
   exe.addCSourceFile(.{
-    .file = b.path("lib/clay/clay.c"), 
+    .file = b.path("lib/zClay/clay.c"), 
     .flags = &.{ }
   });
 
   // Assets
-  b.installBinFile("asset/texture.png", "asset/texture.png");
+  b.installBinFile("asset/profile-picture.png", "asset/profile-picture.png");
   b.installBinFile("asset/Roboto-Regular.ttf", "asset/Roboto-Regular.ttf");
 
   b.installBinFile("lib/raylib/raylib.dll", "raylib.dll");
@@ -59,9 +61,11 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = b.path(rootfile),
-    .target = target,
-   .optimize = optimize,
+    .root_module = b.createModule(.{
+      .root_source_file = b.path(rootfile),
+      .target = target,
+      .optimize = optimize,
+    }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
