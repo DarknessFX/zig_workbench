@@ -42,7 +42,7 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseNuklear](/BaseNuklear/)** | Template with [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) UI using Windows GDI native. | Windows |
 | **[BaseWebview](/BaseWebview/)** | Template with [Webview](https://github.com/webview/webview). | Console |
 | **[BaseClay](/BaseClay/)** | Template with [Clay](https://github.com/nicbarker/clay) UI and [RayLib](https://www.raylib.com/), using [clay-zigibindings](https://github.com/johan0A/clay-zig-bindings). | Windows |
-| **[BaseGTK](/BaseGTK/)** | Template with [GTK](https://www.gtk.org/) . | Windows |
+| **[BaseGTK](/BaseGTK/)** | Template with [GTK](https://www.gtk.org/) . | Console |
 | **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseVulkan](/BaseVulkan/)** | Template with [Vulkan](https://www.vulkan.org/), versions: Win32API, GLFW3 . | Both |
