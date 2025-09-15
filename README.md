@@ -56,6 +56,7 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseODE](/BaseODE/)** | Template with [ODE](https://www.ode.org/) Open Dynamics Engine physics. | Console |
 | **[BaseChipmunk2D](/BaseChipmunk2D/)** | Template with [Chipmunk2D](https://chipmunk-physics.net/) physics. | Console |
 | **[BaseBox2D](/BaseBox2D/)** | Template with [Box2D](https://box2d.org/) physics. | Console |
+| **[BaseZlib](/BaseZlib/)** | Template with [zlib](https://zlib.net/) compression. | Console |
 | **[BaseZstd](/BaseZstd/)** | Template with [Zstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
 | **[BaseCUDA](/BaseCUDA/)** | Template with [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) . | Console |
 
