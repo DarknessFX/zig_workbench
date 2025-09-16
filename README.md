@@ -157,6 +157,11 @@ it failed with duplicate symbols (added inline) and later missing functions (rem
 </details>
 
 <details>
+  <summary><ins>About FLTK</ins></summary>
+<pre>Using FLTK 1.5.0 from https://github.com/fltk/fltk/tree/f05ee883595b910038e49963af6dbaba9081b49f and cFLTK 0.1.5 from https://github.com/MoAlyousef/cfltk .</pre>
+</details>
+
+<details>
   <summary><ins>About GLFW and GLAD</ins></summary>
 <pre>GLFW 3.3.8 (Win64 Static).
 GLAD 2.0 (OpenGL 3.3 Compatibility).
