@@ -43,7 +43,8 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseWebview](/BaseWebview/)** | Template with [Webview](https://github.com/webview/webview). | Console |
 | **[BaseClay](/BaseClay/)** | Template with [Clay](https://github.com/nicbarker/clay) UI and [RayLib](https://www.raylib.com/), using [clay-zigibindings](https://github.com/johan0A/clay-zig-bindings). | Windows |
 | **[BaseGTK](/BaseGTK/)** | Template with [GTK](https://www.gtk.org/) . | Console |
-| **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/) (GL.h). | Windows |
+| **[BaseFLTK](/BaseFLTK/)** | Template with [FLTK](https://www.fltk.org/) via [cFLTK](https://github.com/MoAlyousef/cfltk) . | Windows |
+| **[BaseOpenGL](/BaseOpenGL/)** | Template with [OpenGL](https://www.opengl.org/). | Windows |
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseVulkan](/BaseVulkan/)** | Template with [Vulkan](https://www.vulkan.org/), versions: Win32API, GLFW3 . | Both |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
@@ -448,6 +449,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [libpng](https://www.libpng.org) from The PNG Reference Library Authors.<br/>
 [zlib](https://zlib.net) from Jean-loup Gailly and Mark Adler.<br/>
 [freeglut](https://freeglut.sourceforge.net) from Pawel W. Olszta.<br/>
+[FLTK](https://www.fltk.org/) from Bill Spitzak and others.<br/>
 
 <br/>
 
@@ -459,7 +461,7 @@ https://github.com/DarknessFX/zig_workbench
 
 <details>
   <summary><sub><sub>SEO Helper</sub></sub></summary>
-<pre>Giving Google a little help pairing Zig + LIB words, because it find my twitter posts easier than this repo:
+<pre>Giving Google a little help pairing Zig + LIB words, because it find my X (twitter) posts easier than this repo:
 WinEx       = Zig Windows program template with Windows API as submodule sample example.
 ImGui       = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer sample example.
 LVGL        = Zig LVGL Windows program template sample example.
@@ -489,5 +491,6 @@ zstd        = Zig Zstd fast lossless compression program template sample example
 CUDA        = Zig NVIDIA CUDA program template sample example.
 Clay        = Zig Clay UI program template sample example.
 GTK         = Zig GTK UI program template sample example.
+FLTK        = Zig FLTK UI program template sample example.
 </pre>
 </details>
