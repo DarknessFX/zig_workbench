@@ -56,7 +56,8 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseODE](/BaseODE/)** | Template with [ODE](https://www.ode.org/) Open Dynamics Engine physics. | Console |
 | **[BaseChipmunk2D](/BaseChipmunk2D/)** | Template with [Chipmunk2D](https://chipmunk-physics.net/) physics. | Console |
 | **[BaseBox2D](/BaseBox2D/)** | Template with [Box2D](https://box2d.org/) physics. | Console |
-| **[BaseZlib](/BaseZlib/)** | Template with [zlib](https://zlib.net/) compression. | Console |
+| **[BaseLibpng](/BaseLibpng/)** | Template with [libpng](https://www.libpng.org) image format. | Console |
+| **[BaseZlib](/BaseZlib/)** | Template with [zlib](https://zlib.net) compression. | Console |
 | **[BaseZstd](/BaseZstd/)** | Template with [Zstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
 | **[BaseCUDA](/BaseCUDA/)** | Template with [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) . | Console |
 
@@ -443,6 +444,9 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [Clay](https://github.com/nicbarker/clay) from Nic Barker.<br/>
 [clay-zig-bindings](https://github.com/johan0A/clay-zig-bindings) from johan0A.<br/>
 [GTK](https://www.gtk.org/) from GNOME Foundation.<br/>
+[libpng](https://www.libpng.org) from The PNG Reference Library Authors.<br/>
+[zlib](https://zlib.net) from Jean-loup Gailly and Mark Adler.<br/>
+
 <br/>
 
 ## License
