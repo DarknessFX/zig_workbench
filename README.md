@@ -47,6 +47,7 @@ Using Windows 10, Zig x86_64 Version : **0.15.1**
 | **[BaseDX11](/BaseDX11/)** | Template with [DirectX Direct3D 11](https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11). | Windows |
 | **[BaseVulkan](/BaseVulkan/)** | Template with [Vulkan](https://www.vulkan.org/), versions: Win32API, GLFW3 . | Both |
 | **[BaseGLFW](/BaseGLFW/)** | Template with [GLFW](https://www.glfw.org/) and [GLAD](https://github.com/Dav1dde/glad/). | Console |
+| **[BaseFreeglut](/BaseFreeglut/)** | Template with [freeglut](https://freeglut.sourceforge.net). | Console |
 | **[BaseWasm](/BaseWasm/)** | Template with [BaseWasm](https://webassembly.org/) using Emscripten. | Web |
 | **[BaseWebGPU](/BaseWebGPU/)** | Template with [WebGPU](https://www.w3.org/TR/webgpu/) using Emscripten and Dawn. | Windows + Web |
 | **[BaseLua](/BaseLua/)** | Template with [Lua](https://www.lua.org/home.html) scripting language. | Console |
@@ -446,6 +447,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [GTK](https://www.gtk.org/) from GNOME Foundation.<br/>
 [libpng](https://www.libpng.org) from The PNG Reference Library Authors.<br/>
 [zlib](https://zlib.net) from Jean-loup Gailly and Mark Adler.<br/>
+[freeglut](https://freeglut.sourceforge.net) from Pawel W. Olszta.<br/>
 
 <br/>
 
