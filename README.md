@@ -158,7 +158,8 @@ it failed with duplicate symbols (added inline) and later missing functions (rem
 
 <details>
   <summary><ins>About FLTK</ins></summary>
-<pre>Using FLTK 1.5.0 from https://github.com/fltk/fltk/tree/f05ee883595b910038e49963af6dbaba9081b49f and cFLTK 0.1.5 from https://github.com/MoAlyousef/cfltk .</pre>
+<pre>Using FLTK 1.5.0 from https://github.com/fltk/fltk/tree/f05ee883595b910038e49963af6dbaba9081b49f 
+and cFLTK 0.1.5 from https://github.com/MoAlyousef/cfltk .</pre>
 </details>
 
 <details>
