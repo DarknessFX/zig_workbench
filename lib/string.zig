@@ -1,170 +1,281 @@
-//!zig-autodoc-section: string
-//! string.zig :
-//!   String Type Library.
+//!zig-autodoc-section: zesp-idf\\string.zig
+//!  main.zig :
+//!    Zig String Type.
+// Build using Zig 0.15.2
 
-// Build using Zig 0.12.0
-// updated based on:
-// C++ Weekly With Jason Turner - Ep 430 - How Short String Optimizations Work
-// https://www.youtube.com/watch?v=CIB_khrNPSU
-
-// ============================================================================
-// Internals
-//
-const string = @This();
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
-//<string struct>, removed to avoid reference as string.string : pub const string = struct {
-const allocated_storage = struct {
-  memory: std.mem.Allocator,
-  data: []u8,
+pub const StringKind = enum {
+  Const,
+  Buffer,
+  FBA,
+  Alloc,
+  List,
 };
 
-const small_storage = struct {
-  data: [@sizeOf(allocated_storage)]u8,
-};
+//#endregion ==================================================================
+//#region MARK: String function
+//=============================================================================
+pub fn String(comptime arg: anytype) @TypeOf(StringType: {
+  break :StringType switch (@typeInfo(@TypeOf(arg))) {
+    .pointer => StringConst(arg),
+    .@"struct" => switch (arg.kind) {
+      .Buffer => StringBuffer(arg.text, arg.capacity),
+      .FBA => StringFBA(arg.text, arg.capacity),
+      .Alloc => StringAlloc(arg.text),
+      .List => StringAlloc(arg.text),
+      else => void,
+    },
+    else => void,
+  };
+}) {
+  const typeInfo = @typeInfo(@TypeOf(arg));
+  const isSlice: bool = switch (typeInfo) {
+    .pointer => true,
+    else => false,
+  };
+  const isStruct: bool = switch (typeInfo) {
+    .@"struct" => true,
+    else => false,
+  };
 
-/// Buffer union of Small_Storage and MemoryAllocation_Storage, switch automatically if string grows beyond small size.
-storage: union(enum) {
-  small: small_storage,
-  alloc: allocated_storage,
-
-  /// Return the current string buffer capacity.
-  pub fn capacity(self: @This()) usize {
-    return switch (self) {
-      .small => self.small.data.len,
-      .alloc => self.alloc.data.len,
+  if (isSlice) { return StringConst(arg); }
+  if (isStruct) { 
+    return switch (arg.kind) {
+      .Buffer => StringBuffer(arg.text, arg.capacity),
+      .FBA => StringFBA(arg.text, arg.capacity),
+      .Alloc => StringAlloc(arg.text),
+      .List => StringAlloc(arg.text),
+      else => {},
     };
-  }
-
-  /// Return if the string is using small string optimization or memory alloc.
-  pub fn is_small_storage(self: @This()) bool {
-    return switch (self) {
-      .small => true,
-      .alloc => false,
-    };
-  }
-} = .{ .small = .{ .data = [_]u8{0} ** @sizeOf(allocated_storage) }},
-/// Current size of string
-size: usize = 0,
-
-// ============================================================================
-// Methods
-//
-
-/// Return a new string
-pub fn init() string {
-  return string{};
-}
-
-/// Free memory if string is using memory allocation.
-pub fn deinit(self: *string) void {
-  if (!self.storage.is_small_storage()) {
-    // Segmentation fault ?
-    // self.storage.alloc.memory.free(self.storage.alloc.data);
   }
 }
 
-/// Internal: Realloc buffer memory size when necessary.
-fn reserve(self: *string, current: []u8, data: []const u8) allocated_storage {
-  var alloc = self.storage.alloc.memory.alloc(u8, self.size + data.len + 1) catch unreachable;
-  @memcpy(alloc[0..self.size], current[0..self.size]);
-  @memcpy(alloc[self.size..self.size + data.len], data);
-  alloc[self.size + data.len] = 0; // null-terminator
-  return .{ 
-    .memory = self.storage.alloc.memory,
-    .data = alloc, 
+//#endregion ==================================================================
+//#region MARK: Shared
+//=============================================================================
+fn printShared(text: []const u8) void {
+  std.debug.print("{s}\n", .{ text }); 
+}
+
+//#endregion ==================================================================
+//#region MARK: StringConst
+//=============================================================================
+pub const StringType = struct {
+  const Self = @This();  
+  kind: StringKind,
+  text: []const u8,
+
+  pub fn print(self: Self) void { printShared(self.text); } 
+  pub fn append(self: Self, new_text: []const u8, comptime capacity: usize) @TypeOf(StringBuffer(self.text, capacity)) {
+    var fba = StringBuffer(self.text, capacity);
+    return fba.append(new_text);    
+  }
+};
+
+pub fn StringConst(text: []const u8) StringType {
+  return StringType{
+    .kind = .Const,
+    .text = text,
   };
 }
 
-/// Append string from Zig literal, ex: string.appendConst("Hello");
-pub fn appendConst(self: *string, data: []const u8) string {
-  if (self.size + data.len + 1 < @sizeOf(allocated_storage)) {
-    @memcpy(self.storage.small.data[self.size..self.size + data.len], data);
-    self.storage.small.data[self.size + data.len + 1] = 0; // null-terminator
-    self.size = self.size + data.len;
-  } else {
-    var _small = [_]u8{0} ** @sizeOf(allocated_storage);
-    @memcpy(_small[0..self.size], self.storage.small.data[0..self.size]);
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    self.storage = .{ .alloc = .{ .memory = gpa.allocator(), .data = ""}};
-    self.storage.alloc = reserve(self, &_small, data);
-    self.size = self.size + data.len;
+//#endregion ==================================================================
+//#region MARK: StringBuffer
+//=============================================================================
+pub fn StringBuffer(text: []const u8, comptime capacity: usize) struct {
+  const Self = @This();  
+  text: [capacity]u8,
+  len: usize,
+  capacity: usize = capacity,  
+
+  pub fn print(self: Self) void { printShared(self.text[0..]); }
+  pub fn append(self: *Self, new_text: []const u8) Self {
+    const new_len = self.len + new_text.len;
+    @memcpy(self.text[self.len..new_len], new_text);
+    self.len = new_len;
+    return self.*;
+  }  
+} {
+  var fixed: [capacity]u8 = @splat(0);
+  @memcpy(fixed[0..text.len], text);
+
+  return .{
+    .text = fixed,
+    .len = text.len,
+    .capacity = capacity,  
+  };
+}
+
+//#endregion ==================================================================
+//#region MARK: StringFBA
+//=============================================================================
+pub fn StringFBA(text: []const u8, comptime capacity: usize) struct {
+  const Self = @This();
+  allocator: std.heap.FixedBufferAllocator,
+  text: [capacity]u8,
+  len: usize,
+  capacity: usize = capacity,
+
+  pub fn print(self: Self) void { printShared(self.text[0..self.len]); }
+  pub fn append(self: Self, new_text: []const u8, comptime new_capacity: usize) @TypeOf(StringFBA("", new_capacity)) {
+    var strfba = StringFBA(self.text[0..self.text.len], new_capacity);
+    @memcpy(strfba.text[self.text.len..self.text.len + new_text.len], new_text);
+    strfba.len = self.text.len + new_text.len;
+    return strfba;
   }
-  return self.*;
+} {
+  var fixed_buf: [capacity]u8 = @splat(0);
+  const fba = std.heap.FixedBufferAllocator.init(&fixed_buf);
+  @memcpy(fixed_buf[0..text.len], text);
+
+  return .{
+    .allocator = fba,
+    .text = fixed_buf,
+    .len = text.len,
+    .capacity = capacity,
+  };
 }
 
-/// Return the string value;
-pub fn value(self: *string) []u8 {
-  if (self.size == 0) return "";
-  if (self.storage.is_small_storage()) {
-    return self.storage.small.data[0..self.size];
-  } else {
-    return self.storage.alloc.data[0..self.size];
+//#endregion ==================================================================
+//#region MARK: StringAlloc
+//=============================================================================
+pub const StringAllocType = struct {
+  const Self = @This();  
+  kind: StringKind,
+  gpa: std.heap.GeneralPurposeAllocator(.{}),
+  text: []u8,
+  len: usize,
+
+  pub fn print(self: Self) void { printShared(self.text[0..self.len]); }
+  pub fn append(self: *Self, new_text: []const u8) void {
+    const new_len = self.len + new_text.len;
+    const new_slice = self.gpa.allocator().realloc(self.text, new_len) catch unreachable;
+    @memcpy(new_slice[self.len..new_len], new_text);
+    self.text = new_slice;
+    self.len = new_len;
   }
-}
 
-/// Return the string value as const;
-pub fn valueConst(self: *string) []const u8 {
-  if (self.size == 0) return "";
-  if (self.storage.is_small_storage()) {
-    return self.storage.small.data[0..self.size];
-  } else {
-    return self.storage.alloc.data[0..self.size];
+  pub fn free(self: *Self) void {
+    self.gpa.allocator().free(self.text);
+    self.len = 0;
   }
-}
-//</string struct>
+};
 
+pub fn StringAlloc(text: []const u8) StringAllocType {
+  var strAlloc = StringAllocType{
+    .kind = .Alloc,
+    .gpa = std.heap.GeneralPurposeAllocator(.{}){},
+    .len = 0,
+    .text = &[_]u8{},
+  };
+  const slice = strAlloc.gpa.allocator().alloc(u8, text.len) catch unreachable;
+  @memcpy(slice, text);
+  strAlloc.text = slice;
+  strAlloc.len = slice.len;
 
-// ============================================================================
-// Helpers
-//
-/// Init a string from Zig Literal, ex: var str = string.fromConst("Hello");
-pub fn fromConst(str: []const u8) string {
-  return @constCast(&string.init()).appendConst(str);
-}
-
-
-// ============================================================================
-// Tests
-//
-test "String Tests: Empty" {
-  // Check if Empty string is working and is_small_storage;
-  const tst = "";
-  var str = fromConst("");
-  defer str.deinit();
-  try std.testing.expect(std.mem.eql(u8, tst, str.value()));
-  try std.testing.expectEqualStrings(tst, str.valueConst());
-  try std.testing.expect(str.storage.is_small_storage());
+  return strAlloc;
 }
 
-test "String Tests: Small string" {
-  // Check if Zig Literal is equal to string contents and is_small_storage;
-  const tst = "Hello World";
-  var str = fromConst("Hello World");
-  defer str.deinit();
-  try std.testing.expect(std.mem.eql(u8, tst, str.value()));
-  try std.testing.expectEqualStrings(tst, str.valueConst());
-  try std.testing.expect(str.storage.is_small_storage());
+//#endregion ==================================================================
+//#region MARK: StringList
+//=============================================================================
+pub const StringListType = struct {
+  const Self = @This();
+  kind: StringKind,
+  gpa: std.heap.GeneralPurposeAllocator(.{}),
+  list: std.ArrayList(u8),
+  text: []u8,
+
+  pub fn print(self: Self) void {
+    printShared(self.text);
+  }
+
+  pub fn append(self: *Self, new_text: []const u8) void {
+    _ = self.list.appendSlice(self.gpa.allocator(), new_text) catch unreachable;
+    self.text = self.list.items[0..self.list.items.len];
+  }
+
+  pub fn free(self: *Self) void {
+    self.list.deinit(self.gpa.allocator());
+  }
+};
+
+pub fn StringList(text: []const u8) StringListType {
+  var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+  var list = std.ArrayList(u8).initCapacity(gpa.allocator(), 0) catch unreachable;
+  _ = list.appendSlice(gpa.allocator(), text) catch unreachable;
+
+  return StringListType{
+    .kind = .List,
+    .gpa = gpa,
+    .list = list,
+    .text = list.items[0..list.items.len],
+  };
 }
 
-test "String Tests: Big string" {
-  // Check if a long Zig Literal is equal to string contents and is_small_storage changed;
-  const tst = "Hello World, appending long string to change memory layout to allocator instead of small string optimization";
-  var str = fromConst("Hello World, appending long string to change memory layout to allocator instead of small string optimization");
-  defer str.deinit();
-  try std.testing.expect(std.mem.eql(u8, tst, str.value()));
-  try std.testing.expectEqualStrings(tst, str.valueConst());
-  try std.testing.expect(!str.storage.is_small_storage());
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+test " StringConst" {
+  const strConst1 = String("Hello StringConst");
+  strConst1.print();
+
+  const strConst2 = strConst1.append(" appending to s1 Const", 128);
+  strConst2.print();
 }
 
-test "String Tests: appendConst" {
-  // Check if appendConst ZigLiterals is working and is_small_storage;
-  const tst = "Hello World!";
-  var str = fromConst("Hello");
-  defer str.deinit();
-  _ = str.appendConst(" World");
-  _ = str.appendConst("!");
-  try std.testing.expect(std.mem.eql(u8, tst, str.value()));
-  try std.testing.expectEqualStrings(tst, str.valueConst());
-  try std.testing.expect(str.storage.is_small_storage());
+test " StringBuffer" {
+  var strBuffer1 = String(.{ .kind = .Buffer, .text = "Hello StringBuffer", .capacity = 64 });
+  strBuffer1.print();
+
+  _ = strBuffer1.append(" appended for s2 Buffer");
+  strBuffer1.print();
 }
+
+test " StringFBA" {
+  var strFBA1 = String(.{ .kind = .FBA, .text = "Hello StringFBA", .capacity = 64 });
+  strFBA1.print();
+
+  const strFBA2 = strFBA1.append(" appending to s3 FBA", 128);
+  strFBA2.print();
+}
+
+test " StringAlloc" {
+  var strAlloc1 = StringAlloc("Hello StringAlloc");
+  defer strAlloc1.free();
+  strAlloc1.print();
+
+  strAlloc1.append(" appending to s7 StringAlloc");
+  strAlloc1.print();
+
+  strAlloc1.append(" more and more and more, without knowing the size or capacity");
+  strAlloc1.print();
+
+  var strAlloc2 = String(.{ .kind = .Alloc, .text = "Hello StringAlloc via String" });
+  defer strAlloc2.free();
+  strAlloc2.print();
+}
+
+test " StringList" {
+  var strList1 = StringList("Hello StringList");
+  defer strList1.free();
+  strList1.print();
+
+  strList1.append(" and more!");
+  strList1.print();
+
+  var strList2 = String(.{ .kind = .List, .text = "Hello StringList via String" });
+  defer strList2.free();
+  strList2.print();
+
+  strList2.append(" and more appending!");
+  strList2.print();
+}
+
+//#endregion ==================================================================
+//=============================================================================
