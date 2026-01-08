@@ -171,12 +171,11 @@ All necessary libraries are inside the template.</pre>
 
 <details>
   <summary><ins>About WebGPU</ins></summary>
-<pre>SDL2 and Dawn Native.
+<pre>SDL3 3.4.0 and WebGPU Dawn Jan/2026.
 All necessary libraries are inside the template.
 &nbsp;
 Requirements:
 . [Emscripten](https://emscripten.org/) installed.
-. Change a few hard-coded paths to reflect your local emscripten paths.
 </pre>
 </details>
 
