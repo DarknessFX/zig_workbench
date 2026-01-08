@@ -1,115 +1,199 @@
 //!zig-autodoc-section: BaseWebGPU\\web.zig
 //! web.zig :
 //!  HTML5 WASM WebGPU source code (portable and offline).
-// Build using Zig 0.15.1
+// Build using Zig 0.15.2
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
-const wsm = @import("shared.zig");
-const log = wsm.log;
 pub const gpu = @cImport({
   @cInclude("emscripten.h");
   @cInclude("emscripten/html5.h");
-  @cInclude("emscripten/html5_webgpu.h");
   @cInclude("webgpu.h");
 });
 
-const web = struct {
-  var isRunning: bool = false;
-  var window: *(gpu.SDL_Window) = undefined;
+// Externals
+extern fn jsPrint(ptr: [*]const u8, len: usize) void;
+extern fn jsPrintFlush() void;
 
-  var instance: gpu.WGPUInstance = null;
-  var adapter: gpu.WGPUAdapter = null;
-  var device: gpu.WGPUDevice = null;
-  var surface: gpu.WGPUSurface = null;
-  var pipeline: gpu.WGPURenderPipeline = null;
-  var queue: gpu.WGPUQueue = null;
-  var swapchain: gpu.WGPUSwapChain = null;
+// Internals
+var web = struct {
+  title: [*c]const u8 = "BaseWebGPU",
+  isReady: bool = false,
 
-  var vbuffer: gpu.WGPUBuffer = null;
-  var ibuffer: gpu.WGPUBuffer = null;
-  var ubuffer: gpu.WGPUBuffer = null;
-  var bindgroup: gpu.WGPUBindGroup = null;
-  var vars_rot: f32 = 0.0;
+  width: c_int = 1280,
+  height: c_int = 720,
 
-  const canvas = struct {
-    var name: []const u8 = "";
-    var width: i32 = 0;
-    var height: i32 = 0;
-  };
-};
+  instance: gpu.WGPUInstance = null,
+  adapter: gpu.WGPUAdapter = null,
+  device: gpu.WGPUDevice = null,
+  queue: gpu.WGPUQueue = null,
+  surface: gpu.WGPUSurface = null,
+  pipeline: gpu.WGPURenderPipeline = null,
 
+  vbuffer: gpu.WGPUBuffer = null,
+  ibuffer: gpu.WGPUBuffer = null,
+  ubuffer: gpu.WGPUBuffer = null,
+  bindgroup: gpu.WGPUBindGroup = null,
+  vars_rot: f32 = 0.0,
 
-//#endregion ==================================================================
-//#region MARK: MAIN
-//=============================================================================
-pub fn main() !void {
-  web.canvas.name = "canvas";
-  web.instance = gpu.wgpuCreateInstance(null);
-  gpu.wgpuInstanceRequestAdapter(web.instance, 
-    &[_]gpu.WGPURequestAdapterOptions{
-      gpu.WGPURequestAdapterOptions{
-        .powerPreference = gpu.WGPUPowerPreference_LowPower,
-      },
-    }, 
-    obtainedWebGpuAdapter,
-    null
-  );
-}
+}{};
 
-fn obtainedWebGpuAdapter(
-  instance: c_uint, 
-  adapter: gpu.WGPUAdapter, 
-  message: [*c]const u8, 
-  userData: ?*anyopaque
-) callconv(.c) void {
-  _ = instance; _ = message; _ = userData;
-  web.adapter = adapter;
+pub fn main() void {
+  log(.info, "Retrieving preinitialized WebGPU device...", .{});
+  const instance_desc = gpu.WGPUInstanceDescriptor{ .nextInChain = null };
+  web.instance = gpu.wgpuCreateInstance(&instance_desc).?;
+  log(.info, "WebGPU Instance created.", .{});
 
-  gpu.wgpuAdapterRequestDevice(adapter, &gpu.WGPUDeviceDescriptor{}, obtainedWebGpuDevice, null);
-}
-
-fn obtainedWebGpuDevice(
-  instance: c_uint, 
-  device: gpu.WGPUDevice, 
-  message: [*c]const u8, 
-  userData: ?*anyopaque
-) callconv(.c) void {
-  _ = instance; _ = message; _ = userData;
-  web.device = device;
-
-  main_continue();
+  gpuRequestAdapter();
 }
 
 fn main_continue() void {
-  // Start WebGPU
-  {
-    startQueueSwapchain();
-    startRenderPipeline();
-    startShaderData();    
-  }
+  gpuSurface();
+  gpuRenderPipeline();
+  gpuShaderData();    
 
-  web.isRunning = true;
-  gpu.emscripten_set_main_loop(RenderFrame, 0, true);
+  web.isReady = true;
+  gpu.emscripten_set_main_loop(gpuRenderFrame, 0, true);
+}
 
-  // Stop WebGPU
-  {
-    stopAll();
+//#endregion ==================================================================
+//#region MARK: ADAPTER
+//=============================================================================
+fn gpuRequestAdapter() void {
+  const adapter_options = [_]gpu.WGPURequestAdapterOptions{
+    gpu.WGPURequestAdapterOptions{
+      .nextInChain = null,
+      .powerPreference = gpu.WGPUPowerPreference_Undefined,
+      .backendType = gpu.WGPUBackendType_Undefined,
+      .forceFallbackAdapter = 0,
+    }
+  };
+
+  const adapter_callback_info = gpu.WGPURequestAdapterCallbackInfo{
+    .nextInChain = null,
+    .mode = gpu.WGPUCallbackMode_AllowSpontaneous,
+    .callback = gpuAdapterCallback,
+    .userdata1 = null,
+    .userdata2 = null,
+  };
+
+  log(.info, "WebGPU Adapter requesting...", .{});
+  _ = gpu.wgpuInstanceRequestAdapter(web.instance, &adapter_options, adapter_callback_info);
+}
+
+export fn gpuAdapterCallback(status: gpu.WGPURequestAdapterStatus, adapter: gpu.WGPUAdapter,
+  message: gpu.WGPUStringView, userdata1: ?*anyopaque, userdata2: ?*anyopaque,) callconv(.c) void {
+  _ = message; _ = userdata1; _ = userdata2;
+
+  log(.info, "WebGPU Adapter callback called!", .{});
+  if (status == gpu.WGPURequestAdapterStatus_Success) {
+    web.adapter = adapter;
+    log(.info, "WebGPU Adapter received!", .{});
+    gpuRequestDevice();
+  } else {
+    log(.err, "WebGPU Adapter request failed", .{});
   }
 }
 
+//#endregion ==================================================================
+//#region MARK: DEVICE
+//=============================================================================
+export fn gpuDeviceCallback(status: gpu.WGPURequestDeviceStatus, device: gpu.WGPUDevice, message: gpu.WGPUStringView,
+  userdata1: ?*anyopaque, userdata2: ?*anyopaque,) callconv(.c) void {
+  _ = message; _ = userdata1; _ = userdata2;
+
+  log(.info, "WebGPU Device callback called!", .{});
+  if (status == gpu.WGPURequestDeviceStatus_Success) {
+    web.device = device;
+    log(.info, "WebGPU Device received!", .{});
+    web.queue = gpu.wgpuDeviceGetQueue(device);
+    log(.info, "WebGPU Queue received!", .{});
+    main_continue(); // end of main callbacks
+  } else {
+    log(.err, "WebGPU Device request failed", .{});
+  }
+}
+
+fn gpuRequestDevice() void {
+  const device_callback_info = gpu.WGPURequestDeviceCallbackInfo{
+    .nextInChain = null,
+    .mode = gpu.WGPUCallbackMode_AllowSpontaneous,
+    .callback = gpuDeviceCallback,
+    .userdata1 = null,
+    .userdata2 = null,
+  };
+
+  log(.info, "WebGPU Device requesting...", .{});
+  _ = gpu.wgpuAdapterRequestDevice(
+    web.adapter,
+    &[_]gpu.WGPUDeviceDescriptor{
+      gpu.WGPUDeviceDescriptor{},
+    },
+    device_callback_info,
+  );
+}
 
 //#endregion ==================================================================
-//#region MARK: UTIL
+//#region MARK: SURFACE
 //=============================================================================
-fn RenderFrame() callconv(.c) void {
+fn gpuSurface() void {
+  var surface_selector = gpu.WGPUEmscriptenSurfaceSourceCanvasHTMLSelector{
+    .chain = gpu.WGPUChainedStruct{
+      .next = null,
+      .sType = gpu.WGPUSType_EmscriptenSurfaceSourceCanvasHTMLSelector,
+    },
+   .selector = .{ .data = "canvas", .length = 6},
+  };
+
+  const surface_descriptor = gpu.WGPUSurfaceDescriptor{
+    .nextInChain = &surface_selector.chain,
+    .label = .{ .data = null, .length = 0},
+  };
+
+  web.surface = gpu.wgpuInstanceCreateSurface(web.instance, &surface_descriptor);
+
+  if (web.surface == null) {
+    log(.err, "Failed to create surface from canvas", .{});
+    return;
+  }
+
+  log(.info, "Surface created successfully", .{});
+
+  const config = gpu.WGPUSurfaceConfiguration{
+    .nextInChain = null,
+    .device = web.device,
+    .width = @intCast(web.width),
+    .height = @intCast(web.height),
+    .format = gpu.WGPUTextureFormat_BGRA8Unorm,
+    .usage = gpu.WGPUTextureUsage_RenderAttachment,
+    .alphaMode = gpu.WGPUCompositeAlphaMode_Auto,
+    .presentMode = gpu.WGPUPresentMode_Fifo,
+    .viewFormatCount = 0,
+    .viewFormats = null,
+  };
+  gpu.wgpuSurfaceConfigure(web.surface, &config);
+  log(.info, "Surface configured (BGRA8Unorm hardcoded)", .{});
+}
+
+//=============================================================================
+//#region MARK: RENDERER
+//=============================================================================
+fn gpuRenderFrame() callconv(.c) void {
+  if (!web.isReady) { return; }
+
   web.vars_rot += 0.1;
   web.vars_rot = if (web.vars_rot >= 360) 0.0 else web.vars_rot;
-  gpu.wgpuQueueWriteBuffer(web.queue, web.ubuffer, 0, &web.vars_rot, @sizeOf(@TypeOf(web.vars_rot)));
+  gpu.wgpuQueueWriteBuffer(web.queue, web.ubuffer, 0, &web.vars_rot, 16);
 
-  const back_buffer = gpu.wgpuSwapChainGetCurrentTextureView(web.swapchain);
+  var surface_texture: gpu.WGPUSurfaceTexture = undefined;
+  gpu.wgpuSurfaceGetCurrentTexture(web.surface, &surface_texture);
+  if (surface_texture.status != gpu.WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal) {
+    return;
+  }
+
+  const back_buffer = gpu.wgpuTextureCreateView(surface_texture.texture, null);
   const cmd_encoder = gpu.wgpuDeviceCreateCommandEncoder(web.device, null);
   const render_pass = gpu.wgpuCommandEncoderBeginRenderPass(cmd_encoder, &gpu.WGPURenderPassDescriptor{
     .colorAttachmentCount = 1,
@@ -123,31 +207,29 @@ fn RenderFrame() callconv(.c) void {
   });
 
   gpu.wgpuRenderPassEncoderSetPipeline(render_pass, web.pipeline);
-  gpu.wgpuRenderPassEncoderSetBindGroup(render_pass, 0, web.bindgroup, 0, 0);
+  gpu.wgpuRenderPassEncoderSetBindGroup(render_pass, 0, web.bindgroup, 0, null);
   gpu.wgpuRenderPassEncoderSetVertexBuffer(render_pass, 0, web.vbuffer, 0, gpu.WGPU_WHOLE_SIZE);
   gpu.wgpuRenderPassEncoderSetIndexBuffer(render_pass, web.ibuffer, gpu.WGPUIndexFormat_Uint16, 0, gpu.WGPU_WHOLE_SIZE);
   gpu.wgpuRenderPassEncoderDrawIndexed(render_pass, 6, 1, 0, 0, 0);
 
   gpu.wgpuRenderPassEncoderEnd(render_pass);
   const cmd_buffer = gpu.wgpuCommandEncoderFinish(cmd_encoder, null);
-  gpu.wgpuQueueSubmit(web.queue, 1, &cmd_buffer);
 
+  gpu.wgpuQueueSubmit(web.queue, 1, &cmd_buffer);
+  //_ = gpu.wgpuSurfacePresent(web.surface);
+
+  gpu.wgpuCommandBufferRelease(cmd_buffer);
   gpu.wgpuRenderPassEncoderRelease(render_pass);
   gpu.wgpuCommandEncoderRelease(cmd_encoder);
-  gpu.wgpuCommandBufferRelease(cmd_buffer);
   gpu.wgpuTextureViewRelease(back_buffer);
+  gpu.wgpuTextureRelease(surface_texture.texture);
 }
 
-fn startQueueSwapchain() void {
-  web.queue = gpu.wgpuDeviceGetQueue(web.device);
-  var w: f64 = 0; var h: f64 = 0;
-  _ = gpu.emscripten_get_element_css_size(web.canvas.name.ptr, &w, &h);
-  web.canvas.width = @intFromFloat(w);
-  web.canvas.height = @intFromFloat(h);
-  web.swapchain = createSwapchain();
-}
-
-fn startRenderPipeline() void {
+//#endregion ==================================================================
+//#region MARK: PIPELINE
+//=============================================================================
+fn gpuRenderPipeline() void {
+  log(.info, "Render Pipeline starting...", .{});
   const shader_triangle = createShader(wgsl_triangle, "triangle");
   const vertex_attributes = [2]gpu.WGPUVertexAttribute{
     .{
@@ -192,13 +274,13 @@ fn startRenderPipeline() void {
     },
     .vertex = .{
       .module = shader_triangle,
-      .entryPoint = "vs_main",
+      .entryPoint = .{ .data = "vs_main", .length = 7},
       .bufferCount = 1,
       .buffers = &vertex_buffer_layout,
     },
     .fragment = &gpu.WGPUFragmentState{
       .module = shader_triangle,
-      .entryPoint = "fs_main",
+      .entryPoint = .{ .data = "fs_main", .length = 7},
       .targetCount = 1,
       .targets = &gpu.WGPUColorTargetState{
         .format = gpu.WGPUTextureFormat_BGRA8Unorm,
@@ -228,9 +310,14 @@ fn startRenderPipeline() void {
   gpu.wgpuBindGroupLayoutRelease(bindgroup_layout);
   gpu.wgpuPipelineLayoutRelease(pipeline_layout);
   gpu.wgpuShaderModuleRelease(shader_triangle);
+  log(.info, "Render Pipeline completed!", .{});
 }
 
-fn startShaderData() void {
+//#endregion ==================================================================
+//#region MARK: SHADERDATA
+//=============================================================================
+fn gpuShaderData() void {
+  log(.info, "Render ShaderData starting...", .{});
   const vertex_data = [_]f32{
     // x, y          // r, g, b
     -0.5, -0.5,     1.0, 0.0, 0.0, // bottom-left
@@ -244,7 +331,7 @@ fn startShaderData() void {
   };
   web.vbuffer = createBuffer(&vertex_data, @sizeOf(@TypeOf(vertex_data)), gpu.WGPUBufferUsage_Vertex);
   web.ibuffer = createBuffer(&index_data, @sizeOf(@TypeOf(index_data)), gpu.WGPUBufferUsage_Index);
-  web.ubuffer = createBuffer(&web.vars_rot, @sizeOf(@TypeOf(web.vars_rot)), gpu.WGPUBufferUsage_Uniform);
+  web.ubuffer = createBuffer(&web.vars_rot, 16, gpu.WGPUBufferUsage_Uniform);
   web.bindgroup = gpu.wgpuDeviceCreateBindGroup(web.device, &gpu.WGPUBindGroupDescriptor{
     .layout = gpu.wgpuRenderPipelineGetBindGroupLayout(web.pipeline, 0),
     .entryCount = 1,
@@ -255,75 +342,15 @@ fn startShaderData() void {
       .size = @sizeOf(@TypeOf(web.vars_rot)),
     },
   });
+  log(.info, "Render ShaderData completed!", .{});
 }
 
 fn stopAll() void {
   gpu.wgpuRenderPipelineRelease(web.pipeline);
-  gpu.wgpuSwapChainRelease(web.swapchain);
   gpu.wgpuQueueRelease(web.queue);
   gpu.wgpuDeviceRelease(web.device);
   gpu.wgpuInstanceRelease(web.instance);
 }
-
-//#endregion ==================================================================
-//#region MARK: CALLBACKS
-//=============================================================================
-export fn onWindowResize(callback: ?*anyopaque) void {
-  _ = callback;
-
-  var w: f64 = 0; var h: f64 = 0;
-  _ = gpu.emscripten_get_element_css_size(web.canvas.name.ptr, &w, &h);
-  web.canvas.width = @intFromFloat(w);
-  web.canvas.height = @intFromFloat(h);
-  if (web.swapchain != null) {
-    gpu.wgpuSwapChainRelease(web.swapchain);
-    web.swapchain = null;
-  }
-  web.swapchain = createSwapchain();  
-}
-
-
-//#endregion ==================================================================
-//#region MARK: TOOLS
-//=============================================================================
-fn createSwapchain() gpu.WGPUSwapChain {
-  const surface = gpu.wgpuInstanceCreateSurface(web.instance, &gpu.WGPUSurfaceDescriptor{
-    .nextInChain = @ptrCast(&gpu.WGPUSurfaceDescriptorFromCanvasHTMLSelector{
-      .chain = .{ .sType = gpu.WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector },
-      .selector = web.canvas.name.ptr,
-    }),
-  });
-
-  return gpu.wgpuDeviceCreateSwapChain(web.device, surface, &gpu.WGPUSwapChainDescriptor{
-    .usage = gpu.WGPUTextureUsage_RenderAttachment,
-    .format = gpu.WGPUTextureFormat_BGRA8Unorm,
-    .width = @intCast(web.canvas.width),
-    .height = @intCast(web.canvas.height),
-    .presentMode = gpu.WGPUPresentMode_Fifo,
-  });
-}
-
-fn createShader(code: [*:0]const u8, label: [*:0]const u8) gpu.WGPUShaderModule {
-  const wgsl = gpu.WGPUShaderModuleWGSLDescriptor{
-    .chain = .{ .sType = gpu.WGPUSType_ShaderModuleWGSLDescriptor },
-    .code = code,
-  };
-
-  return gpu.wgpuDeviceCreateShaderModule(web.device, &gpu.WGPUShaderModuleDescriptor{
-    .nextInChain = @ptrCast(&wgsl),
-    .label = label
-  });
-}
-
-fn createBuffer(data: ?*const anyopaque, size: usize, usage: gpu.WGPUBufferUsage) gpu.WGPUBuffer {
-  const buffer = gpu.wgpuDeviceCreateBuffer(web.device, &gpu.WGPUBufferDescriptor{
-    .usage = @as(gpu.enum_WGPUBufferUsage, gpu.WGPUBufferUsage_CopyDst) | usage,
-    .size = size,
-  });
-  gpu.wgpuQueueWriteBuffer(web.queue, buffer, 0, data, size);
-  return buffer;
-}
-
 
 //#endregion ==================================================================
 //#region MARK: SHADER
@@ -370,12 +397,63 @@ const wgsl_triangle =
 ;
 
 //#endregion ==================================================================
-//#region MARK: TEST
+//#region MARK: UTILS
 //=============================================================================
+fn createShader(code: [*:0]const u8, label: [*:0]const u8) gpu.WGPUShaderModule {
+  var wgsl = gpu.WGPUShaderSourceWGSL{
+    .chain = .{ .sType = gpu.WGPUSType_ShaderSourceWGSL },
+    .code = .{ .data = code, .length = std.mem.len(code) },
+  };
 
-test " empty" {
-  try std.testing.expect(true);
+  return gpu.wgpuDeviceCreateShaderModule(web.device, &gpu.WGPUShaderModuleDescriptor{
+    .nextInChain = @ptrCast(&wgsl),
+    .label = .{
+      .data = label,
+      .length = std.mem.len(label),
+    },
+  });
 }
 
-//#endregion ==================================================================
+fn createBuffer(data: ?*const anyopaque, size: usize, usage: gpu.WGPUBufferUsage) gpu.WGPUBuffer {
+  const buffer = gpu.wgpuDeviceCreateBuffer(web.device, &gpu.WGPUBufferDescriptor{
+    .usage = gpu.WGPUBufferUsage_CopyDst | usage,
+    .size = size,
+  });
+  gpu.wgpuQueueWriteBuffer(web.queue, buffer, 0, data, size);
+  return buffer;
+}
+
 //=============================================================================
+//#region MARK: LOG
+//=============================================================================
+pub const LogLevel = enum {
+  info,
+  warn,
+  err,
+};
+
+const LogInfo = struct {
+  prefix: []const u8,
+  func: []const u8,
+};
+
+fn log(level: LogLevel, comptime fmt: []const u8, args: anytype) void {
+  const info = switch (level) {
+    .info => LogInfo{ .prefix = "[INFO]", .func = "console.log" },
+    .warn => LogInfo{ .prefix = "[WARN]", .func = "console.warn" },
+    .err  => LogInfo{ .prefix = "[ERR] ", .func = "console.error" },
+  };
+
+  var msg_buf: [1024:0]u8 = @splat(0);
+  var msg_buf_slice: []u8 = undefined;
+  msg_buf_slice = std.fmt.bufPrint(&msg_buf, fmt, args) catch unreachable;
+
+  var script_buf: [1024:0]u8 = @splat(0);
+  var script_buf_slice: []u8 = undefined;
+  script_buf_slice = std.fmt.bufPrint(&script_buf,
+    "{s}('[WebGPU] {s} {s}')",
+    .{ info.func, info.prefix, msg_buf[0..msg_buf_slice.len] }) catch return;
+  script_buf[script_buf_slice.len] = '0';
+  jsPrint(&script_buf, script_buf_slice.len);
+  jsPrintFlush();
+}

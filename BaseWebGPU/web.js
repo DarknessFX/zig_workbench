@@ -1,13 +1,10 @@
 // Shared Wasm externs
-_Print=(text, len)=>{
+_jsPrint=(text, len)=>{
   BaseWebGPU.print(text, len);
 };
-_printFlush=()=>{
+_jsPrintFlush=()=>{
   BaseWebGPU.printFlush();
 };
-_onShaderCompiled=(a1,b2,c3)=>{
-  BaseWebGPU.log("Shader compiled.");
-}
 
 // Main object, connect with shared exports 
 // and externs, + tools.
@@ -21,7 +18,15 @@ const BaseWebGPU = (() => {
   const methods = {
     log(message) { console.log(title + ' : ' + message); },
     print(ptr, len) { this.print.buffer += this.getString(ptr, len); },
-    printFlush() { console.log(this.print.buffer); this.print.buffer = ""; BaseWebGPU.memory.buffer = ""; },
+    printFlush() { 
+      try {
+        eval(this.print.buffer);
+      } catch (e) {
+        console.error("Log eval error:", e);
+        console.error("Failed script:", this.print.buffer);
+      }
+      this.print.buffer = ""; 
+    },
     construct() { this.log('Constructed'); },
 
     // Emscripten
@@ -35,22 +40,25 @@ const BaseWebGPU = (() => {
       this.print.buffer = "";
       this.print.decoder = new TextDecoder(); 
       this.loadModules();
-      _Init();
       this.loadEvents(); 
       this.log('Initialized');
       if (this.main) this.main();
     },
-    update() { _Update(); this.log('Update'); },
+    update() { this.log('Update'); },
 
     // WebGPU
     loadEvents() {
-      window.onresize=_onWindowResize;
-      window.addEventListener("resize", _onWindowResize);
       this.log('Loaded events with externs.');
     },
 
     // Helpers
-    getString(ptr, len) { return this.print.decoder.decode(new Uint8Array(BaseWebGPU.memory.buffer, ptr, len)); },    
+    getString(ptr, len) { 
+      if (!wasmMemory || !wasmMemory.buffer) {
+        return "<memory not ready>";
+      }
+      return this.print.decoder.decode(new Uint8Array(wasmMemory.buffer, ptr, len));   
+      // return this.print.decoder.decode(new Uint8Array(BaseWebGPU.memory.buffer, ptr, len)); 
+    },
   };
   return { getInstance() {
     return instance ? instance : (instance = methods, instance.construct(), instance); },
