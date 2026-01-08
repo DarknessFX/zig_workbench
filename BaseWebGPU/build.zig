@@ -126,6 +126,14 @@ pub fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.b
     .ReleaseFast => lib_dir = "bin/web/ReleaseFast",
     .ReleaseSmall => lib_dir = "bin/web/ReleaseSmall"
   }
+  std.fs.cwd().makeDir("bin/web") catch |err| switch (err) {
+    error.PathAlreadyExists => {},
+    else => |e| return e,
+  };  
+  std.fs.cwd().makeDir(lib_dir) catch |err| switch (err) {
+    error.PathAlreadyExists => {},
+    else => |e| return e,
+  };
 
   // Emscripten - Build HTML, JS, WASM
   const bat_content = try std.fmt.allocPrint(b.allocator,
