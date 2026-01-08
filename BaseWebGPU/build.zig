@@ -126,14 +126,7 @@ pub fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.b
     .ReleaseFast => lib_dir = "bin/web/ReleaseFast",
     .ReleaseSmall => lib_dir = "bin/web/ReleaseSmall"
   }
-  std.fs.cwd().makeDir("bin/web") catch |err| switch (err) {
-    error.PathAlreadyExists => {},
-    else => |e| return e,
-  };  
-  std.fs.cwd().makeDir(lib_dir) catch |err| switch (err) {
-    error.PathAlreadyExists => {},
-    else => |e| return e,
-  };
+  try ensureDirPath(&.{ "bin", "web", "Debug" });
 
   // Emscripten - Build HTML, JS, WASM
   const bat_content = try std.fmt.allocPrint(b.allocator,
@@ -209,4 +202,25 @@ fn getEmscriptenPaths(allocator: std.mem.Allocator) !void {
   const emcc_path = try std.fs.path.join(allocator, &.{ emscripten_path, "emcc.bat" });
   emscripten_emcc = try std.fs.realpathAlloc(allocator, emcc_path);
 
+}
+
+fn ensureDirPath(parts: []const []const u8) !void {
+  var path_buf: [1024]u8 = undefined;
+  var path_len: usize = 0;
+
+  for (parts) |part| {
+    if (path_len > 0) {
+      path_buf[path_len] = std.fs.path.sep;
+      path_len += 1;
+    }
+    @memcpy(path_buf[path_len..][0..part.len], part);
+    path_len += part.len;
+
+    const dir_path = path_buf[0..path_len];
+
+    std.fs.cwd().makeDir(dir_path) catch |err| switch (err) {
+      error.PathAlreadyExists => {}, 
+      else => |e| return e,
+    };
+  }
 }
