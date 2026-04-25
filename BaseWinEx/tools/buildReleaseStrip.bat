@@ -46,25 +46,24 @@ IF EXIST "*.rc" (
   SET rcmd=-rcflags /c65001 -- %CD%\%ProjectName%.rc
 )
 
-SET singlethread=-fsingle-threaded
 SET libc=
-FINDSTR /L linkLibC build.zig > NUL && (
+FINDSTR /L link_libc build.zig > NUL && (
   SET libc=-lc
 )
 SET libcpp=
-FINDSTR /L linkLibCpp build.zig > NUL && (
+FINDSTR /L link_libcpp build.zig > NUL && (
   SET libcpp=-lc++
   SET singlethread=
 )
 
 REM OUTPUT TO ZIG_REPORT.TXT
 > bin/ReleaseStrip/obj/zig_report.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
 
 REM OUTPUT BUILD COMMAND LINE TO ZIG_BUILD_CMD.TXT
 > bin/ReleaseStrip/obj/zig_build_cmd.txt (
-  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% %singlethread% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
+  zig build-exe -O ReleaseSmall %rcmd% %libc% %libcpp% -fstrip --color off -femit-bin=bin/ReleaseStrip/%ProjectName%.exe -femit-asm=bin/ReleaseStrip/obj/%ProjectName%.s -femit-llvm-ir=bin/ReleaseStrip/obj/%ProjectName%.ll -femit-llvm-bc=bin/ReleaseStrip/obj/%ProjectName%.bc -femit-h=bin/ReleaseStrip/obj/%ProjectName%.h -fstack-report %extra_args% --name %ProjectName% main.zig %addCSourceFile%
 ) 2>&1 
 
 IF EXIST "%CD%\bin\ReleaseStrip\%ProjectName%.exe.obj" (

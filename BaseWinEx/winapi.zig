@@ -1,5 +1,7 @@
-//!zig-autodoc-section: Windows API
-//! Windows API
+//!zig-autodoc-section: BaseWinEx.WinAPI
+//! BaseWinEx\\winapi.zig :
+//!   Windows API module.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -29,9 +31,22 @@ pub const wnd_type = struct {
   },
   hdc: HDC = undefined,
   dpi: UINT = 96,
-  color: COLORREF = 0x001E1E1E,  //0x00RRGGBB;  
+  color: COLORREF = 0x001E1E1E,  //0x00RRGGBB;
 };
 pub var wnd: wnd_type = .{};
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
+pub fn gethInstance() win.HINSTANCE {
+  return GetModuleHandleW(null) orelse unreachable;
+}
+
+pub fn getnCmdShow()  win.INT {
+  var si: win.STARTUPINFOW = undefined;
+  GetStartupInfoW(&si);
+  return @intCast(si.wShowWindow);
+}
 
 pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: INT) void {
   _ = nCmdShow;
@@ -43,12 +58,12 @@ pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: 
     .cbSize = @sizeOf(WNDCLASSEXA),
     .style = CS_CLASSDC | CS_HREDRAW | CS_VREDRAW,
     .lpfnWndProc = WindowProc,
-    .cbClsExtra = 0, 
+    .cbClsExtra = 0,
     .cbWndExtra = 0,
     .hInstance = hInstance,
-    .hIcon = null, 
+    .hIcon = null,
     .hCursor = LoadCursorA(null, IDC_ARROW),
-    .hbrBackground = null, 
+    .hbrBackground = null,
     .lpszMenuName = null,
     .lpszClassName = wnd.classname,
     .hIconSm = null,
@@ -58,10 +73,10 @@ pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: 
 
   wnd.hWnd = CreateWindowExA(
     0, wnd.classname, wnd.name, WS_OVERLAPPEDWINDOW,
-    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
     null, null, hInstance, null) orelse undefined;
 
-  std.debug.print("{any}\n", .{ wnd.hWnd });
+  // std.debug.print("{any}\n", .{ wnd.hWnd });
 
   wnd.hdc = GetDC(wnd.hWnd).?;
   wnd.dpi = GetDpiForWindow(wnd.hWnd);
@@ -75,8 +90,8 @@ pub fn CreateWindow(comptime title: []const u8, hInstance: HINSTANCE, nCmdShow: 
   wnd.pos.bottom = wnd.pos.top + div_h;
   _ = SetWindowPos( wnd.hWnd, null, wnd.pos.left, wnd.pos.top, wnd.pos.right, wnd.pos.bottom, SWP_NOCOPYBITS );
 
-  std.debug.print("{any}\n", .{ wnd.hdc });
-  std.debug.print("{any}\n", .{ wnd.dpi });
+  // std.debug.print("{any}\n", .{ wnd.hdc });
+  // std.debug.print("{any}\n", .{ wnd.dpi });
 
 }
 
@@ -102,7 +117,7 @@ pub fn WindowProc( hWnd: HWND, uMsg: UINT, wParam: WPARAM, lParam: LPARAM ) call
     WM_SIZE => {
       wnd.size.width = @as(i16, @intCast(LOWORD(lParam)));
       wnd.size.height = @as(i16, @intCast(HIWORD(lParam)));
-      _ = PostMessageW(hWnd, WM_PAINT, 0, 0);      
+      _ = PostMessageW(hWnd, WM_PAINT, 0, 0);
     },
 		WM_KEYDOWN,
 		WM_SYSKEYDOWN => {
@@ -143,15 +158,28 @@ pub const INT = std.os.windows.INT;
 pub const HANDLE = std.os.windows.HANDLE;
 const UINT = std.os.windows.UINT;
 const LONG = std.os.windows.LONG;
-const BOOL = std.os.windows.BOOL;
+pub const BOOL = std.os.windows.BOOL;
 pub const DWORD = std.os.windows.DWORD;
 const WORD = std.os.windows.WORD;
-const RECT = std.os.windows.RECT;
-const LRESULT = std.os.windows.LRESULT;
+//const RECT = std.os.windows.RECT;
+pub const RECT = extern struct {
+  left:   win.LONG,
+  top:    win.LONG,
+  right:  win.LONG,
+  bottom: win.LONG,
+};
+// const LRESULT = std.os.windows.LRESULT;
 const LONG_PTR = std.os.windows.LONG_PTR;
-const WPARAM = std.os.windows.WPARAM;
-const LPARAM = std.os.windows.LPARAM;
-const POINT = std.os.windows.POINT;
+// const WPARAM = std.os.windows.WPARAM;
+// const LPARAM = std.os.windows.LPARAM;
+pub const WPARAM = usize;
+pub const LPARAM = isize;
+pub const LRESULT = isize;
+// const POINT = std.os.windows.POINT;
+pub const POINT = extern struct {
+  x: win.LONG,
+  y: win.LONG,
+};
 const HDC = *opaque{};
 const HBRUSH = *opaque{};
 const HGLRC = std.os.windows.HGLRC;
@@ -307,9 +335,9 @@ const WNDCLASSEXA = extern struct {
 };
 
 const WNDPROC = *const fn (
-  hwnd: HWND, 
-  uMsg: UINT, 
-  wParam: WPARAM, 
+  hwnd: HWND,
+  uMsg: UINT,
+  wParam: WPARAM,
   lParam: LPARAM
 ) callconv(.winapi) LRESULT;
 
@@ -408,9 +436,9 @@ pub extern "kernel32" fn GetCommandLineA(
 ) callconv(.winapi) ?LPSTR;
 
 pub extern "user32" fn MessageBoxA(
-  hWnd: ?HWND, 
-  lpText: [*:0]const u8, 
-  lpCaption: [*:0]const u8, 
+  hWnd: ?HWND,
+  lpText: [*:0]const u8,
+  lpCaption: [*:0]const u8,
   uType: UINT
 ) callconv(.winapi) INT;
 
@@ -428,12 +456,12 @@ extern "user32" fn RegisterClassExA(
 ) callconv(.winapi) ATOM;
 
 extern "user32" fn UnregisterClassA(
-  lpClassName: [*:0]const u8, 
+  lpClassName: [*:0]const u8,
   hInstance: HINSTANCE
 ) callconv(.winapi) BOOL;
 
 extern "user32" fn AdjustWindowRectEx(
-  lpRect: *RECT, 
+  lpRect: *RECT,
   dwStyle: DWORD,
   bMenu: BOOL,
   dwExStyle: DWORD
@@ -463,7 +491,7 @@ extern "user32" fn GetDC(
 ) callconv(.winapi) ?HDC;
 
 extern "user32" fn ReleaseDC(
-  hWnd: ?HWND, 
+  hWnd: ?HWND,
   hDC: HDC
 ) callconv(.winapi) i32;
 
@@ -473,9 +501,9 @@ extern "user32" fn PostQuitMessage(
 
 pub extern "user32" fn PeekMessageA(
   lpMsg: *MSG,
-  hWnd: ?HWND, 
-  wMsgFilterMin: UINT, 
-  wMsgFilterMax: UINT, 
+  hWnd: ?HWND,
+  wMsgFilterMin: UINT,
+  wMsgFilterMax: UINT,
   wRemoveMsg: UINT
 ) callconv(.winapi) BOOL;
 
@@ -583,12 +611,12 @@ extern "user32" fn EnumWindows(
 ) callconv(.winapi) void;
 
 const WNDENUMPROC = *const fn (
-  hwnd: HWND, 
+  hwnd: HWND,
   lParam: LPARAM
 ) callconv(.winapi) INT;
 
 extern "user32" fn IsWindowVisible(
-  hwnd: HWND 
+  hwnd: HWND
 ) callconv(.winapi) BOOL;
 
 extern "user32" fn GetWindowTextA(
@@ -647,8 +675,37 @@ extern "user32" fn SetWindowPos(
   Y: INT,
   cx: INT,
   cy: INT,
-  uFlags: UINT,        
+  uFlags: UINT,
 ) callconv(.winapi) BOOL;
+
+pub const STARTUPINFOW = extern struct {
+    cb: win.DWORD = @sizeOf(STARTUPINFOW),
+    lpReserved: ?win.LPWSTR = null,
+    lpDesktop: ?win.LPWSTR = null,
+    lpTitle: ?win.LPWSTR = null,
+    dwX: win.DWORD = 0,
+    dwY: win.DWORD = 0,
+    dwXSize: win.DWORD = 0,
+    dwYSize: win.DWORD = 0,
+    dwXCountChars: win.DWORD = 0,
+    dwYCountChars: win.DWORD = 0,
+    dwFillAttribute: win.DWORD = 0,
+    dwFlags: win.DWORD = 0,
+    wShowWindow: win.WORD = 0,
+    cbReserved2: win.WORD = 0,
+    lpReserved2: ?*win.BYTE = null,
+    hStdInput: win.HANDLE = undefined,
+    hStdOutput: win.HANDLE = undefined,
+    hStdError: win.HANDLE = undefined,
+};
+
+pub extern "kernel32" fn GetModuleHandleW(
+    lpModuleName: ?win.LPCWSTR,
+) callconv(.winapi) ?win.HINSTANCE;
+
+pub extern "kernel32" fn GetStartupInfoW(
+    lpStartupInfo: *win.STARTUPINFOW,
+) callconv(.winapi) void;
 
 //#endregion ==================================================================
 //#region MARK: TEST

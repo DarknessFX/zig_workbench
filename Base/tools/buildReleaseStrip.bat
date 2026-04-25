@@ -47,11 +47,11 @@ IF EXIST "*.rc" (
 )
 
 SET libc=
-FINDSTR /L linkLibC build.zig > NUL && (
+FINDSTR /L link_libc build.zig > NUL && (
   SET libc=-lc
 )
 SET libcpp=
-FINDSTR /L linkLibCpp build.zig > NUL && (
+FINDSTR /L link_libcpp build.zig > NUL && (
   SET libcpp=-lc++
   SET singlethread=
 )
