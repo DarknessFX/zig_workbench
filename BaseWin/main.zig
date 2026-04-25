@@ -1,24 +1,42 @@
-//!zig-autodoc-section: BaseWin
-//!  Template for a Windows program.
-// Build using Zig 0.15.1
+//!zig-autodoc-section: BaseEx.Main
+//! BaseEx\\main.zig :
+//!   Template for a Windows program.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
 const std = @import("std");
+const Io = std.Io;
+var appinit: std.process.Init = undefined;
 const win = std.os.windows;
+
+const print = std.debug.print;
+/// Print line directly when text don't need formating.
+inline fn printLine(line: []const u8) void { print("{s}\n", .{ line }); }
+
+const log = std.log.info;
+/// Log line directly when text don't need formating.
+inline fn logLine(line: []const u8) void { log("{s}\n", .{ line }); }
+
 const wnd = struct {
   pub const MSG = extern struct {
     hWnd: ?win.HWND,
     message: win.UINT,
-    wParam: win.WPARAM,
-    lParam: win.LPARAM,
+    wParam: usize,
+    lParam: isize,
     time: win.DWORD,
-    pt: win.POINT,
+    pt: POINT,
     lPrivate: win.DWORD,
   };
 
-  pub const WNDPROC = *const fn (hwnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(.winapi) win.LRESULT;
+  pub const WNDPROC = *const fn (
+    hwnd: win.HWND, 
+    uMsg: win.UINT, 
+    wParam: usize, 
+    lParam: isize
+  ) callconv(.winapi) isize;
+
   pub const WNDCLASSEXW = extern struct {
     cbSize: win.UINT = @sizeOf(WNDCLASSEXW),
     style: win.UINT,
@@ -43,15 +61,16 @@ var g_height: i32 = 720;
 var hwnd: win.HWND = undefined;
 const wnd_title = L("BaseWin");
 const wnd_classname = wnd_title ++ L("_class");
-var wnd_size: win.RECT = .{ .left=0, .top=0, .right=1280, .bottom=720 };
+var wnd_size: RECT = .{ .left=0, .top=0, .right=1280, .bottom=720 };
 var wnd_dc: win.HDC = undefined;
 var wnd_dpi: win.UINT = 96;
 var wnd_color: COLORREF = 0x001E1E1E;  //0x00RRGGBB;
 
+
 //#endregion ==================================================================
 //#region MARK: MAIN
 //=============================================================================
-pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
+pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   _ = hPrevInstance;
   _ = pCmdLine;
@@ -64,7 +83,7 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   var done: bool = false;
   var msg: wnd.MSG = std.mem.zeroes(wnd.MSG);
   while (!done) {
-    while (PeekMessageW(&msg, null, 0, 0, PM_REMOVE) != 0) {
+    while (PeekMessageW(&msg, null, 0, 0, PM_REMOVE) != win.BOOL.FALSE) {
       _ = TranslateMessage(&msg);
       _ = DispatchMessageW(&msg);
       if (msg.message == WM_QUIT) { done = true; }
@@ -79,7 +98,7 @@ pub export fn wWinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
 //#endregion ==================================================================
 //#region MARK: UTIL
 //=============================================================================
-fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(.winapi) win.LRESULT {
+fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: usize, lParam: isize ) callconv(.winapi) isize {
   switch (uMsg) {
     WM_DESTROY,
     WM_CLOSE => {
@@ -121,18 +140,18 @@ fn CreateWindow(hInstance: win.HINSTANCE, nCmdShow: win.INT) void {
     .cbSize = @sizeOf(wnd.WNDCLASSEXW),
     .style = CS_DBLCLKS,
     .lpfnWndProc = WindowProc,
-    .cbClsExtra = 0, 
+    .cbClsExtra = 0,
     .cbWndExtra = 0,
     .hInstance = hInstance,
-    .hIcon = null, 
+    .hIcon = null,
     .hCursor = LoadCursorW(null, IDC_ARROW),
-    .hbrBackground = null, 
+    .hbrBackground = null,
     .lpszMenuName = null,
     .lpszClassName = wnd_classname,
     .hIconSm = null,
   };
   _ = RegisterClassExW(&wnd_class);
-  _ = AdjustWindowRectEx(&wnd_size, WS_OVERLAPPEDWINDOW, win.FALSE, WS_EX_APPWINDOW);
+  _ = AdjustWindowRectEx(&wnd_size, WS_OVERLAPPEDWINDOW, win.BOOL.FALSE, WS_EX_APPWINDOW);
 
   hwnd = CreateWindowExW(
     WS_EX_APPWINDOW, wnd_classname, wnd_title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
@@ -154,17 +173,33 @@ fn CreateWindow(hInstance: win.HINSTANCE, nCmdShow: win.INT) void {
   _ = UpdateWindow(hwnd);
 }
 
-
 // Fix for libc linking error.
-pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE, 
+pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   pCmdLine: ?win.LPWSTR, nCmdShow: win.INT) callconv(.winapi) win.INT {
   return wWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 
-
-
+//#endregion ==================================================================
+//#region MARK: WINAPI
+//=============================================================================pub fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 pub fn LOWORD(l: win.LONG_PTR) win.UINT { return @as(u32, @intCast(l)) & 0xFFFF; }
 pub fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xFFFF; }
+
+pub const WPARAM = usize;
+pub const LPARAM = isize;
+pub const LRESULT = isize;
+
+pub const POINT = extern struct {
+  x: win.LONG,
+  y: win.LONG,
+};
+
+pub const RECT = extern struct {
+  left:   win.LONG,
+  top:    win.LONG,
+  right:  win.LONG,
+  bottom: win.LONG,
+};
 
 pub const VK_ESCAPE = 27;
 pub const VK_LSHIFT = 160;
@@ -437,7 +472,7 @@ pub var ps: PAINTSTRUCT = undefined;
 pub const PAINTSTRUCT = extern struct {
   hdc: win.HDC,
   fErase: win.BOOL,
-  rcPaint: win.RECT,
+  rcPaint: RECT,
   fRestore: win.BOOL,
   fIncUpdate: win.BOOL,
   rgbReserved: [32]win.BYTE
@@ -455,7 +490,7 @@ pub extern "gdi32" fn CreateSolidBrush(
 
 pub extern "user32" fn FillRect(
   hDC: ?win.HDC,
-  lprc: ?*const win.RECT,
+  lprc: ?*const RECT,
   hbr: ?win.HBRUSH
 ) callconv(.winapi) win.INT;
 
@@ -490,7 +525,7 @@ pub extern "kernel32" fn OutputDebugStringA(
 
 pub extern "user32" fn GetWindowRect(
   hWnd: win.HWND,
-  lpRect: *win.RECT
+  lpRect: *RECT
 ) callconv(.winapi) win.INT;
 
 pub const SM_CXSCREEN = 0;
@@ -525,7 +560,7 @@ pub extern "user32" fn SetWindowPos(
   Y: win.INT,
   cx: win.INT,
   cy: win.INT,
-  uFlags: win.UINT,        
+  uFlags: win.UINT,
 ) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn PostQuitMessage(
@@ -535,15 +570,15 @@ pub extern "user32" fn PostQuitMessage(
 pub extern "user32" fn DefWindowProcW(
   hWnd: win.HWND,
   Msg: win.UINT,
-  wParam: win.WPARAM,
-  lParam: win.LPARAM
-) callconv(.winapi) win.LRESULT;
+  wParam: usize,
+  lParam: isize
+) callconv(.winapi) isize;
 
 pub extern "user32" fn PostMessageW(
   hWnd: ?win.HWND,
   Msg: win.UINT,
-  wParam: win.WPARAM,
-  lParam: win.LPARAM
+  wParam: usize,
+  lParam: isize
 ) callconv(.winapi) win.BOOL;
 
 pub const PM_REMOVE = 0x0001;
@@ -561,7 +596,7 @@ pub extern "user32" fn TranslateMessage(
 
 pub extern "user32" fn DispatchMessageW(
   lpMsg: *const wnd.MSG
-) callconv(.winapi) win.LRESULT;
+) callconv(.winapi) isize;
 
 pub extern "user32" fn UnregisterClassW(
   lpClassName: [*:0]const u16,
@@ -582,7 +617,7 @@ pub extern "user32" fn RegisterClassExW(
 ) callconv(.winapi) win.ATOM;
 
 pub extern "user32" fn AdjustWindowRectEx(
-  lpRect: *win.RECT,
+  lpRect: *RECT,
   dwStyle: win.DWORD,
   bMenu: win.BOOL,
   dwExStyle: win.DWORD
@@ -603,11 +638,13 @@ pub extern "user32" fn CreateWindowExW(
   lpParam: ?win.LPVOID
 ) callconv(.winapi) ?win.HWND;
 
+
+
 //#endregion ==================================================================
 //#region MARK: TEST
 //=============================================================================
-
-
+test " " {
+}
 
 //#endregion ==================================================================
 //=============================================================================
