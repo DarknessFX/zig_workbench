@@ -1,34 +1,42 @@
-//!zig-autodoc-section: BaseEx\\main.zig
-//! main.zig :
-//!     Template for a console program that hide the console window.
-// Build using Zig 0.15.1
+//!zig-autodoc-section: BaseEx.Main
+//! BaseEx\\main.zig :
+//!   Template for a console program that hide the console window.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-
 const std = @import("std");
+const Io = std.Io;
+var appinit: std.process.Init = undefined;
 const win = std.os.windows;
-
 const appTitle = "BaseEx";
+
+const print = std.debug.print;
+/// Print line directly when text don't need formating.
+inline fn printLine(line: []const u8) void { print("{s}\n", .{ line }); }
+
+const log = std.log.info;
+/// Log line directly when text don't need formating.
+inline fn logLine(line: []const u8) void { log("{s}\n", .{ line }); }
 
 //#endregion ==================================================================
 //#region MARK: MAIN
 //=============================================================================
+pub fn main(init: std.process.Init) !void {
+  appinit = init;
 
-pub fn main() void {
   HideConsoleWindow();
   _ = MessageBoxA(null, "Console window is hide.", appTitle, MB_OK);
 }
 
 //#endregion ==================================================================
-//#region MARK: UTIL
+//#region MARK: WINAPI
 //=============================================================================
-
 fn HideConsoleWindow() void {
   const BUF_TITLE = 1024;
   var hwndFound: win.HWND = undefined;
-  var pszWindowTitle: [BUF_TITLE:0]win.CHAR = std.mem.zeroes([BUF_TITLE:0]win.CHAR); 
+  var pszWindowTitle: [BUF_TITLE:0]win.CHAR = std.mem.zeroes([BUF_TITLE:0]win.CHAR);
 
   _ = GetConsoleTitleA(&pszWindowTitle, BUF_TITLE);
   hwndFound=FindWindowA(null, &pszWindowTitle);
@@ -59,10 +67,10 @@ pub extern "user32" fn MessageBoxA(
   uType: win.UINT
 ) callconv(.winapi) win.INT;
 
+
 //#endregion ==================================================================
 //#region MARK: TEST
 //=============================================================================
-
 test " " {
 }
 
