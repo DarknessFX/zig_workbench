@@ -124,7 +124,7 @@ it failed with duplicate symbols (added inline) and later missing functions (rem
 
 <details>
   <summary><ins>About RayLib</ins></summary>
-<pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib from source</a> (v5.0 from 20250102).</pre>
+<pre>Using <a href="https://github.com/raysan5/raylib" target="_blank">RayLib</a> and <a href="https://github.com/raysan5/raygui" target="_blank">RayGUI</a>  from source (v6.0 from 20260423).</pre>
 </details>
 
 <details>

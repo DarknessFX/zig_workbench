@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseRayLib.Main
 //! BaseRayLib//main.zig :
 //!   Template using RayLib and RayGUI.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
