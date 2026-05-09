@@ -54,11 +54,12 @@ fn style_window(ctx: *mu.mu_Context) void {
         80, sw, sw, sw, sw, -@as(c_int, 1), }))))), @as(c_int, 0));
     for (colors, 0..) |sc, i| {
       mu.mu_label(ctx, sc.label);
-      _ = slider(ctx, &ctx.*.style.*.colors[@as(c_uint, @intCast(i))].r, clow, chigh);
-      _ = slider(ctx, &ctx.*.style.*.colors[@as(c_uint, @intCast(i))].g, clow, chigh);
-      _ = slider(ctx, &ctx.*.style.*.colors[@as(c_uint, @intCast(i))].b, clow, chigh);
-      _ = slider(ctx, &ctx.*.style.*.colors[@as(c_uint, @intCast(i))].a, clow, chigh);
-      mu.mu_draw_rect(ctx, mu.mu_layout_next(ctx), ctx.*.style.*.colors[@as(c_uint, @intCast(i))]);
+      var color = &ctx.style.*.colors[0][@intCast(i)];
+      _ = slider(ctx, &color.r, clow, chigh);
+      _ = slider(ctx, &color.g, clow, chigh);
+      _ = slider(ctx, &color.b, clow, chigh);
+      _ = slider(ctx, &color.a, clow, chigh);
+      mu.mu_draw_rect(ctx, mu.mu_layout_next(ctx), ctx.*.style.*.colors[0][@as(c_uint, @intCast(i))]);
     }
     mu.mu_end_window(ctx);
   }

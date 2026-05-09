@@ -114,7 +114,10 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     var cmd: [*c]mu.mu_Command = null;
     while (mu.mu_next_command(ctx, &cmd) != 0) {
       switch (cmd.*.type) {
-        mu.MU_COMMAND_TEXT => { r_draw_text(&cmd.*.text.str, cmd.*.text.pos, cmd.*.text.color); },
+        mu.MU_COMMAND_TEXT => { 
+          const str = std.mem.span(@as([*:0]const u8, @ptrCast(&cmd.*.text.str)));
+          r_draw_text(str, cmd.*.text.pos, cmd.*.text.color); 
+        },
         mu.MU_COMMAND_RECT => { r_draw_rect(cmd.*.rect.rect, cmd.*.rect.color); },
         mu.MU_COMMAND_ICON => { r_draw_icon(cmd.*.icon.id, cmd.*.icon.rect, cmd.*.icon.color); },
         mu.MU_COMMAND_CLIP => { r_set_clip_rect(cmd.*.clip.rect); },

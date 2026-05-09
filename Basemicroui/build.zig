@@ -1,40 +1,50 @@
+//!zig-autodoc-section: BaseMicroui.Main
+//! BaseMicroui//main.zig :
+//!  Template using Microui and SDL2.
+// Build using Zig 0.15.1
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "Basemicroui";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"} // UTF-8 codepage
   });
 
   //SDL2
-  exe.addIncludePath( b.path("lib/SDL2/include") );
-  exe.addLibraryPath( b.path("lib/SDL2/") );
-  exe.linkSystemLibrary("SDL2");
-  exe.linkSystemLibrary("OpenGL32");
+  exe.root_module.addIncludePath( b.path("lib/SDL2/include") );
+  exe.root_module.addLibraryPath( b.path("lib/SDL2/") );
+  exe.root_module.linkSystemLibrary("SDL2", .{});
+  exe.root_module.linkSystemLibrary("OpenGL32", .{});
   //b.installBinFile("lib/SDL2/SDL2.dll", "SDL2.dll");
 
   // microui
-  exe.addCSourceFile(.{
+  exe.root_module.addCSourceFile(.{
     .file = b.path("lib/microui/microui.c"), 
     .flags = &.{ }
   });
-  exe.addIncludePath( b.path("lib/microui") );
-
-  exe.linkLibC();
+  exe.root_module.addIncludePath( b.path("lib/microui") );
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
@@ -45,6 +55,9 @@ pub fn build(b: *std.Build) void {
   }
   b.installArtifact(exe);
 
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -53,15 +66,20 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
   test_step.dependOn(&run_unit_tests.step);
 }
+//#endregion ==================================================================
+//=============================================================================
