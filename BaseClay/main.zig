@@ -3,8 +3,11 @@
 //!  Credits:
 //!    Clay from nicbarker - https://github.com/nicbarker/clay
 //!    Clay-zig binding from johan0A - https://github.com/johan0A/clay-zig-bindings
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const cl = @import("lib/zClay/zclay.zig");
 const renderer = @import("lib/zClay/raylib_render_clay.zig");
@@ -17,6 +20,67 @@ const white: cl.Color = .{ 250, 250, 255, 255 };
 
 const sidebar_item_layout: cl.LayoutConfig = .{ .sizing = .{ .w = .grow, .h = .fixed(50) } };
 
+//#endregion ==================================================================
+//#region MARK: MAIN
+//=============================================================================
+pub fn main() !void {
+  const allocator = std.heap.page_allocator;
+
+  // init clay
+  const min_memory_size: u32 = cl.minMemorySize();
+  const memory = try allocator.alloc(u8, min_memory_size);
+  defer allocator.free(memory);
+  const arena: cl.Arena = cl.createArenaWithCapacityAndMemory(memory);
+  _ = cl.initialize(arena, .{ .h = 720, .w = 1280 }, .{});
+  cl.setMeasureTextFunction(void, {}, renderer.measureText);
+
+  // init raylib
+  rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT | rl.FLAG_WINDOW_RESIZABLE);
+  rl.InitWindow(1280, 720, "Clay+Raylib zig Example");
+  rl.SetTargetFPS(60);
+
+  // load assets
+  try loadFont(@embedFile("./asset/Roboto-Regular.ttf"), 0, 24);
+  const profile_picture = try loadImage("./asset/profile-picture.png");
+
+  var debug_mode_enabled = false;
+  while (!rl.WindowShouldClose()) {
+    if (rl.IsKeyPressed(rl.KEY_D)) {
+      debug_mode_enabled = !debug_mode_enabled;
+      cl.setDebugModeEnabled(debug_mode_enabled);
+    }
+
+    const mouse_pos = rl.GetMousePosition();
+    cl.setPointerState(.{
+      .x = mouse_pos.x,
+      .y = mouse_pos.y,
+    }, rl.IsMouseButtonDown(rl.KEY_LEFT));
+
+    var scroll_delta = rl.GetMouseWheelMoveV();
+    scroll_delta = .{ 
+      .x = scroll_delta.x * 6, 
+      .y = scroll_delta.y * 6, };
+    cl.updateScrollContainers(
+      false,
+      .{ .x = scroll_delta.x, .y = scroll_delta.y },
+      rl.GetFrameTime(),
+    );
+
+    cl.setLayoutDimensions(.{
+      .w = @floatFromInt(rl.GetScreenWidth()),
+      .h = @floatFromInt(rl.GetScreenHeight()),
+    });
+    const render_commands = createLayout(&profile_picture);
+
+    rl.BeginDrawing();
+    try renderer.clayRaylibRender(render_commands, allocator);
+    rl.EndDrawing();
+  }
+}
+
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 // Re-useable components are just normal functions
 fn sidebarItemComponent(index: u32) void {
   cl.UI()(.{
@@ -85,57 +149,9 @@ fn loadImage(comptime path: [:0]const u8) !rl.Texture2D {
   return texture;
 }
 
-pub fn main() !void {
-  const allocator = std.heap.page_allocator;
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
 
-  // init clay
-  const min_memory_size: u32 = cl.minMemorySize();
-  const memory = try allocator.alloc(u8, min_memory_size);
-  defer allocator.free(memory);
-  const arena: cl.Arena = cl.createArenaWithCapacityAndMemory(memory);
-  _ = cl.initialize(arena, .{ .h = 720, .w = 1280 }, .{});
-  cl.setMeasureTextFunction(void, {}, renderer.measureText);
-
-  // init raylib
-  rl.SetConfigFlags(rl.FLAG_MSAA_4X_HINT | rl.FLAG_WINDOW_RESIZABLE);
-  rl.InitWindow(1280, 720, "Clay+Raylib zig Example");
-  rl.SetTargetFPS(60);
-
-  // load assets
-  try loadFont(@embedFile("./asset/Roboto-Regular.ttf"), 0, 24);
-  const profile_picture = try loadImage("./asset/profile-picture.png");
-
-  var debug_mode_enabled = false;
-  while (!rl.WindowShouldClose()) {
-    if (rl.IsKeyPressed(rl.KEY_D)) {
-      debug_mode_enabled = !debug_mode_enabled;
-      cl.setDebugModeEnabled(debug_mode_enabled);
-    }
-
-    const mouse_pos = rl.GetMousePosition();
-    cl.setPointerState(.{
-      .x = mouse_pos.x,
-      .y = mouse_pos.y,
-    }, rl.IsMouseButtonDown(rl.KEY_LEFT));
-
-    var scroll_delta = rl.GetMouseWheelMoveV();
-    scroll_delta = .{ 
-      .x = scroll_delta.x * 6, 
-      .y = scroll_delta.y * 6, };
-    cl.updateScrollContainers(
-      false,
-      .{ .x = scroll_delta.x, .y = scroll_delta.y },
-      rl.GetFrameTime(),
-    );
-
-    cl.setLayoutDimensions(.{
-      .w = @floatFromInt(rl.GetScreenWidth()),
-      .h = @floatFromInt(rl.GetScreenHeight()),
-    });
-    const render_commands = createLayout(&profile_picture);
-
-    rl.BeginDrawing();
-    try renderer.clayRaylibRender(render_commands, allocator);
-    rl.EndDrawing();
-  }
-}
+//#endregion ==================================================================
+//=============================================================================
