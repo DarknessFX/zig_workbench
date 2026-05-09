@@ -1,8 +1,11 @@
 //!zig-autodoc-section: BaseGTK\\main.zig
 //!  main.zig :
 //!  Template for aprogram using GTK4 UI.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 // NOTE: Read lib/GTK/ReadMe.md before start.
 const std = @import("std");
 const gtk = @cImport({
@@ -10,6 +13,9 @@ const gtk = @cImport({
 });
 const GtkCallback = ?*const fn() callconv(.c) void;
 
+//=============================================================================
+//#region MARK: MAIN
+//=============================================================================
 pub fn main() !void {
   var app: *gtk.GtkApplication = gtk.gtk_application_new("org.example.hello", gtk.G_APPLICATION_FLAGS_NONE);
   const gapp: *gtk.GApplication = @as(*gtk.GApplication, @ptrCast(app));
@@ -46,8 +52,19 @@ fn activate(app: ?*gtk.GtkApplication, data: ?*anyopaque) callconv(.c) void {
   gtk.gtk_widget_show(window);
 }
 
+//=============================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn button_clicked(widget: ?*gtk.GtkButton, data: ?*anyopaque) callconv(.c) void {
   _ = widget;
   _ = data;
   std.debug.print("Button clicked!\n", .{});
 }
+
+//=============================================================================
+//#region MARK: TEST
+//=============================================================================
+
+
+//#endregion ==================================================================
+//=============================================================================

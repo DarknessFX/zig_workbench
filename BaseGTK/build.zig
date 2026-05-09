@@ -1,12 +1,22 @@
+//!zig-autodoc-section: BaseGTK\\main.zig
+//!  main.zig :
+//!  Template for aprogram using GTK4 UI.
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-  //Build
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "BaseGTK";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   // Edit here with your MSYS2 path
   const msys2_root = "D:/workbench/Zig/_msys64/mingw64";
@@ -14,47 +24,46 @@ pub fn build(b: *std.Build) void {
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target =  target,
       .optimize = optimize,
+      .link_libc = true,
     }),    
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
   
-  exe.linkLibC();
+  exe.root_module.addIncludePath( b.path(".") );
+  exe.root_module.addIncludePath( b.path("lib/GTK") );
 
-  exe.addIncludePath( b.path(".") );
-  exe.addIncludePath( b.path("lib/GTK") );
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0/gtk"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0/gdk"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0/gsk"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gdk-pixbuf-2.0"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/graphene-1.0"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/glib-2.0"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/cairo"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/pango-1.0"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/pango-1.0/pango"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/harfbuzz"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "lib/glib-2.0/include"}) });
+  exe.root_module.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "lib/graphene-1.0/include"}) });
 
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0/gtk"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0/gdk"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gtk-4.0/gsk"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/gdk-pixbuf-2.0"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/graphene-1.0"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/glib-2.0"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/cairo"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/pango-1.0"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/pango-1.0/pango"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "include/harfbuzz"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "lib/glib-2.0/include"}) });
-  exe.addIncludePath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "lib/graphene-1.0/include"}) });
+  exe.root_module.addLibraryPath( b.path("lib/GTK") );
+  exe.root_module.addLibraryPath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "lib"}) });
+  exe.root_module.addLibraryPath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "bin"}) });
 
-  exe.addLibraryPath( b.path("lib/GTK") );
-  exe.addLibraryPath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "lib"}) });
-  exe.addLibraryPath( .{ .cwd_relative = b.pathJoin(&.{ msys2_root, "bin"}) });
-
-  exe.linkSystemLibrary("libgtk-4-1");
-  exe.linkSystemLibrary("libgobject-2.0-0");
-  exe.linkSystemLibrary("libglib-2.0-0");
-  exe.linkSystemLibrary("libgio-2.0-0");
-  exe.linkSystemLibrary("libpango-1.0-0");
-  exe.linkSystemLibrary("libcairo-2");
-  exe.linkSystemLibrary("libgdk_pixbuf-2.0-0");
-  exe.linkSystemLibrary("libintl-8");
+  exe.root_module.linkSystemLibrary("libgtk-4-1", .{});
+  exe.root_module.linkSystemLibrary("libgobject-2.0-0", .{});
+  exe.root_module.linkSystemLibrary("libglib-2.0-0", .{});
+  exe.root_module.linkSystemLibrary("libgio-2.0-0", .{});
+  exe.root_module.linkSystemLibrary("libpango-1.0-0", .{});
+  exe.root_module.linkSystemLibrary("libcairo-2", .{});
+  exe.root_module.linkSystemLibrary("libgdk_pixbuf-2.0-0", .{});
+  exe.root_module.linkSystemLibrary("libintl-8", .{});
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
@@ -82,7 +91,9 @@ pub fn build(b: *std.Build) void {
 
   b.installArtifact(exe);
 
-  //Run
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -91,15 +102,20 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target =  target,
       .optimize = optimize,
+      .link_libc = true,
     }),    
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
   test_step.dependOn(&run_unit_tests.step);
 }
+//#endregion ==================================================================
+//=============================================================================
