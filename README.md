@@ -117,7 +117,7 @@ error: member access within misaligned address</i> and without the
 
  <details>
   <summary><ins>About Nuklear</ins></summary>
-<pre>Using Nuklear from source (20241231).
+<pre>Using Nuklear <a href="https://github.com/Immediate-Mode-UI/Nuklear/releases/tag/v4.13.3" target="_blank">4.13.3</a> from source (20260504).
 I had to make some changes to the nuklear_gdi.h header to fix cImport errors, 
 it failed with duplicate symbols (added inline) and later missing functions (removed static).</pre>
 </details>

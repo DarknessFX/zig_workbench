@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseNuklear.Main
 //! BaseNuklear//main.zig :
 //!  Template using Nuklear UI.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -20,8 +20,8 @@ const nk = @cImport({
   @cDefine("NK_INCLUDE_STANDARD_IO", "");
   @cDefine("NK_INCLUDE_STANDARD_VARARGS", "");
   @cDefine("NK_INCLUDE_DEFAULT_ALLOCATOR", "");
-  //@cDefine("NK_IMPLEMENTATION", "");
-  @cDefine("NK_GDI_IMPLEMENTATION", "");
+  // @cDefine("NK_IMPLEMENTATION", "");
+  // @cDefine("NK_GDI_IMPLEMENTATION", "");
   @cInclude("nuklear.h");
   @cInclude("nuklear_gdi.h");
   @cDefine("NKGDI_IMPLEMENT_WINDOW", "");
@@ -63,8 +63,10 @@ pub fn wWinMain(
   nk.nkgdi_window_create(&w2, 500, 500, "F2", 520, 10);
 
   // Update both windows as long as valid
+  var threaded: std.Io.Threaded = .init_single_threaded;
+  const io = threaded.io();
   while (nk.nkgdi_window_update(&w1) != 0 and nk.nkgdi_window_update(&w2) != 0) {
-    win.kernel32.Sleep(10);
+    io.sleep(std.Io.Duration.fromMilliseconds(10), .awake) catch {};
   }
 
   // Destroy both window contexts

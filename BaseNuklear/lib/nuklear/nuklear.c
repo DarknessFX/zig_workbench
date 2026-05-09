@@ -12,5 +12,5 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #define NK_GDI_IMPLEMENTATION
 #include "nuklear.h"
 #include "nuklear_gdi.h"
-#define NKGDI_IMPLEMENT_WINDOW
-#include "window.h"
+// #define NKGDI_IMPLEMENT_WINDOW
+// #include "window.h"

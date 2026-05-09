@@ -2,11 +2,11 @@
  * Nuklear - 1.32.0 - public domain
  * no warrenty implied; use at your own risk.
  * authored from 2015-2016 by Micha Mettke
- * 
+ *
  * Modified GDI backend 2022
  * Now based on a context that is required for each API function call.
  * Removes the global state --> you can have multiple windows :-)
- * 
+ *
  */
  /*
   * ==============================================================
@@ -15,15 +15,13 @@
   *
   * ===============================================================
   */
-#include <windows.h>
-
 #ifndef NK_GDI_H_
 #define NK_GDI_H_
 
 #ifdef __cplusplus
 extern "C"{
 #endif
-
+#include <windows.h>
 typedef struct GdiFont GdiFont;
 struct _nk_gdi_ctx;
 typedef struct _nk_gdi_ctx* nk_gdi_ctx;
@@ -37,10 +35,6 @@ NK_API void nk_gdi_shutdown(nk_gdi_ctx gdi);
 NK_API GdiFont* nk_gdifont_create(const char* name, int size);
 NK_API void nk_gdifont_del(GdiFont* font);
 NK_API void nk_gdi_set_font(nk_gdi_ctx gdi, GdiFont* font);
-
-//NK_API float nk_gdifont_get_text_width(GdiFont* font, const char* text, int len);
-// NK_API static void nk_gdi_draw_text(HDC dc, short x, short y, unsigned short w, unsigned short h,
-//     const char* text, int len, GdiFont* font, struct nk_color cbg, struct nk_color cfg);
 
 #ifdef __cplusplus
 }
@@ -481,7 +475,7 @@ nk_gdi_stroke_curve(HDC dc, struct nk_vec2i p1,
     }
 }
 
-void
+static void
 nk_gdi_draw_text(HDC dc, short x, short y, unsigned short w, unsigned short h,
     const char* text, int len, GdiFont* font, struct nk_color cbg, struct nk_color cfg)
 {
@@ -519,7 +513,7 @@ nk_gdi_blit(nk_gdi_ctx gdi, HDC dc)
 
 }
 
-inline GdiFont*
+GdiFont*
 nk_gdifont_create(const char* name, int size)
 {
     TEXTMETRICW metric;
@@ -534,7 +528,7 @@ nk_gdifont_create(const char* name, int size)
     return font;
 }
 
-float
+static float
 nk_gdifont_get_text_width(nk_handle handle, float height, const char* text, int len)
 {
     GdiFont* font = (GdiFont*)handle.ptr;
@@ -552,7 +546,7 @@ nk_gdifont_get_text_width(nk_handle handle, float height, const char* text, int 
     return -1.0f;
 }
 
-inline void
+void
 nk_gdifont_del(GdiFont* font)
 {
     if (!font) return;
@@ -644,7 +638,7 @@ nk_gdi_init(nk_gdi_ctx* gdi, GdiFont* gdifont, HDC window_dc, unsigned int width
     return &(*gdi)->ctx;
 }
 
-NK_API inline void
+NK_API void
 nk_gdi_set_font(nk_gdi_ctx gdi, GdiFont* gdifont)
 {
     struct nk_user_font* font = &gdifont->nk;
@@ -657,6 +651,7 @@ nk_gdi_set_font(nk_gdi_ctx gdi, GdiFont* gdifont)
 NK_API int
 nk_gdi_handle_event(nk_gdi_ctx gdi, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    static int insert_toggle = 0;
     switch (msg)
     {
     case WM_SIZE:
@@ -704,6 +699,7 @@ nk_gdi_handle_event(nk_gdi_ctx gdi, HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
             return 1;
 
         case VK_RETURN:
+        case VK_SEPARATOR:
             nk_input_key(&gdi->ctx, NK_KEY_ENTER, down);
             return 1;
 
@@ -746,6 +742,48 @@ nk_gdi_handle_event(nk_gdi_ctx gdi, HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
         case VK_PRIOR:
             nk_input_key(&gdi->ctx, NK_KEY_SCROLL_UP, down);
             return 1;
+
+        case VK_ESCAPE:
+            nk_input_key(&gdi->ctx, NK_KEY_TEXT_RESET_MODE, down);
+            return 1;
+
+        case VK_INSERT:
+        /* Only switch on release to avoid repeat issues
+         * kind of confusing since we have to negate it but we're already
+         * hacking it since Nuklear treats them as two separate keys rather
+         * than a single toggle state */
+            if (!down) {
+                insert_toggle = !insert_toggle;
+                if (insert_toggle) {
+                    nk_input_key(&gdi->ctx, NK_KEY_TEXT_INSERT_MODE, !down);
+                    /* nk_input_key(&gdi->ctx, NK_KEY_TEXT_REPLACE_MODE, down); */
+                } else {
+                    nk_input_key(&gdi->ctx, NK_KEY_TEXT_REPLACE_MODE, !down);
+                    /* nk_input_key(&gdi->ctx, NK_KEY_TEXT_INSERT_MODE, down); */
+                }
+            }
+            return 1;
+
+        case 'A':
+            if (ctrl) {
+                nk_input_key(&gdi->ctx, NK_KEY_TEXT_SELECT_ALL, down);
+                return 1;
+            }
+            break;
+
+        case 'B':
+            if (ctrl) {
+                nk_input_key(&gdi->ctx, NK_KEY_TEXT_LINE_START, down);
+                return 1;
+            }
+            break;
+
+        case 'E':
+            if (ctrl) {
+                nk_input_key(&gdi->ctx, NK_KEY_TEXT_LINE_END, down);
+                return 1;
+            }
+            break;
 
         case 'C':
             if (ctrl) {
@@ -821,6 +859,30 @@ nk_gdi_handle_event(nk_gdi_ctx gdi, HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 
     case WM_MBUTTONUP:
         nk_input_button(&gdi->ctx, NK_BUTTON_MIDDLE, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+        ReleaseCapture();
+        return 1;
+
+    case WM_XBUTTONDOWN:
+        switch (GET_XBUTTON_WPARAM(wparam)) {
+        case XBUTTON1:
+            nk_input_button(&gdi->ctx, NK_BUTTON_X1, (short)LOWORD(lparam), (short)HIWORD(lparam), 1);
+            break;
+        case XBUTTON2:
+            nk_input_button(&gdi->ctx, NK_BUTTON_X2, (short)LOWORD(lparam), (short)HIWORD(lparam), 1);
+            break;
+        }
+        SetCapture(wnd);
+        return 1;
+
+    case WM_XBUTTONUP:
+        switch (GET_XBUTTON_WPARAM(wparam)) {
+        case XBUTTON1:
+            nk_input_button(&gdi->ctx, NK_BUTTON_X1, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+            break;
+        case XBUTTON2:
+            nk_input_button(&gdi->ctx, NK_BUTTON_X2, (short)LOWORD(lparam), (short)HIWORD(lparam), 0);
+            break;
+        }
         ReleaseCapture();
         return 1;
 

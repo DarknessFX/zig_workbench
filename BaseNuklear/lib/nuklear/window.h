@@ -3,6 +3,8 @@
 
 #define NK_GDI_WINDOW_CLS L"WNDCLS_NkGdi"
 
+#include <windows.h>
+
 /* Functin pointer types for window callbacks */
 typedef int(*nkgdi_window_func_close)(void);
 typedef int(*nkgdi_window_func_draw)(struct nk_context*);
@@ -72,7 +74,7 @@ LRESULT CALLBACK nkgdi_window_proc_setup(HWND wnd, UINT msg, WPARAM wParam, LPAR
 /* This proc will take the window context pointer and performs operations on it*/
 LRESULT CALLBACK nkgdi_window_proc_run(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-inline void nkgdi_window_init(void)
+void nkgdi_window_init(void)
 {
     /* Describe the window class */
     WNDCLASSEXW cls;
@@ -93,13 +95,13 @@ inline void nkgdi_window_init(void)
     RegisterClassExW(&cls);
 }
 
-inline void nkgdi_window_shutdown(void)
+void nkgdi_window_shutdown(void)
 {
     /* Windows class no longer required, unregister it */
     UnregisterClassW(NK_GDI_WINDOW_CLS, GetModuleHandle(NULL));
 }
 
-inline void nkgdi_window_create(struct nkgdi_window* wnd, unsigned int width, unsigned int height, const char* name, int posX, int posY)
+void nkgdi_window_create(struct nkgdi_window* wnd, unsigned int width, unsigned int height, const char* name, int posX, int posY)
 {
     DWORD styleEx = WS_EX_WINDOWEDGE;
     DWORD style = WS_POPUP;
@@ -108,8 +110,8 @@ inline void nkgdi_window_create(struct nkgdi_window* wnd, unsigned int width, un
     RECT cr;
     cr.left = 0;
     cr.top = 0;
-    cr.right = width;
-    cr.bottom = height;
+    cr.right = (nk_byte)width;
+    cr.bottom = (nk_byte)height;
     AdjustWindowRectEx(&cr, style, FALSE, styleEx);
 
     /* Create the new window */
@@ -148,7 +150,7 @@ inline void nkgdi_window_create(struct nkgdi_window* wnd, unsigned int width, un
     wnd->_internal.height = height;
 }
 
-inline void nkgdi_window_destroy(struct nkgdi_window* wnd)
+void nkgdi_window_destroy(struct nkgdi_window* wnd)
 {
     /* Destroy all objects in reverse order */
     if (wnd->_internal.nk_gdi_ctx)
@@ -170,7 +172,7 @@ inline void nkgdi_window_destroy(struct nkgdi_window* wnd)
     }
 }
 
-inline int nkgdi_window_update(struct nkgdi_window* wnd)
+int nkgdi_window_update(struct nkgdi_window* wnd)
 {
     /* The window will only be updated when it is open / valid */
     if (wnd->_internal.is_open)
@@ -230,14 +232,13 @@ inline int nkgdi_window_update(struct nkgdi_window* wnd)
     return wnd->_internal.is_open;
 }
 
-inline LRESULT CALLBACK nkgdi_window_proc_setup(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK nkgdi_window_proc_setup(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     /* Waiting to receive the NCCREATE message with the custom window data */
     if (msg == WM_NCCREATE)
     {
         /* Extracting the window context from message parameters */
-        size_t uParam = (size_t)lParam;
-        CREATESTRUCT* ptrCr = (CREATESTRUCT*)uParam;
+        CREATESTRUCT* ptrCr = (CREATESTRUCT*)lParam;
         struct nkgdi_window* nkgdi_wnd = (struct nkgdi_window*)ptrCr->lpCreateParams;
 
         /* Store the context in the window and redirect any further message to the run window proc*/
@@ -252,10 +253,10 @@ inline LRESULT CALLBACK nkgdi_window_proc_setup(HWND wnd, UINT msg, WPARAM wPara
     return DefWindowProc(wnd, msg, wParam, lParam);
 }
 
-inline LRESULT CALLBACK nkgdi_window_proc_run(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK nkgdi_window_proc_run(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     /* The window context is extracted from the window data */
-    struct nkgdi_window* nkwnd = (struct nkgdi_window*)(size_t)GetWindowLongPtrW(wnd, GWLP_USERDATA);
+    struct nkgdi_window* nkwnd = (struct nkgdi_window*)GetWindowLongPtrW(wnd, GWLP_USERDATA);
 
     /* Switch on the message code to handle all required messages */
     switch (msg)
