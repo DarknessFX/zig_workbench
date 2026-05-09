@@ -1,12 +1,11 @@
 //!zig-autodoc-section: BaseFLTK\\main.zig
 //!  main.zig :
 //!    Template for a program using FLTK (via cFLTK).
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-
 const std = @import("std");
 const fl = @cImport({
   @cInclude("lib/CFLTK/include/cFl.h");
