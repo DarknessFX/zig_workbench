@@ -1,22 +1,33 @@
+//!zig-autodoc-section: BaseLibpng.Build
+//! BaseLibpng\\build.zig :
+//!   Template for a program using libpng 1.6.50 .
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-  //Build
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "BaseLibpng";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),    
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
@@ -62,18 +73,19 @@ pub fn build(b: *std.Build) void {
     "lib/zlib/zutil.c",
   };
   inline for (c_srcs) |c_cpp| {
-    exe.addCSourceFile(.{
+    exe.root_module.addCSourceFile(.{
       .file = b.path(c_cpp), 
       .flags = &.{ "-std=c89" }
     });
   }
 
-  exe.addIncludePath( b.path(".") );
-  exe.addIncludePath( b.path("lib/zlib") );
-  exe.linkLibC();  
+  exe.root_module.addIncludePath( b.path(".") );
+  exe.root_module.addIncludePath( b.path("lib/zlib") );
   b.installArtifact(exe);
 
-  //Run
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -82,15 +94,20 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
   test_step.dependOn(&run_unit_tests.step);
 }
+//#endregion ==================================================================
+//=============================================================================
