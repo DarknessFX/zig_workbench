@@ -1,3 +1,11 @@
+//!zig-autodoc-section: BaseSDL3ImGui.Main
+//! BaseSDL3ImGui\\main.zig :
+//!   Template using SDL3 and Dear ImGui.
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 pub extern fn main() void; // Zig Main, ignored, using SDL3
 
@@ -28,7 +36,6 @@ var renderer: *sdl.SDL_Renderer = undefined;
 var context: sdl.SDL_GLContext = undefined;
 var cwindow: *im.SDL_Window = undefined;
 
-
 var show_demo_window: bool = true;
 var show_another_window: bool = false;
 const show_memedit_window = true;
@@ -57,7 +64,9 @@ var clear_color: im.ImVec4 = im.ImVec4{.x=0.45, .y=0.55, .z=0.60, .w=1.00};
 var f: f32 = 0.0;
 var counter: u16 = 0;
 
-
+//=============================================================================
+//#region MARK: INIT
+//=============================================================================
 //* This function runs once at startup. */
 pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sdl.SDL_AppResult {
   _ = appstate; _ = argc; _ = argv;
@@ -128,6 +137,9 @@ pub export fn SDL_AppInit(appstate: ?*anyopaque, argc: c_int, argv: [*][*]u8) sd
   return sdl.SDL_APP_CONTINUE; // carry on with the program!
 }
 
+//=============================================================================
+//#region MARK: EVENTS
+//=============================================================================
 //* This function runs when a new event (mouse input, keypresses, etc) occurs. */
 pub export fn SDL_AppEvent(appstate: ?*anyopaque, event: *sdl.SDL_Event) sdl.SDL_AppResult {
   _ = appstate;
@@ -146,6 +158,9 @@ pub export fn SDL_AppEvent(appstate: ?*anyopaque, event: *sdl.SDL_Event) sdl.SDL
   return sdl.SDL_APP_CONTINUE; // carry on with the program
 }
 
+//=============================================================================
+//#region MARK: LOOP
+//=============================================================================
 //* This function runs once per frame, and is the heart of the program. */
 pub export fn SDL_AppIterate(appstate: ?*anyopaque) sdl.SDL_AppResult {
   _ = appstate;
@@ -215,6 +230,9 @@ pub export fn SDL_AppIterate(appstate: ?*anyopaque) sdl.SDL_AppResult {
   return sdl.SDL_APP_CONTINUE; // carry on with the program
 }
 
+//=============================================================================
+//#region MARK: QUIT
+//=============================================================================
 //* This function runs once at shutdown. */
 pub export fn SDL_AppQuit(appstate: ?*anyopaque, result: sdl.SDL_AppResult) void {
   _ = appstate; _ = result;
@@ -229,6 +247,16 @@ pub export fn SDL_AppQuit(appstate: ?*anyopaque, result: sdl.SDL_AppResult) void
   //* SDL will clean up the window/renderer for us. */
 }
 
+//=============================================================================
+//#region MARK: UTIL
+//=============================================================================
 fn toCInt(value: f32) c_int {
   return @as(c_int, @intFromFloat(value));
 }
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
+
+//#endregion ==================================================================
+//=============================================================================
