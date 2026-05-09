@@ -1,33 +1,45 @@
+//!zig-autodoc-section: BaseCUDA.Main
+//!   BaseCUDA, template for Nvidia CUDA program.
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-  //Build
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "BaseCUDA";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
   
 // ===========
   std.log.info("1) Compiling lib\\cuda.dll.", .{});
-  const cwd: []u8 = std.process.getCwd(b.allocator.alloc(u8, 256) catch unreachable) catch unreachable;
-  std.fs.makeDirAbsolute(fmt("{s}\\{s}", .{cwd, "lib"})) catch  { };
+  const cwd: []u8 = @constCast(b.build_root.path orelse ".");
+  var io_impl: std.Io.Threaded = .init_single_threaded;
+  const io = io_impl.io();
+  std.Io.Dir.createDirAbsolute(io, fmt("{s}\\{s}", .{cwd, "lib"}), .default_dir) catch  { };
 
   const lib_path = fmt("{s}\\lib", .{ cwd });
   const compileCUDAstep = b.addSystemCommand(&.{ "CMD", "/S", "/C", "CALL",
-    "D:\\Program Files\\Visual_Studio\\VC\\Auxiliary\\Build\\vcvars64.bat",
+    "D:\\Program Files\\VisualStudio\\VC\\Auxiliary\\Build\\vcvars64.bat",
     "&",
     "nvcc",
     "--shared", "-allow-unsupported-compiler", 
@@ -39,9 +51,8 @@ pub fn build(b: *std.Build) void {
   b.getInstallStep().dependOn(&compileCUDAstep.step);
 // ===========
 
-  exe.addLibraryPath( b.path("lib") );
-  exe.linkSystemLibrary("cuda");
-  exe.linkLibC();
+  exe.root_module.addLibraryPath( b.path("lib") );
+  exe.root_module.linkSystemLibrary("cuda", .{});
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
@@ -64,7 +75,9 @@ pub fn build(b: *std.Build) void {
   copyDLL.step.dependOn(&compileCUDAstep.step);
 // ===========
 
-  //Run
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -73,12 +86,15 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
@@ -86,6 +102,13 @@ pub fn build(b: *std.Build) void {
   test_step.dependOn(&run_unit_tests.step);
 }
 
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
 inline fn fmt(comptime format: []const u8, args: anytype) []u8 {
   return std.fmt.allocPrint(std.heap.page_allocator, format, args) catch unreachable; 
 }
+
+
+//#endregion ==================================================================
+//=============================================================================

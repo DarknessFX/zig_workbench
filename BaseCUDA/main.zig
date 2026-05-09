@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseCUDA.Main
 //!   BaseCUDA, template for Nvidia CUDA program.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
