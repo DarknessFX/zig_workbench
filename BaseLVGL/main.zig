@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseLVGL.Main
 //! BaseLVGL//main.zig :
 //!  Template using LVGL.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -17,6 +17,8 @@ pub const lv = @cImport({
 });
 
 // NOTE: 
+//  Manually edited lv_text.h, line 159, replaced uint8_t to size_t to fix a 0.16 translate-c error.
+//
 // - Get Demos and Examples folders from https://github.com/lvgl/lvgl 
 // - Need to add all .C files for demos or examples to work.
 //

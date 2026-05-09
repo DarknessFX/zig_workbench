@@ -1,7 +1,17 @@
+//!zig-autodoc-section: BaseLVGL.Build
+//! BaseLVGL//build.zig :
+//!  Template using LVGL.
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-  //Build
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
@@ -14,18 +24,19 @@ pub fn build(b: *std.Build) void {
       .root_source_file = b.path(rootfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
-  exe.addIncludePath( b.path("."));
-  exe.addIncludePath( b.path("lib/lvgl"));
-  exe.addIncludePath( b.path("lib/lvgl/src"));
-  exe.addIncludePath( b.path("lib/lvgl_drv/"));
-  exe.linkSystemLibrary("GDI32");
+  exe.root_module.addIncludePath( b.path("."));
+  exe.root_module.addIncludePath( b.path("lib/lvgl"));
+  exe.root_module.addIncludePath( b.path("lib/lvgl/src"));
+  exe.root_module.addIncludePath( b.path("lib/lvgl_drv/"));
+  exe.root_module.linkSystemLibrary("GDI32", .{});
 
   const c_srcs = .{
     "lib/lvgl/src/core/lv_group.c",
@@ -159,17 +170,17 @@ pub fn build(b: *std.Build) void {
     "lib/lvgl/src/widgets/tileview/lv_tileview.c",
     "lib/lvgl/src/widgets/win/lv_win.c"
   };
-  exe.addCSourceFile(.{
+  exe.root_module.addCSourceFile(.{
     .file = b.path("lib/lvgl/src/lv_init.c"), 
     .flags = &.{ "-Wno-implicit-function-declaration" }
   });
   inline for (c_srcs) |c_cpp| {
-    exe.addCSourceFile(.{
+    exe.root_module.addCSourceFile(.{
       .file = b.path(c_cpp),
       .flags = &.{ }
     });
   }
-  exe.addCSourceFile(.{
+  exe.root_module.addCSourceFile(.{
     .file  = b.path("lib/lvgl_drv/win32drv.c"),
     .flags = &.{ 
       "-Wno-macro-redefined", 
@@ -180,7 +191,6 @@ pub fn build(b: *std.Build) void {
       "-Wno-int-to-pointer-cast" 
     }
   });
-  exe.linkLibC();
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
@@ -191,7 +201,9 @@ pub fn build(b: *std.Build) void {
   }
   b.installArtifact(exe);
 
-  //Run
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -200,15 +212,20 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
       .root_source_file = b.path(rootfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
   test_step.dependOn(&run_unit_tests.step);
 }
+//#endregion ==================================================================
+//=============================================================================

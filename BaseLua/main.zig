@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseLua\\main.zig
 //! main.zig :
 //!  Template for Lua program.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
