@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseSDL2\\main.zig
 //! main.zig :
 //!  Template using SDL2 framework.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -31,7 +31,9 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
     orelse undefined;
   defer sdl.SDL_DestroyWindow(window);
 
-  win.kernel32.Sleep(3000);
+  var threaded: std.Io.Threaded = .init_single_threaded;
+  const io = threaded.io();
+  io.sleep(std.Io.Duration.fromMilliseconds(3000), .awake) catch {};
 
   return 0;    
 }

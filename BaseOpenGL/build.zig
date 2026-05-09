@@ -1,31 +1,37 @@
+//!zig-autodoc-section: BaseOpenGL.Main
+//! BaseOpenGL//main.zig :
+//!   Template using OpenGL and Windows GDI.
+// Build using Zig 0.16.0
+
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-  //Build
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "BaseOpenGL";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file  = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
-  exe.addIncludePath(b.path("."));
-  exe.addIncludePath(b.path("lib/opengl"));
-  exe.linkSystemLibrary("OpenGL32");
-
-  exe.linkLibC();
+  exe.root_module.addIncludePath(b.path("."));
+  exe.root_module.addIncludePath(b.path("lib/opengl"));
+  exe.root_module.linkSystemLibrary("OpenGL32", .{});
 
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
@@ -36,7 +42,9 @@ pub fn build(b: *std.Build) void {
   }
   b.installArtifact(exe);
 
-  //Run
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -45,15 +53,21 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
   const run_unit_tests = b.addRunArtifact(unit_tests);
   const test_step = b.step("test", "Run unit tests");
   test_step.dependOn(&run_unit_tests.step);
 }
+//#endregion ==================================================================
+//=============================================================================

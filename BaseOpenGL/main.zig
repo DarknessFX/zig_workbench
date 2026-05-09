@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseOpenGL.Main
 //! BaseOpenGL//main.zig :
 //!   Template using OpenGL and Windows GDI.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 // Port from https://www.opengl.org/archives/resources/code/samples/win32_tutorial/animate.c
 // An example of an OpenGL animation loop using the Win32 API. Also
@@ -30,7 +30,7 @@ var g_height: i32 = 720;
 var wnd: win.HWND = undefined;
 const wnd_title = L("BaseOpenGL");
 const wnd_classname = wnd_title ++ L("_class");
-var wnd_size: win.RECT = .{ .left=0, .top=0, .right=1280, .bottom=720 };
+var wnd_size: RECT = .{ .left=0, .top=0, .right=1280, .bottom=720 };
 var wnd_dc: win.HDC = undefined;
 var wnd_dpi: win.UINT = 96;
 var wnd_palette: ?HPALETTE = null;
@@ -73,7 +73,7 @@ pub export fn WinMain(hInstance: win.HINSTANCE, hPrevInstance: ?win.HINSTANCE,
   var done: bool = false;
   var msg: MSG = std.mem.zeroes(MSG);
   while (!done) {
-    while (PeekMessageW(&msg, null, 0, 0, PM_REMOVE) != 0) {
+    while (PeekMessageW(&msg, null, 0, 0, PM_REMOVE) != win.BOOL.FALSE) {
       _ = TranslateMessage(&msg);
       _ = DispatchMessageW(&msg);
       if (msg.message == WM_QUIT) { done = true; }
@@ -112,7 +112,7 @@ fn glDisplay() void {
   _ = SwapBuffers(wnd_dc);
 }
 
-fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM ) callconv(.winapi) win.LRESULT {
+fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: WPARAM, lParam: LPARAM ) callconv(.winapi) LRESULT {
   switch (uMsg) {
     WM_DESTROY,
     WM_CLOSE => {
@@ -145,7 +145,7 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
       }
     },
     WM_ACTIVATE => {
-      if (IsIconic(wnd) != 0) {
+      if (IsIconic(wnd) != win.BOOL.FALSE) {
         gl_anim = gl.GL_FALSE;
       } else {
         gl_anim = gl.GL_TRUE;
@@ -155,7 +155,7 @@ fn WindowProc( hWnd: win.HWND, uMsg: win.UINT, wParam: win.WPARAM, lParam: win.L
     WM_QUERYNEWPALETTE => {
       if (wnd_palette != null) {
         _ = UnrealizeObject(ToWinObj(HGDIOBJ, &wnd_palette));
-        _ = SelectPalette(wnd_dc, ToWinObj(HPALETTE, &wnd_palette), win.FALSE);
+        _ = SelectPalette(wnd_dc, ToWinObj(HPALETTE, &wnd_palette), win.BOOL.FALSE);
         _ = RealizePalette(wnd_dc);
         return 1;
       }
@@ -229,7 +229,7 @@ fn CreateWindowOpenGL(hInstance: win.HINSTANCE, x: c_int, y: c_int,
   lpPal.palPalEntry[3].peFlags = gl.PC_NOCOLLAPSE;
 
   const new_palette = CreatePalette(&lpPal).?;
-  wnd_palette = SelectPalette(wnd_dc, new_palette, win.FALSE);
+  wnd_palette = SelectPalette(wnd_dc, new_palette, win.BOOL.FALSE);
   _ = RealizePalette(wnd_dc);
   _ = ReleaseDC(wnd, wnd_dc);
 
@@ -248,6 +248,20 @@ fn HIWORD(l: win.LONG_PTR) win.UINT { return (@as(u32, @intCast(l)) >> 16) & 0xF
 //#endregion ==================================================================
 //#region MARK: CONST
 //=============================================================================
+pub const RECT = extern struct {
+  left:   win.LONG,
+  top:    win.LONG,
+  right:  win.LONG,
+  bottom: win.LONG,
+};
+pub const WPARAM = usize;
+pub const LPARAM = isize;
+pub const LRESULT = isize;
+pub const POINT = extern struct {
+  x: win.LONG,
+  y: win.LONG,
+};
+
 const VK_ESCAPE = 27;
 const VK_LSHIFT = 160;
 const PM_REMOVE = 0x0001;
@@ -302,7 +316,7 @@ var ps: PAINTSTRUCT = undefined;
 pub const PAINTSTRUCT = extern struct {
   hdc: win.HDC,
   fErase: win.BOOL,
-  rcPaint: win.RECT,
+  rcPaint: RECT,
   fRestore: win.BOOL,
   fIncUpdate: win.BOOL,
   rgbReserved: [32]win.BYTE
@@ -326,9 +340,9 @@ const WNDCLASSEXW = extern struct {
 const WNDPROC = *const fn (
   hwnd: win.HWND, 
   uMsg: win.UINT, 
-  wParam: win.WPARAM, 
-  lParam: win.LPARAM
-) callconv(.winapi) win.LRESULT;
+  wParam: WPARAM, 
+  lParam: LPARAM
+) callconv(.winapi) LRESULT;
 
 //#endregion ==================================================================
 //#region MARK: WNIAPI
@@ -359,7 +373,7 @@ pub extern "user32" fn BeginPaint(
 
 pub extern "user32" fn FillRect(
   hDC: ?win.HDC,
-  lprc: ?*const win.RECT,
+  lprc: ?*const RECT,
   hbr: ?HBRUSH
 ) callconv(.winapi) win.INT;
 
@@ -393,7 +407,7 @@ pub extern "kernel32" fn OutputDebugStringA(
 
 pub extern "user32" fn GetWindowRect(
   hWnd: win.HWND,
-  lpRect: *win.RECT
+  lpRect: *RECT
 ) callconv(.winapi) win.INT;
 
 pub const SM_CXSCREEN = 0;
@@ -421,8 +435,8 @@ pub extern "user32" fn SetWindowPos(
 pub extern "user32" fn PostMessageW(
   hWnd: ?win.HWND,
   Msg: win.UINT,
-  wParam: win.WPARAM,
-  lParam: win.LPARAM
+  wParam: WPARAM,
+  lParam: LPARAM
 ) callconv(.winapi) win.BOOL;
 
 pub extern "user32" fn IsIconic(
@@ -487,10 +501,10 @@ extern "user32" fn UpdateWindow(
 const MSG = extern struct {
   hWnd: ?win.HWND,
   message: win.UINT,
-  wParam: win.WPARAM,
-  lParam: win.LPARAM,
+  wParam: WPARAM,
+  lParam: LPARAM,
   time: win.DWORD,
-  pt: win.POINT,
+  pt: POINT,
   lPrivate: win.DWORD,
 };
 
@@ -508,7 +522,7 @@ extern "user32" fn TranslateMessage(
 
 extern "user32" fn DispatchMessageW(
   lpMsg: *const MSG
-) callconv(.winapi) win.LRESULT;
+) callconv(.winapi) LRESULT;
 
 extern "user32" fn UnregisterClassW(
   lpClassName: [*:0]const u16, 
@@ -572,7 +586,7 @@ pub extern "gdi32" fn SwapBuffers(hdc: ?win.HDC) callconv(.winapi) bool;
 pub extern "gdi32" fn wglCreateContext(hdc: ?win.HDC) callconv(.winapi) ?win.HGLRC;
 pub extern "gdi32" fn wglMakeCurrent(hdc: ?win.HDC, hglrc: ?win.HGLRC) callconv(.winapi) bool;
 pub extern "user32" fn PostQuitMessage(nExitCode: i32) callconv(.winapi) void;
-pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: win.WPARAM, lParam: win.LPARAM) callconv(.winapi) win.LRESULT;
+pub extern "user32" fn DefWindowProcW(hWnd: win.HWND, Msg: win.UINT, wParam: WPARAM, lParam: LPARAM) callconv(.winapi) LRESULT;
 
 //#endregion ==================================================================
 //#region MARK: TEST
