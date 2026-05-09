@@ -156,7 +156,7 @@ void _lv_text_encoded_letter_next_2(const char * txt, uint32_t * letter, uint32_
  */
 static inline bool _lv_text_is_break_char(uint32_t letter)
 {
-    uint8_t i;
+    size_t i;
     bool ret = false;
 
     /*Compare the letter to TXT_BREAK_CHARS*/
