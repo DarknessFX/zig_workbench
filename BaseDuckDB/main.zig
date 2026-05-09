@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseDuckDB\\main.zig
 //! main.zig :
 //!  Template for a DuckDB database program.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -72,58 +72,6 @@ pub fn main() !u8 {
       duk.duckdb_free(val);
     }
     std.debug.print("\n", .{});
-  }
-
-  return 0;
-}
-
-
-pub fn main1() !u8 {
-  //  HideConsoleWindow();
-  // Initialize database
-  var db: duk.duckdb_database = std.mem.zeroes(duk.duckdb_database);
-  if (duk.duckdb_open(null, &db) != duk.DuckDBSuccess) return error.DuckDBOpenFailed;
-  defer duk.duckdb_close(&db);
-
-  // Create a connection
-  var conn: duk.duckdb_connection = std.mem.zeroes(duk.duckdb_connection);
-  if (duk.duckdb_connect(db, &conn) != duk.DuckDBSuccess) return error.DuckDBConnectFailed;
-  defer duk.duckdb_disconnect(&conn);
-
-  // Execute a query
-  var result: duk.duckdb_result = std.mem.zeroes(duk.duckdb_result);
-  const query = "SELECT 'Hello, DuckDB!' as greeting";
-  if (duk.duckdb_query(conn, query, &result) != duk.DuckDBSuccess) return error.DuckDBQueryFailed;
-  defer duk.duckdb_destroy_result(&result);
-
-  // Print results
-  var row_count: u64 = 0;
-  //if (duk.duckdb_row_count(&result) != duk.DuckDBSuccess) return error.DuckDBRowCountFailed;
-  row_count = duk.duckdb_row_count(&result);
-
-  if (row_count > 0) {
-    var column_count: u64 = 0;
-    //if (duk.duckdb_column_count(&result) != duk.DuckDBSuccess) return error.DuckDBColumnCountFailed;
-    column_count = duk.duckdb_column_count(&result);
-
-    var values = std.ArrayList([*c]const u8).init(std.heap.page_allocator);
-    defer values.deinit();
-
-    for (0..column_count) |col| {
-      const value: u64 = std.mem.zeroes(u64);
-      _ = duk.duckdb_column_data(&result, value);
-      if (duk.duckdb_value_varchar(&result, col, row_count) != duk.DuckDBSuccess) {
-        return error.DuckDBValueFailed;
-      }
-      try values.append(value);
-    }
-
-    for (values.items) |value| {
-      std.debug.print("{any}\t{any}\t{any}\t", .{result, result.internal_data, value});
-    }
-    std.debug.print("\n", .{});
-  } else {
-    std.debug.print("No results\n", .{});
   }
 
   return 0;
