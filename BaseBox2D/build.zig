@@ -1,28 +1,39 @@
+//!zig-autodoc-section: BaseBox2D.Build
+//! BaseBox2D\\build.zig :
+//!   Build Template using Box2D.
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-  //Build
+//#endregion ==================================================================
+//#region MARK: INSTALL
+//=============================================================================
   const target = b.standardTargetOptions(.{});
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "BaseBox2D";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
   
-  exe.addIncludePath( b.path(".") );
-  exe.addIncludePath( b.path("lib") );
+  exe.root_module.addIncludePath( b.path(".") );
+  exe.root_module.addIncludePath( b.path("lib") );
 
   const c_srcs = .{
     "lib/box2d/src/aabb.c", 
@@ -60,14 +71,12 @@ pub fn build(b: *std.Build) void {
     "lib/box2d/src/world.c", 
   };
   inline for (c_srcs) |c_cpp| {
-    exe.addCSourceFile(.{
+    exe.root_module.addCSourceFile(.{
       .file  = b.path(c_cpp), 
-      .flags = &.{ }
+      .flags = &.{ },
     });
   }
 
-  exe.linkLibC();
-  
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
     .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
@@ -77,7 +86,9 @@ pub fn build(b: *std.Build) void {
   }
   b.installArtifact(exe);
 
-  //Run
+//#endregion ==================================================================
+//#region MARK: RUN
+//=============================================================================
   const run_cmd = b.addRunArtifact(exe);
   run_cmd.step.dependOn(b.getInstallStep());
   if (b.args) |args| {
@@ -86,10 +97,12 @@ pub fn build(b: *std.Build) void {
   const run_step = b.step("run", "Run the app");
   run_step.dependOn(&run_cmd.step);
 
-  //Tests
+//#endregion ==================================================================
+//#region MARK: TEST
+//=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
     }),
@@ -98,3 +111,5 @@ pub fn build(b: *std.Build) void {
   const test_step = b.step("test", "Run unit tests");
   test_step.dependOn(&run_unit_tests.step);
 }
+//#endregion ==================================================================
+//=============================================================================

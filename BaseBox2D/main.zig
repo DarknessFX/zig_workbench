@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseBox2D\\main.zig
 //! main.zig :
-//!  Template for a console program that hide the console window.
-// Build using Zig 0.15.1
+//!  Template using Box2D.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -28,7 +28,7 @@ const BOX_COUNT: c_int = 10;
 //#endregion ==================================================================
 //#region MARK: MAIN
 //=============================================================================
-pub fn main() u8 {
+pub fn main(init: std.process.Init) void {
   //HideConsoleWindow();
   const lengthUnitsPerMeter = 128.0;
   box.b2SetLengthUnitsPerMeter(lengthUnitsPerMeter);
@@ -78,11 +78,9 @@ pub fn main() u8 {
         groundEntities[j].extent.x, 
         groundEntities[j].extent.y });
     }
-    win.kernel32.Sleep(@intFromFloat(16 * std.time.ns_per_ms));
+    init.io.sleep(std.Io.Duration.fromMilliseconds(16), .real) catch unreachable;
     i += 1;
   }
-
-  return 0;
 }
 
 //#endregion ==================================================================
