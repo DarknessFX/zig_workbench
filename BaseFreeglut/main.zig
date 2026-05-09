@@ -1,12 +1,11 @@
 //!zig-autodoc-section: BaseFreeglut.Main
 //! BaseFreeglut\\main.zig :
 //!   Template for a program using freeglut.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-
 const std = @import("std");
 const fg = @cImport({
   @cInclude("lib/freeglut/include/GL/freeglut.h");
@@ -15,7 +14,6 @@ const fg = @cImport({
 //#endregion ==================================================================
 //#region MARK: MAIN
 //=============================================================================
-
 fn display() callconv(.c) void {
   fg.glClear(fg.GL_COLOR_BUFFER_BIT);
   fg.glColor3f(1.0, 0.0, 0.0);
@@ -46,7 +44,6 @@ pub fn main() void {
 //#endregion ==================================================================
 //#region MARK: TEST
 //=============================================================================
-
 test " " { }
 
 //#endregion ==================================================================

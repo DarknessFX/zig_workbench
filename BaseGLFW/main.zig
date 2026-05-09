@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseGLFW.Main
 //! BaseGLFW//main.zig :
 //!   Template using GLFW3.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
