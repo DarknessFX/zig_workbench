@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseOpenGL.Main
 //! BaseOpenGL//main.zig :
 //!   Template using OpenGL and Windows GDI.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 // Port from https://www.opengl.org/archives/resources/code/samples/win32_tutorial/minimal.c
 // An example of the minimal Win32 & OpenGL program.  It only works in

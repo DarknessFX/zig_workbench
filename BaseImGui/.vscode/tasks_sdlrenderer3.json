@@ -43,7 +43,7 @@
   },
   {
     "label": "Zig: Run main",
-    "args": [  "run", "-lc++", "-lgdi32", "-ldwmapi", "-lSDL3", "-L", "lib/SDL3", "-I", "lib/SDL3/include", "main.zig",
+    "args": [  "run", "-lc++", "-lgdi32", "-ldwmapi", "-lSDL3", "-L", "lib/SDL3","-I", "lib/SDL3/include", "-Ilib/imgui", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_sdl3.cpp",
     "lib/imgui/dcimgui_impl_sdlrenderer3.cpp",
@@ -62,7 +62,7 @@
   },
   {
     "label": "Zig: Run main (With Args)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3", "-I", "lib/SDL3/include", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3","-I", "lib/SDL3/include", "-Ilib/imgui", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_sdl3.cpp",
     "lib/imgui/dcimgui_impl_sdlrenderer3.cpp",
@@ -80,7 +80,7 @@
   },
   {
     "label": "Zig: Run main (Fast)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3", "-I", "lib/SDL3/include", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3","-I", "lib/SDL3/include", "-Ilib/imgui", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_sdl3.cpp",
     "lib/imgui/dcimgui_impl_sdlrenderer3.cpp",
@@ -98,7 +98,7 @@
   },
   {
     "label": "Zig: Run main (Safe)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3", "-I", "lib/SDL3/include", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3","-I", "lib/SDL3/include", "-Ilib/imgui", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_sdl3.cpp",
     "lib/imgui/dcimgui_impl_sdlrenderer3.cpp",
@@ -116,7 +116,7 @@
   },
   {
     "label": "Zig: Run main (Small)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3", "-I", "lib/SDL3/include", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi",  "-lopengl32", "-lSDL3", "-L", "lib/SDL3","-I", "lib/SDL3/include", "-Ilib/imgui", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_sdl3.cpp",
     "lib/imgui/dcimgui_impl_sdlrenderer3.cpp",

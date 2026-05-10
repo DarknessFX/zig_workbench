@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseVulkan
 //!  Template for a Vulkan program using only Win32 Api, without GLFW3.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 // NOTE: Edit tasks.json and build.zig replacing hard coded paths to Vulkan SDK folder.
 

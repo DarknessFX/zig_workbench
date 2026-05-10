@@ -53,7 +53,7 @@
       "types": "#2EA990",
       "variables": "#7CBCDE",
 
-      "[Dark+]": {
+      "[Default Dark+]": {
         "textMateRules": [
           {
             "scope": [

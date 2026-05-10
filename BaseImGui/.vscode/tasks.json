@@ -43,7 +43,7 @@
   },
   {
     "label": "Zig: Run main",
-    "args": [  "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "main.zig",
+    "args": [  "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "-Ilib/imgui", "-Ilib/opengl", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_opengl2.cpp",
     "lib/imgui/dcimgui_impl_win32.cpp",
@@ -62,7 +62,7 @@
   },
   {
     "label": "Zig: Run main (With Args)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "-Ilib/imgui", "-Ilib/opengl", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_opengl2.cpp",
     "lib/imgui/dcimgui_impl_win32.cpp",
@@ -80,7 +80,7 @@
   },
   {
     "label": "Zig: Run main (Fast)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "-Ilib/imgui", "-Ilib/opengl", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_opengl2.cpp",
     "lib/imgui/dcimgui_impl_win32.cpp",
@@ -98,7 +98,7 @@
   },
   {
     "label": "Zig: Run main (Safe)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "-Ilib/imgui", "-Ilib/opengl", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_opengl2.cpp",
     "lib/imgui/dcimgui_impl_win32.cpp",
@@ -116,7 +116,7 @@
   },
   {
     "label": "Zig: Run main (Small)",
-    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "main.zig",
+    "args": [ "run", "-lc++", "-lgdi32", "-ldwmapi", "-lopengl32", "-Ilib/imgui", "-Ilib/opengl", "main.zig",
     "lib/imgui/dcimgui.cpp",
     "lib/imgui/dcimgui_impl_opengl2.cpp",
     "lib/imgui/dcimgui_impl_win32.cpp",

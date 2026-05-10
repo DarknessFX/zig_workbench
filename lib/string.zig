@@ -1,7 +1,7 @@
 //!zig-autodoc-section: zesp-idf\\string.zig
 //!  main.zig :
 //!    Zig String Type.
-// Build using Zig 0.15.2
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL

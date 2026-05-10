@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseSokol\\main.zig
 //! main.zig :
 //!  Template using Sokol framework and Nuklear UI.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL

@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseMicroui.Main
 //! BaseMicroui//main.zig :
 //!  Template using Microui and SDL2.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
