@@ -4708,6 +4708,8 @@ char **GuiLoadIconsFromMemory(const unsigned char *fileData, int dataSize, bool 
     short iconCount = 0;
     short iconSize = 0;
 
+    if (dataSize < 12) return guiIconsName;
+
     memcpy(signature, fileDataPtr, 4);
     memcpy(&version, fileDataPtr + 4, sizeof(short));
     memcpy(&reserved, fileDataPtr + 4 + 2, sizeof(short));
