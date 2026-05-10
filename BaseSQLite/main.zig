@@ -1,7 +1,7 @@
-//!zig-autodoc-section: BaseEx\\main.zig
-//! main.zig :
-//!  Template for a console program that hide the console window.
-// Build using Zig 0.15.1
+//!zig-autodoc-section: BaseSQLite.Main
+//! BaseSQLite\\main.zig :
+//!  Template using SQLite.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL

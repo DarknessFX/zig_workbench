@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseSFML2.Main
 //! BaseSFML2//main.zig :
 //!  Template using SFML2.6.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
