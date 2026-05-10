@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseWasm.Main
 //! BaseWasm//main.zig :
 //!  Template of HTML+Wasm program.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 // Credits : Marco Selvatici
 // https://marcoselvatici.github.io/WASM_tutorial/#your_first_WASM_WebApp
@@ -9,7 +9,6 @@
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-
 const std = @import("std");
 
 //#endregion ==================================================================
