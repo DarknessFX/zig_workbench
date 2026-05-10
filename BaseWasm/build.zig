@@ -30,12 +30,12 @@ pub fn build(b: *std.Build) void {
 
   const current_path = @constCast(b.build_root.path orelse ".");
   const projectname: []const u8 = "BaseWasm";
-  const rootfile: []const u8 = "main.zig";
+  const mainfile: []const u8 = "main.zig";
 
   const lib = b.addLibrary(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,

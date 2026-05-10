@@ -32,7 +32,7 @@
 
     // DarknessFX settings
     "telemetry.telemetryLevel": "off",
-    "workbench.colorTheme": "Default Dark+",
+    "workbench.colorTheme": "Dark+",
     "workbench.startupEditor": "none",
     "workbench.colorCustomizations": {
       "statusBar.background" : "#1A1A1A",
@@ -53,7 +53,7 @@
       "types": "#2EA990",
       "variables": "#7CBCDE",
 
-      "[Default Dark+]": {
+      "[Dark+]": {
         "textMateRules": [
           {
             "scope": [

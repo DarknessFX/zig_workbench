@@ -56,12 +56,12 @@ pub fn build(b: *std.Build) !void {
 //#region MARK: buildWindows
 //=============================================================================
 pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,
@@ -96,12 +96,12 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
 //#region MARK: buildHTML
 //=============================================================================
 pub fn buildHTML(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) void {
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const lib = b.addLibrary(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,

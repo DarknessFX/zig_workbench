@@ -16,12 +16,12 @@ pub fn build(b: *std.Build) void {
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "BaseLVGL";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,
@@ -217,7 +217,7 @@ pub fn build(b: *std.Build) void {
 //=============================================================================
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,

@@ -6,11 +6,11 @@ pub fn build(b: *std.Build) void {
   const optimize = b.standardOptimizeOption(.{});
 
   const projectname = "zTime";
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
-    .root_source_file = b.path(rootfile),
+    .root_source_file = b.path(mainfile),
     .target = target,
     .optimize = optimize
   });
@@ -35,7 +35,7 @@ pub fn build(b: *std.Build) void {
 
   //Tests
   const unit_tests = b.addTest(.{
-    .root_source_file = b.path(rootfile),
+    .root_source_file = b.path(mainfile),
     .target = target,
    .optimize = optimize,
   });

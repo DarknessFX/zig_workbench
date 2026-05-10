@@ -18,9 +18,9 @@ pub fn build(b: *std.Build) void {
   const projectname = "BaseWin";
   const mainfile = "main.zig";
 
-  // const rootfile = "root.zig";
+  // const mainfile = "root.zig";
   // const mod = b.addModule(projectname, .{
-  //   .root_source_file = b.path(rootfile),
+  //   .root_source_file = b.path(mainfile),
   //   .target = target,
   // });
 

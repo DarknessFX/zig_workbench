@@ -1,6 +1,7 @@
-//!zig-autodoc-section: BaseVulkan
-//!  Template for a Vulkan program using GLFW3.
-// Build using Zig 0.15.1
+//!zig-autodoc-section: BaseVulkan.Main
+//!  BaseVulkan\\main.zig
+//!    Template for a Vulkan program using GLFW3.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL

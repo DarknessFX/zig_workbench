@@ -47,12 +47,12 @@ pub fn build(b: *std.Build) !void {
 //#region MARK: Windows
 //=============================================================================
 pub fn buildDesktop(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
-  const rootfile = "main.zig";
+  const mainfile = "main.zig";
 
   const exe = b.addExecutable(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,
@@ -94,7 +94,7 @@ pub fn buildDesktop(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
   //Tests
   const unit_tests = b.addTest(.{
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
     }),
@@ -108,12 +108,12 @@ pub fn buildDesktop(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
 //#region MARK: Web
 //=============================================================================
 pub fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
-  const rootfile = "web.zig";
+  const mainfile = "web.zig";
 
   const lib = b.addLibrary(.{
     .name = projectname,
     .root_module = b.createModule(.{
-      .root_source_file = b.path(rootfile),
+      .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
       .link_libc = true,

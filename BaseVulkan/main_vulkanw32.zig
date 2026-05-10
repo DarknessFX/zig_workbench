@@ -816,10 +816,19 @@ fn createShaderModule(code: []const u8) !vk.VkShaderModule {
   return shaderModule;
 }
 
-fn readFile(filename: []const u8) ![]u8{
-  const code = try std.fs.cwd().readFileAlloc(
-    std.heap.page_allocator, filename, std.math.maxInt(usize));
-  return code;
+fn readFile(filename: []const u8) ![]u8 {
+  var threaded: std.Io.Threaded = .init_single_threaded;
+  const io = threaded.io();
+  var dir = std.Io.Dir.cwd();
+  var file = try dir.openFile(io, filename, .{});
+  defer file.close(io);
+
+  const stat = try file.stat(io);
+  const buf = try std.heap.page_allocator.alloc(u8, stat.size);
+  var reader = file.reader(io, buf);
+  const interface = &reader.interface;
+  _ = try interface.readSliceAll(buf);
+  return buf;
 }
 
 //#endregion ==================================================================

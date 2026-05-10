@@ -1,12 +1,11 @@
 //!zig-autodoc-section: BaseZlib.Main
-//! Base\\main.zig :
+//! BaseZlib\\main.zig :
 //!   Template for a program using zlib 1.3.1 .
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
 //=============================================================================
-
 const std = @import("std");
 const zlib = @cImport({
   @cInclude("lib/zlib/zlib.h");
@@ -16,7 +15,6 @@ const print = std.debug.print;
 //#endregion ==================================================================
 //#region MARK: MAIN
 //=============================================================================
-
 pub fn main() !void {
   const input_text = 
     \\Hello, Zig and zlib! A sample text to test zlib compress/decompress :
@@ -77,7 +75,6 @@ pub fn main() !void {
 //#endregion ==================================================================
 //#region MARK: UTIL
 //=============================================================================
-
 fn checkZlibError(code: c_int) !void {
   if (code != zlib.Z_OK and code != zlib.Z_STREAM_END) {
     const err_msg = switch (code) {
@@ -96,7 +93,6 @@ fn checkZlibError(code: c_int) !void {
 //#endregion ==================================================================
 //#region MARK: TEST
 //=============================================================================
-
 test " " {
 
 }
