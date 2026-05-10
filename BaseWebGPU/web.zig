@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseWebGPU\\web.zig
 //! web.zig :
-//!  HTML5 WASM WebGPU source code (portable and offline).
-// Build using Zig 0.15.2
+//!   Template using WebGPU, HTML5 WASM source code (portable and offline).
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL

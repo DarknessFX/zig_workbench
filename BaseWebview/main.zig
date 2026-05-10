@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseWebview\\main.zig
 //! main.zig :
 //!  Template for Webview program.
-// Build using Zig 0.15.1
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL

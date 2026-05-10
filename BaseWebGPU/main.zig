@@ -1,7 +1,7 @@
 //!zig-autodoc-section: BaseWebGPU\\main.zig
 //! main.zig :
-//!  WebGPU project.
-// Build using Zig 0.15.2
+//!  Template using WebGPU.
+// Build using Zig 0.16.0
 
 //=============================================================================
 //#region MARK: GLOBAL
@@ -230,7 +230,7 @@ fn gpuPipeline() void {
   gpu.wgpuBindGroupLayoutRelease(bindgroup_layout);
   gpu.wgpuPipelineLayoutRelease(pipeline_layout);
   gpu.wgpuShaderModuleRelease(shader_triangle);
-  log("WebGPU Pipeline created.", .{});
+  log("WebGPU Pipeline created.", );
 }
 
 //#endregion ==================================================================
@@ -261,7 +261,7 @@ fn gpuShaderData() void {
       .size = @sizeOf(@TypeOf(app.vars_rot)),
     },
   });
-  log("WebGPU ShaderData created.", .{});
+  log("WebGPU ShaderData created.", );
 }
 
 //#endregion ==================================================================
@@ -334,16 +334,16 @@ fn sdlHwnd() sdl.SDL_AppResult {
   if (sdl.SDL_GetPointerProperty(props, sdl.SDL_PROP_WINDOW_WIN32_HWND_POINTER, null)) |hwnd| {
     app.hWnd = @ptrCast(hwnd);
   } else {
-    log("Failed to get native window handle", .{});
+    log("Failed to get native window handle",);
     return sdl.SDL_APP_FAILURE;
   }
   if (sdl.SDL_GetPointerProperty(props, sdl.SDL_PROP_WINDOW_WIN32_INSTANCE_POINTER, null)) |hinstance| {
     app.hInstance = @ptrCast(hinstance);
     if (@intFromPtr(hinstance) != @intFromPtr(GetModuleHandleA(null))) {
-      log("SDL Wrong hIntance? Possible error.", .{});
+      log("SDL Wrong hIntance? Possible error.",);
     }
   } else {
-    log("Failed to get native window instance", .{});
+    log("Failed to get native window instance",);
     return sdl.SDL_APP_FAILURE;
   }
   log("SDL Window HWND and hInstance found.", );
@@ -371,12 +371,12 @@ fn gpuInstanceSurface() void {
   };
 
   app.surface = gpu.wgpuInstanceCreateSurface(app.instance, &surface_desc);
-  log("WebGPU Surface created.", .{});
+  log("WebGPU Surface created.", );
 }
 
 fn gpuConfigureSurface() void {
   app.queue = gpu.wgpuDeviceGetQueue(app.device);
-  log("WebGPU Queue acquired.", .{});    
+  log("WebGPU Queue acquired.", );    
 
   const config = gpu.WGPUSurfaceConfiguration{
     .nextInChain = null,
@@ -400,12 +400,12 @@ export fn gpuAdapterCallback(status: gpu.WGPURequestAdapterStatus, adapter: gpu.
   message: gpu.WGPUStringView, userdata1: ?*anyopaque, userdata2: ?*anyopaque,) callconv(.c) void {
   _ = message; _ = userdata1; _ = userdata2;
 
-  log("WebGPU Adapter callback called!", .{});
+  log("WebGPU Adapter callback called!", );
   if (status == gpu.WGPURequestAdapterStatus_Success) {
     app.adapter = adapter;
-    log("WebGPU Adapter received!", .{});
+    log("WebGPU Adapter received!", );
   } else {
-    log("WebGPU Adapter request failed", .{});
+    log("WebGPU Adapter request failed", );
   }
 }
 
@@ -428,7 +428,7 @@ fn gpuRequestAdapter() void {
     .userdata2 = null,
   };
 
-  log("WebGPU Adapter requesting...", .{});
+  log("WebGPU Adapter requesting...", );
   _ = gpu.wgpuInstanceRequestAdapter(app.instance, &adapter_options, adapter_callback_info);
 }
   
@@ -439,13 +439,13 @@ export fn gpuDeviceCallback(status: gpu.WGPURequestDeviceStatus, device: gpu.WGP
   userdata1: ?*anyopaque, userdata2: ?*anyopaque,) callconv(.c) void {
   _ = message; _ = userdata1; _ = userdata2;
 
-  log("WebGPU Device callback called!", .{});
+  log("WebGPU Device callback called!", );
   if (status == gpu.WGPURequestDeviceStatus_Success) {
     app.device = device;
     app.queue = gpu.wgpuDeviceGetQueue(device);
-    log("WebGPU Device received!", .{});
+    log("WebGPU Device received!", );
   } else {
-    log("WebGPU Device request failed", .{});
+    log("WebGPU Device request failed", );
   }
 }
 
@@ -458,7 +458,7 @@ fn gpuRequestDevice() void {
     .userdata2 = null,
   };
 
-  log("WebGPU Device requesting...", .{});
+  log("WebGPU Device requesting...", );
   _ = gpu.wgpuAdapterRequestDevice(
     app.adapter,
     &[_]gpu.WGPUDeviceDescriptor{
@@ -498,7 +498,7 @@ fn createBuffer(data: ?*const anyopaque, size: usize, usage: gpu.WGPUBufferUsage
 fn printAdapterInfo() void {
   var info: gpu.WGPUAdapterInfo = std.mem.zeroes(gpu.WGPUAdapterInfo);
   _ = gpu.wgpuAdapterGetInfo(app.adapter, &info);
-  log("WebGPU Adapter info :\n", .{});
+  log("WebGPU Adapter info :\n", );
   log("  Driver: %s\n", info.description.data );
   log("  Vendor: %s\n", info.vendor.data );
   log("  Architecture: %s\n", info.architecture.data );

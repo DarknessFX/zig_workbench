@@ -1,3 +1,11 @@
+//!zig-autodoc-section: BaseWebGPU\\main.zig
+//! main.zig :
+//!  Template using WebGPU.
+// Build using Zig 0.16.0
+
+//=============================================================================
+//#region MARK: GLOBAL
+//=============================================================================
 const std = @import("std");
 const builtin = @import("builtin");
 
@@ -14,13 +22,16 @@ const targets: []const std.Target.Query = &.{
   .{ .cpu_arch = .wasm32, .os_tag = .emscripten },
 };
 
+//=============================================================================
+//#region MARK: Build
+//=============================================================================
 pub fn build(b: *std.Build) !void {
   const optimize = b.standardOptimizeOption(.{});
 
-  current_path = std.fs.realpathAlloc(std.heap.page_allocator, ".") catch unreachable;
+  current_path = @constCast(b.build_root.path orelse ".");
   build_context = b;
 
-  try getEmscriptenPaths(b.allocator);
+  _ = getEmsdkPath(b);
   
   for (targets) |t| {
     const target = b.resolveTargetQuery(t);
@@ -32,6 +43,9 @@ pub fn build(b: *std.Build) !void {
   }
 }
 
+//#endregion ==================================================================
+//#region MARK: Windows
+//=============================================================================
 pub fn buildDesktop(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
   const rootfile = "main.zig";
 
@@ -41,31 +55,30 @@ pub fn buildDesktop(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
       .root_source_file = b.path(rootfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
-  exe.addWin32ResourceFile(.{
+  exe.root_module.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
   switch (optimize) {
-    .Debug =>  b.exe_dir = "bin/Debug",
-    .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
-    .ReleaseFast =>  b.exe_dir = "bin/ReleaseFast",
-    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall"
+    .Debug =>  b.exe_dir = "bin/Debug/Windows",
+    .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe/Windows",
+    .ReleaseFast =>  b.exe_dir = "bin/ReleaseFast/Windows",
+    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall/Windows"
   }
 
-  exe.linkLibC();
-
-  exe.addIncludePath( b.path("lib/SDL3") );
-  exe.addIncludePath( b.path("lib/SDL3/include") );
-  exe.addLibraryPath(b.path("lib/SDL3/lib"));
-  exe.linkSystemLibrary("libSDL3");
+  exe.root_module.addIncludePath( b.path("lib/SDL3") );
+  exe.root_module.addIncludePath( b.path("lib/SDL3/include") );
+  exe.root_module.addLibraryPath(b.path("lib/SDL3/lib"));
+  exe.root_module.linkSystemLibrary("libSDL3", .{});
   b.installBinFile("lib/SDL3/lib/libSDL3.dll", "libSDL3.dll");
 
-  exe.addIncludePath(b.path("lib/dawn"));
-  exe.addLibraryPath(b.path("lib/dawn"));
-  exe.linkSystemLibrary("webgpu_dawn");
+  exe.root_module.addIncludePath(b.path("lib/dawn"));
+  exe.root_module.addLibraryPath(b.path("lib/dawn"));
+  exe.root_module.linkSystemLibrary("webgpu_dawn", .{});
   b.installBinFile("lib/dawn/webgpu_dawn.dll", "webgpu_dawn.dll");
   b.installArtifact(exe);
 
@@ -91,6 +104,9 @@ pub fn buildDesktop(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
   test_step.dependOn(&run_unit_tests.step);
 }
 
+//#endregion ==================================================================
+//#region MARK: Web
+//=============================================================================
 pub fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) !void {
   const rootfile = "web.zig";
 
@@ -100,37 +116,51 @@ pub fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.b
       .root_source_file = b.path(rootfile),
       .target = target,
       .optimize = optimize,
+      .link_libc = true,
     }),
   });
   b.lib_dir = b.cache_root.path.?;
-  lib.linkLibC();
+  lib.root_module.addCMacro("deprecated", "");
+  lib.root_module.addCMacro("__attribute__(x)", "");
 
-  lib.addIncludePath( b.path("lib/SDL3/include"));
-  lib.addLibraryPath( b.path("lib/SDL3/lib") );
+  lib.root_module.addIncludePath( b.path("lib/SDL3/include"));
+  lib.root_module.addLibraryPath( b.path("lib/SDL3/lib") );
 
-  lib.addIncludePath( .{ .cwd_relative = emscripten_include_path });
-  lib.addIncludePath( .{ .cwd_relative = emscripten_webgpu });
+  lib.root_module.addIncludePath( .{ .cwd_relative = emscripten_include_path });
+  lib.root_module.addIncludePath( .{ .cwd_relative = emscripten_webgpu });
 
   // const shared_exports = &.{ "jsPrint", "jsPrintFlush" };
   // lib.root_module.export_symbol_names = shared_exports;
   // lib.entry = .disabled;
   // lib.rdynamic = true;
 
-  const wasm_lib_path = b.fmt("{s}/libBaseWebGPU.a", .{ b.lib_dir });
-  const build_wasm_step = b.addInstallArtifact(lib, .{});
-
   var lib_dir: []const u8 = undefined;
   switch (optimize) {
-    .Debug => lib_dir = "bin/web/Debug",
-    .ReleaseSafe => lib_dir = "bin/web/ReleaseSafe",
-    .ReleaseFast => lib_dir = "bin/web/ReleaseFast",
-    .ReleaseSmall => lib_dir = "bin/web/ReleaseSmall"
+    .Debug => { 
+      b.lib_dir = "bin/Debug/web"; 
+      try ensureDirPath(&.{ "bin", "Debug", "web" });
+      std.debug.print("NOTE: emscripten Debug Build is broken in 0.16, only Release builds are working", .{});
+    },
+    .ReleaseSafe => {
+      b.lib_dir = "bin/ReleaseSafe/web";
+      try ensureDirPath(&.{ "bin", "ReleaseSafe", "web" });
+    },
+    .ReleaseFast => {
+      b.lib_dir = "bin/ReleaseFast/web";
+      try ensureDirPath(&.{ "bin", "ReleaseFast", "web" });
+    },
+    .ReleaseSmall =>{
+      b.lib_dir = "bin/ReleaseSmall/web";
+      try ensureDirPath(&.{ "bin", "ReleaseSmall", "web" });
+    },
   }
-  try ensureDirPath(&.{ "bin", "web", "Debug" });
 
+  const wasm_lib_path = b.fmt("{s}/libBaseWebGPU.a", .{ b.lib_dir });
+  const build_wasm_step = b.addInstallArtifact(lib, .{});
   // Emscripten - Build HTML, JS, WASM
   const bat_content = try std.fmt.allocPrint(b.allocator,
     \\@echo off
+    \\SET EMSDK_QUIET=1
     \\call "{s}\\..\\..\\emsdk_env.bat"
     \\"{s}" "{s}" ^
     \\ -o "{s}\\{s}.html" ^
@@ -170,10 +200,17 @@ pub fn buildWeb(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.b
   defer b.allocator.free(bat_content);
 
   const bat_file = try b.cache_root.join(b.allocator, &.{ "build_web_temp.bat" });
-  try std.fs.cwd().writeFile(.{
-    .sub_path = bat_file,
-    .data = bat_content,
-  });
+  var dir = std.Io.Dir.cwd();
+  var threaded: std.Io.Threaded = .init_single_threaded;
+  const io = threaded.io();
+  var file = dir.createFile(io, bat_file, .{}) catch unreachable;
+
+  var buffer: [4096]u8 = undefined;
+  var buffered = file.writer(io, &buffer);
+  const writer = &buffered.interface;
+  try writer.writeAll(bat_content);
+  writer.flush() catch unreachable;
+  file.close(io);
 
   const run_bat = b.addSystemCommand(&.{ "cmd", "/c", bat_file });
   run_bat.step.dependOn(&build_wasm_step.step);
@@ -184,24 +221,23 @@ fn fmt(comptime format: []const u8, args: anytype) []u8 {
   return build_context.fmt(format, args);
 }
 
-fn getEmscriptenPaths(allocator: std.mem.Allocator) !void {
-  const emsdk = try std.process.getEnvVarOwned(allocator, "EMSDK");
-  defer allocator.free(emsdk);
+//#endregion ==================================================================
+//#region MARK: UTIL
+//=============================================================================
+fn getEmsdkPath(b: *std.Build) bool {
+  const run = b.addSystemCommand(&.{"echo"});   // dummy command just to get env map
+  const env_map = run.getEnvMap();
 
-  const emscripten_path = try std.fs.path.join(allocator, &.{ emsdk, "upstream", "emscripten" });
-  defer allocator.free(emscripten_path);
-
-  emscripten_sdk_path = try std.fs.realpathAlloc(allocator, emscripten_path);
-
-  const include_path = try std.fs.path.join(allocator, &.{ emscripten_path, "cache", "sysroot", "include" });
-  emscripten_include_path = try std.fs.realpathAlloc(allocator, include_path);
-
-  const webgpu_path = try std.fs.path.join(allocator, &.{ emscripten_path, "cache", "ports", "emdawnwebgpu", "emdawnwebgpu_pkg", "webgpu", "include", "webgpu" });
-  emscripten_webgpu = try std.fs.realpathAlloc(allocator, webgpu_path);
-
-  const emcc_path = try std.fs.path.join(allocator, &.{ emscripten_path, "emcc.bat" });
-  emscripten_emcc = try std.fs.realpathAlloc(allocator, emcc_path);
-
+  if (env_map.get("EMSDK")) |path| {
+    emscripten_sdk_path = b.pathJoin(&.{ path, "upstream/emscripten" });
+    emscripten_emcc = b.pathJoin(&.{ emscripten_sdk_path, "emcc.bat" });
+    emscripten_include_path = b.pathJoin(&.{ emscripten_sdk_path, "cache/sysroot/include" });
+    emscripten_webgpu = b.pathJoin(&.{ emscripten_sdk_path, "cache/ports/emdawnwebgpu/emdawnwebgpu_pkg/webgpu/include/webgpu" });
+    // std.debug.print("EMSDK found: {s}\n", .{emscripten_sdk_path});
+    return true;
+  }
+  std.debug.print("EMSDK environment variable not found\n", .{});
+  return false;
 }
 
 fn ensureDirPath(parts: []const []const u8) !void {
@@ -218,9 +254,14 @@ fn ensureDirPath(parts: []const []const u8) !void {
 
     const dir_path = path_buf[0..path_len];
 
-    std.fs.cwd().makeDir(dir_path) catch |err| switch (err) {
-      error.PathAlreadyExists => {}, 
-      else => |e| return e,
-    };
+    var threaded: std.Io.Threaded = .init_single_threaded;
+    const io = threaded.io();
+    std.Io.Dir.createDir(std.Io.Dir.cwd(), io, dir_path, .default_file) catch {};
+    // std.fs.cwd().makeDir(dir_path) catch |err| switch (err) {
+    //   error.PathAlreadyExists => {}, 
+    //   else => |e| return e,
+    // };
   }
 }
+//#endregion ==================================================================
+//=============================================================================
