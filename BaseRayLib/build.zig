@@ -67,6 +67,15 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
       .link_libc = true,
     }),
   });
+
+  switch (optimize) {
+    .Debug =>  b.exe_dir = "bin/Debug/Windows",
+    .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe/Windows",
+    .ReleaseFast =>  b.exe_dir = "bin/ReleaseFast/Windows",
+    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall/Windows"
+    //else  =>  b.exe_dir = "bin/Else",
+  }
+
   exe.root_module.addWin32ResourceFile(.{
     .file = b.path(projectname ++ ".rc"),
     .flags = &.{"/c65001"}, // UTF-8 codepage
@@ -82,13 +91,17 @@ pub fn buildWindows(b: *std.Build, target: std.Build.ResolvedTarget, optimize: s
   exe.root_module.linkSystemLibrary("opengl32", .{});
   //b.installBinFile("lib/raylib/raylib.dll", "raylib.dll");
 
-  switch (optimize) {
-    .Debug =>  b.exe_dir = "bin/Debug/Windows",
-    .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe/Windows",
-    .ReleaseFast =>  b.exe_dir = "bin/ReleaseFast/Windows",
-    .ReleaseSmall =>  b.exe_dir = "bin/ReleaseSmall/Windows"
-    //else  =>  b.exe_dir = "bin/Else",
+  // RayGUI
+  const c_srcs = .{
+    "lib/raylib/include/raygui.c",
+  };
+  inline for (c_srcs) |c_cpp| {
+    exe.root_module.addCSourceFile(.{
+      .file  = b.path(c_cpp), 
+      .flags = &.{ }
+    });
   }
+
   b.installArtifact(exe);
 }
 

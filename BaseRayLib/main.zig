@@ -13,6 +13,8 @@ const std = @import("std");
 //   @cInclude("C:/BaseRayLib/lib/raylib/include/raylib.h"); 
 const ray = @cImport({ 
   @cInclude("lib/raylib/include/raylib.h");
+  // @cDefine("RAYGUI_IMPLEMENTATION", "");
+  @cInclude("lib/raylib/include/raygui.h");    
 });
 
 //#endregion ==================================================================
