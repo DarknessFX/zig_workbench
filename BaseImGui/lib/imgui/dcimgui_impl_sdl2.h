@@ -22,7 +22,7 @@ typedef unsigned short ImDrawIdx;  // Default: 16-bit (for maximum compatibility
 //  [X] Platform: Multi-viewport support (multiple windows). Enable with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
 // Missing features or Issues:
 //  [ ] Platform: Multi-viewport: Minimized windows seems to break mouse wheel events (at least under Windows).
-//  [ ] Platform: Multi-viewport: ParentViewportID not honored, and so io.ConfigViewportsNoDefaultParent has no effect (minor).
+//  [ ] Platform: Multi-viewport: Missing ImGuiBackendFlags_HasParentViewport support. The viewport->ParentViewportID field is ignored, and therefore io.ConfigViewportsNoDefaultParent has no effect either.
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
 // Prefer including the entire imgui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
@@ -70,7 +70,19 @@ typedef enum
     ImGui_ImplSDL2_GamepadMode_Manual,
 } ImGui_ImplSDL2_GamepadMode;
 CIMGUI_IMPL_API void cImGui_ImplSDL2_SetGamepadMode(ImGui_ImplSDL2_GamepadMode mode); // Implied manual_gamepads_array = nullptr, manual_gamepads_count = -1
-//CIMGUI_IMPL_API void cImGui_ImplSDL2_SetGamepadModeEx(ImGui_ImplSDL2_GamepadMode mode, struct _SDL_GameController** manual_gamepads_array /* = nullptr */, int manual_gamepads_count /* = -1 */);
+CIMGUI_IMPL_API void cImGui_ImplSDL2_SetGamepadModeEx(ImGui_ImplSDL2_GamepadMode mode, struct _SDL_GameController** manual_gamepads_array /* = nullptr */, int manual_gamepads_count /* = -1 */);
+
+// (Advanced, for X11 users) Override Mouse Capture mode. Mouse capture allows receiving updated mouse position after clicking inside our window and dragging outside it.
+// Having this 'Enabled' is in theory always better. But, on X11 if you crash/break to debugger while capture is active you may temporarily lose access to your mouse.
+// The best solution is to setup your debugger to automatically release capture, e.g. 'setxkbmap -option grab:break_actions && xdotool key XF86Ungrab' or via a GDB script. See #3650.
+// But you may independently decide on X11, when a debugger is attached, to set this value to ImGui_ImplSDL2_MouseCaptureMode_Disabled.
+typedef enum
+{
+    ImGui_ImplSDL2_MouseCaptureMode_Enabled,
+    ImGui_ImplSDL2_MouseCaptureMode_EnabledAfterDrag,
+    ImGui_ImplSDL2_MouseCaptureMode_Disabled,
+} ImGui_ImplSDL2_MouseCaptureMode;
+CIMGUI_IMPL_API void cImGui_ImplSDL2_SetMouseCaptureMode(ImGui_ImplSDL2_MouseCaptureMode mode);
 #endif// #ifndef IMGUI_DISABLE
 #ifdef __cplusplus
 } // End of extern "C" block

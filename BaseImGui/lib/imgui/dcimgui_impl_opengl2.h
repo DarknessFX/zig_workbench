@@ -17,6 +17,7 @@ typedef unsigned short ImDrawIdx;  // Default: 16-bit (for maximum compatibility
 //  [X] Renderer: Multi-viewport support (multiple windows). Enable with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
 // Missing features or Issues:
 //  [ ] Renderer: Large meshes support (64k+ vertices) even with 16-bit indices (ImGuiBackendFlags_RendererHasVtxOffset).
+//  [ ] Renderer: Use of DrawCallback_SetSamplerLinear, DrawCallback_SetSamplerNearest is emulated by poking to glTexParameter(), as legacy OpenGL doesn't have glBindSampler().
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
 // Prefer including the entire imgui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
@@ -53,7 +54,7 @@ CIMGUI_IMPL_API void cImGui_ImplOpenGL2_RenderDrawData(ImDrawData* draw_data);
 CIMGUI_IMPL_API bool cImGui_ImplOpenGL2_CreateDeviceObjects(void);
 CIMGUI_IMPL_API void cImGui_ImplOpenGL2_DestroyDeviceObjects(void);
 
-// (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = NULL to handle this manually.
+// (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = nullptr to handle this manually.
 CIMGUI_IMPL_API void cImGui_ImplOpenGL2_UpdateTexture(ImTextureData* tex);
 #endif// #ifndef IMGUI_DISABLE
 #ifdef __cplusplus

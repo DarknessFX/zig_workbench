@@ -33,14 +33,14 @@ pub fn build(b: *std.Build) void {
   exe.root_module.addIncludePath( b.path("lib") );
   exe.root_module.addIncludePath( b.path("lib/SDL3") );
 
-  const use_shared = b.option(bool, "shared", "Use shared library linking") orelse true;
+  const use_shared = b.option(bool, "shared", "Use shared library linking") orelse false;
   if (use_shared) {
     exe.root_module.addLibraryPath( b.path("lib/SDL3/shared") );
+    exe.root_module.linkSystemLibrary("SDL3", .{ .preferred_link_mode = .dynamic });
     b.installBinFile("lib/SDL3/shared/SDL3.dll", "SDL3.dll");
-    exe.root_module.linkSystemLibrary("SDL3", .{});
   } else {
     exe.root_module.addLibraryPath( b.path("lib/SDL3/static") );
-    exe.root_module.linkSystemLibrary("SDL3", .{});
+    exe.root_module.linkSystemLibrary("SDL3",  .{ .preferred_link_mode = .static });
     exe.root_module.linkSystemLibrary("user32", .{});
     exe.root_module.linkSystemLibrary("ole32", .{});
     exe.root_module.linkSystemLibrary("gdi32", .{});

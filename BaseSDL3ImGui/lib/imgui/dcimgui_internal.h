@@ -2,9 +2,7 @@
 // **DO NOT EDIT DIRECTLY**
 // https://github.com/dearimgui/dear_bindings
 
-// dear imgui, v1.92.3 WIP
-struct ImVector_ImFontBakedPtr_t { int Size; int Capacity; ImFontBaked** Data; };  // Instantiation of ImVector<ImFontBaked*>
-struct ImVector_ImFontAtlasPtr_t { int Size; int Capacity; ImFontAtlas** Data; };  // Instantiation of ImVector<ImFontAtlas*>
+// dear imgui, v1.92.8
 // (internal structures/api)
 
 // You may use this file to debug, understand or extend Dear ImGui features but we don't provide any guarantee of forward compatibility.
@@ -68,14 +66,16 @@ extern "C"
 #include <math.h>
 #include <limits.h>
 // Enable SSE intrinsics if available
-#if (defined __SSE__ || defined __x86_64__ || defined _M_X64 ||(defined(_M_IX86_FP)&&(_M_IX86_FP >= 1)))&&!defined(IMGUI_DISABLE_SSE)
+#if (defined __SSE__ || defined __x86_64__ || defined _M_X64 ||(defined(_M_IX86_FP)&&(_M_IX86_FP >= 1)))&&!defined(IMGUI_DISABLE_SSE)&&!defined(_M_ARM64)&&!defined(_M_ARM64EC)
 #define IMGUI_ENABLE_SSE
 #include <immintrin.h>
 #if (defined __AVX__ || defined __SSE4_2__)
 #define IMGUI_ENABLE_SSE4_2
 #include <nmmintrin.h>
 #endif // #if (defined __AVX__ || defined __SSE4_2__)
-#endif // #if (defined __SSE__ || defined __x86_64__ || defined _M_X64 ||(defined(_M_IX86_FP)&&(_M_IX86_FP >= 1)))&&!defined(IMGUI_DISABLE_SSE)
+#endif // #if (defined __SSE__ || defined __x86_64__ || defined _M_X64 ||(defined(_M_IX86_FP)&&(_M_IX86_FP >= 1)))&&!defined(IMGUI_DISABLE_SSE)&&!defined(_M_ARM64)&&!defined(_M_ARM64EC)
+struct ImVector_ImFontBakedPtr_t { int Size; int Capacity; ImFontBaked** Data; };  // Instantiation of ImVector<ImFontBaked*>
+struct ImVector_ImFontAtlasPtr_t { int Size; int Capacity; ImFontAtlas** Data; };  // Instantiation of ImVector<ImFontAtlas*>
 // Emscripten has partial SSE 4.2 support where _mm_crc32_u32 is not available. See https://emscripten.org/docs/porting/simd.html#id11 and #8213
 #if defined(IMGUI_ENABLE_SSE4_2)&&!defined(IMGUI_USE_LEGACY_CRC32_ADLER)&&!defined(__EMSCRIPTEN__)
 #define IMGUI_ENABLE_SSE4_2_CRC
@@ -113,6 +113,7 @@ extern "C"
 #pragma GCC diagnostic ignored "-Wfloat-equal"                       // warning: comparing floating-point with '==' or '!=' is unsafe
 #pragma GCC diagnostic ignored "-Wclass-memaccess"                   // [__GNUC__ >= 8] warning: 'memset/memcpy' clearing/writing an object of type 'xxxx' with no trivial copy-assignment; use assignment or value-initialization instead
 #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"   // warning: bitwise operation between different enumeration types ('XXXFlags_' and 'XXXFlagsPrivate_') is deprecated
+#pragma GCC diagnostic ignored "-Wsign-conversion"                   // warning: conversion to 'xxxx' from 'xxxx' may change the sign of the result
 #endif // #if defined(__GNUC__)
 #endif // #if defined(__clang__)
 // In 1.89.4, we moved the implementation of "courtesy maths operators" from imgui_internal.h in imgui.h
@@ -212,6 +213,7 @@ typedef struct ImGuiViewportP_t ImGuiViewportP;
 typedef struct ImGuiDebugAllocEntry_t ImGuiDebugAllocEntry;
 typedef struct ImGuiDebugAllocInfo_t ImGuiDebugAllocInfo;
 typedef struct ImGuiStackLevelInfo_t ImGuiStackLevelInfo;
+typedef struct ImGuiDebugItemPathQuery_t ImGuiDebugItemPathQuery;
 typedef struct ImGuiIDStackTool_t ImGuiIDStackTool;
 typedef struct ImGuiTableCellData_t ImGuiTableCellData;
 typedef struct ImGuiTableColumnSettings_t ImGuiTableColumnSettings;
@@ -304,6 +306,7 @@ typedef int ImGuiSeparatorFlags;        // -> enum ImGuiSeparatorFlags_     // F
 typedef int ImGuiTextFlags;             // -> enum ImGuiTextFlags_          // Flags: for TextEx()
 typedef int ImGuiTooltipFlags;          // -> enum ImGuiTooltipFlags_       // Flags: for BeginTooltipEx()
 typedef int ImGuiTypingSelectFlags;     // -> enum ImGuiTypingSelectFlags_  // Flags: for GetTypingSelectRequest()
+typedef int ImGuiWindowBgClickFlags;    // -> enum ImGuiWindowBgClickFlags_ // Flags: for overriding behavior of clicking on window background/void.
 typedef int ImGuiWindowRefreshFlags;    // -> enum ImGuiWindowRefreshFlags_ // Flags: for SetNextWindowRefreshPolicy()
 
 typedef ImU16 ImGuiTableDrawChannelIdx;
@@ -338,10 +341,15 @@ typedef ImU16 ImGuiTableDrawChannelIdx;
 #define IMGUI_DEBUG_LOG_SELECTION(...)  do { if (g.DebugLogFlags & ImGuiDebugLogFlags_EventSelection)   IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)
 #define IMGUI_DEBUG_LOG_CLIPPER(...)    do { if (g.DebugLogFlags & ImGuiDebugLogFlags_EventClipper)     IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)
 #define IMGUI_DEBUG_LOG_IO(...)         do { if (g.DebugLogFlags & ImGuiDebugLogFlags_EventIO)          IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)
-#define IMGUI_DEBUG_LOG_FONT(...)       do { ImGuiContext* g2 = GImGui; if (g2 && g2->DebugLogFlags & ImGuiDebugLogFlags_EventFont) IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)  // Called from ImFontAtlas function which may operate without a context.
+#ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
+#define IMGUI_DEBUG_LOG_FONT(...) do { ImGuiContext* g2 = ImGui_GetCurrentContext(); if (g2 && g2->DebugLogFlags & ImGuiDebugLogFlags_EventFont) IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)  // Called from ImFontAtlas function which may operate without a context.
+#endif // #ifndef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 #define IMGUI_DEBUG_LOG_INPUTROUTING(...) do{if (g.DebugLogFlags & ImGuiDebugLogFlags_EventInputRouting)IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)
 #define IMGUI_DEBUG_LOG_DOCKING(...)    do { if (g.DebugLogFlags & ImGuiDebugLogFlags_EventDocking)     IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)
 #define IMGUI_DEBUG_LOG_VIEWPORT(...)   do { if (g.DebugLogFlags & ImGuiDebugLogFlags_EventViewport)    IMGUI_DEBUG_LOG(__VA_ARGS__); } while (0)
+
+// Debug options (also see ones on top of imgui.cpp)
+//#define IMGUI_DEBUG_BOXSELECT
 
 // Static Asserts
 #define IM_STATIC_ASSERT(_COND)         static_assert(_COND, "")
@@ -364,16 +372,13 @@ typedef ImU16 ImGuiTableDrawChannelIdx;
 #ifndef IM_TABSIZE
 #define IM_TABSIZE                      (4)
 #endif// Until we move this to runtime and/or add proper tab support, at least allow users to compile-time override
-#define IM_MEMALIGN(_OFF,_ALIGN)        (((_OFF) + ((_ALIGN) - 1)) & ~((_ALIGN) - 1))                           // Memory align e.g. IM_ALIGN(0,4)=0, IM_ALIGN(1,4)=4, IM_ALIGN(4,4)=4, IM_ALIGN(5,4)=8
-#define IM_F32_TO_INT8_UNBOUND(_VAL)    ((int)((_VAL) * 255.0f + ((_VAL)>=0 ? 0.5f : -0.5f)))                   // Unsaturated, for display purpose
-#define IM_F32_TO_INT8_SAT(_VAL)        ((int)(ImSaturate(_VAL) * 255.0f + 0.5f))                               // Saturated, always output 0..255
-#define IM_TRUNC(_VAL)                  ((float)(int)(_VAL))                                                    // ImTrunc() is not inlined in MSVC debug builds
-#define IM_ROUND(_VAL)                  ((float)(int)((_VAL) + 0.5f))                                           //
-#define IM_STRINGIFY_HELPER(_X)         #_X
-#define IM_STRINGIFY(_X)                IM_STRINGIFY_HELPER(_X)                                                 // Preprocessor idiom to stringify e.g. an integer.
-#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-#define IM_FLOOR IM_TRUNC
-#endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+#define IM_MEMALIGN(_OFF,_ALIGN)        (((_OFF) + ((_ALIGN) - 1)) & ~((_ALIGN) - 1))            // Memory align e.g. IM_ALIGN(0,4)=0, IM_ALIGN(1,4)=4, IM_ALIGN(4,4)=4, IM_ALIGN(5,4)=8
+#define IM_F32_TO_INT8_UNBOUND(_VAL)    ((int)((_VAL) * 255.0f + ((_VAL)>=0 ? 0.5f : -0.5f)))    // Unsaturated, for display purpose
+#define IM_F32_TO_INT8_SAT(_VAL)        ((int)(ImSaturate(_VAL) * 255.0f + 0.5f))                // Saturated, always output 0..255
+#define IM_TRUNC(_VAL)                  ((float)(int)(_VAL))                                     // Positive values only! ImTrunc() is not inlined in MSVC debug builds
+#define IM_ROUND(_VAL)                  ((float)(int)((_VAL) + 0.5f))                            // Positive values only!
+//#define IM_FLOOR IM_TRUNC             // [OBSOLETE] Renamed in 1.90.0 (Sept 2023)
+
 // Hint for branch prediction
 #if (defined(__cplusplus)&&(__cplusplus >= 202002L))||(defined(_MSVC_LANG)&&(_MSVC_LANG >= 202002L))
 #define IM_LIKELY   [[likely]]
@@ -431,8 +436,6 @@ typedef ImU16 ImGuiTableDrawChannelIdx;
 #define IM_PRIu64   "llu"
 #define IM_PRIX64   "llX"
 #endif // #if defined(_MSC_VER)&&!defined(__clang__)
-#define IM_TEXTUREID_TO_U64(_TEXID) ((ImU64)(intptr_t)(_TEXID))
-
 //-----------------------------------------------------------------------------
 // [SECTION] Generic helpers
 // Note that the ImXXX helpers functions are lower-level than ImGui functions.
@@ -512,16 +515,17 @@ CIMGUI_API const char* cImParseFormatSanitizeForScanning(const char* fmt_in, cha
 CIMGUI_API int         cImParseFormatPrecision(const char* format, int default_value);
 
 // Helpers: UTF-8 <> wchar conversions
-CIMGUI_API int         cImTextCharToUtf8(char out_buf[5], unsigned int c);                                                     // return output UTF-8 bytes count
-CIMGUI_API int         cImTextStrToUtf8(char* out_buf, int out_buf_size, const ImWchar* in_text, const ImWchar* in_text_end);  // return output UTF-8 bytes count
-CIMGUI_API int         cImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* in_text_end);              // read one character. return input UTF-8 bytes count
-CIMGUI_API int         cImTextStrFromUtf8(ImWchar* out_buf, int out_buf_size, const char* in_text, const char* in_text_end);   // Implied in_remaining = NULL
+CIMGUI_API int         cImTextCharToUtf8(char out_buf[5], unsigned int c);                                                      // return output UTF-8 bytes count
+CIMGUI_API int         cImTextStrToUtf8(char* out_buf, int out_buf_size, const ImWchar* in_text, const ImWchar* in_text_end);   // return output UTF-8 bytes count
+CIMGUI_API int         cImTextCharFromUtf8(unsigned int* out_char, const char* in_text, const char* in_text_end);               // read one character. return input UTF-8 bytes count
+CIMGUI_API int         cImTextStrFromUtf8(ImWchar* out_buf, int out_buf_size, const char* in_text, const char* in_text_end);    // Implied in_remaining = NULL
 CIMGUI_API int         cImTextStrFromUtf8Ex(ImWchar* out_buf, int out_buf_size, const char* in_text, const char* in_text_end, const char** in_remaining /* = NULL */); // return input UTF-8 bytes count
-CIMGUI_API int         cImTextCountCharsFromUtf8(const char* in_text, const char* in_text_end);                                // return number of UTF-8 code-points (NOT bytes count)
-CIMGUI_API int         cImTextCountUtf8BytesFromChar(const char* in_text, const char* in_text_end);                            // return number of bytes to express one char in UTF-8
-CIMGUI_API int         cImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_text_end);                       // return number of bytes to express string in UTF-8
-CIMGUI_API const char* cImTextFindPreviousUtf8Codepoint(const char* in_text_start, const char* in_text_curr);                  // return previous UTF-8 code-point.
-CIMGUI_API int         cImTextCountLines(const char* in_text, const char* in_text_end);                                        // return number of lines taken by text. trailing carriage return doesn't count as an extra line.
+CIMGUI_API int         cImTextCountCharsFromUtf8(const char* in_text, const char* in_text_end);                                 // return number of UTF-8 code-points (NOT bytes count)
+CIMGUI_API int         cImTextCountUtf8BytesFromChar(const char* in_text, const char* in_text_end);                             // return number of bytes to express one char in UTF-8
+CIMGUI_API int         cImTextCountUtf8BytesFromStr(const ImWchar* in_text, const ImWchar* in_text_end);                        // return number of bytes to express string in UTF-8
+CIMGUI_API const char* cImTextFindPreviousUtf8Codepoint(const char* in_text_start, const char* in_p);                           // return previous UTF-8 code-point.
+CIMGUI_API const char* cImTextFindValidUtf8CodepointEnd(const char* in_text_start, const char* in_text_end, const char* in_p);  // return previous UTF-8 code-point if 'in_p' is not the end of a valid one.
+CIMGUI_API int         cImTextCountLines(const char* in_text, const char* in_text_end);                                         // return number of lines taken by text. trailing carriage return doesn't count as an extra line.
 
 // Helpers: High-level text functions (DO NOT USE!!! THIS IS A MINIMAL SUBSET OF LARGER UPCOMING CHANGES)
 typedef enum
@@ -534,6 +538,18 @@ typedef enum
 CIMGUI_API ImVec2      cImFontCalcTextSizeEx(ImFont* font, float size, float max_width, float wrap_width, const char* text_begin, const char* text_end_display, const char* text_end, const char** out_remaining, ImVec2* out_offset, ImDrawTextFlags flags);
 CIMGUI_API const char* cImFontCalcWordWrapPositionEx(ImFont* font, float size, const char* text, const char* text_end, float wrap_width, ImDrawTextFlags flags /* = 0 */);
 CIMGUI_API const char* cImTextCalcWordWrapNextLineStart(const char* text, const char* text_end, ImDrawTextFlags flags /* = 0 */);  // trim trailing space and find beginning of next line
+
+// Character classification for word-wrapping logic
+typedef enum
+{
+    ImWcharClass_Blank,
+    ImWcharClass_Punct,
+    ImWcharClass_Other,
+} ImWcharClass;
+CIMGUI_API void cImTextInitClassifiers(void);
+CIMGUI_API void cImTextClassifierClear(ImU32* bits, unsigned int codepoint_min, unsigned int codepoint_end, ImWcharClass char_class);
+CIMGUI_API void cImTextClassifierSetCharClass(ImU32* bits, unsigned int codepoint_min, unsigned int codepoint_end, ImWcharClass char_class, unsigned int c);
+CIMGUI_API void cImTextClassifierSetCharClassFromStr(ImU32* bits, unsigned int codepoint_min, unsigned int codepoint_end, ImWcharClass char_class, const char* s);
 
 // Helpers: File System
 #ifdef IMGUI_DISABLE_FILE_FUNCTIONS
@@ -603,7 +619,7 @@ CIMGUI_API ImVec2 cImTruncImVec2(ImVec2 v);
 CIMGUI_API float  cImFloor(float f);                                                     // Decent replacement for floorf()
 CIMGUI_API ImVec2 cImFloorImVec2(ImVec2 v);
 CIMGUI_API float  cImTrunc64(float f);
-CIMGUI_API float  cImRound64(float f);
+CIMGUI_API float  cImRound64(float f);                                                   // FIXME: Positive values only.
 CIMGUI_API int    cImModPositive(int a, int b);
 CIMGUI_API float  cImDot(ImVec2 a, ImVec2 b);
 CIMGUI_API ImVec2 cImRotate(ImVec2 v, float cos_a, float sin_a);
@@ -668,6 +684,8 @@ CIMGUI_API bool   ImRect_ContainsWithPad(const ImRect* self, ImVec2 p, ImVec2 pa
 CIMGUI_API bool   ImRect_Overlaps(const ImRect* self, ImRect r);
 CIMGUI_API void   ImRect_Add(ImRect* self, ImVec2 p);
 CIMGUI_API void   ImRect_AddImRect(ImRect* self, ImRect r);
+CIMGUI_API void   ImRect_AddX(ImRect* self, float x);
+CIMGUI_API void   ImRect_AddY(ImRect* self, float y);
 CIMGUI_API void   ImRect_Expand(ImRect* self, const float amount);
 CIMGUI_API void   ImRect_ExpandImVec2(ImRect* self, ImVec2 amount);
 CIMGUI_API void   ImRect_Translate(ImRect* self, ImVec2 d);
@@ -675,7 +693,6 @@ CIMGUI_API void   ImRect_TranslateX(ImRect* self, float dx);
 CIMGUI_API void   ImRect_TranslateY(ImRect* self, float dy);
 CIMGUI_API void   ImRect_ClipWith(ImRect* self, ImRect r);                           // Simple version, may lead to an inverted rectangle, which is fine for Contains/Overlaps test but not for display.
 CIMGUI_API void   ImRect_ClipWithFull(ImRect* self, ImRect r);                       // Full version, ensure both points are fully clipped.
-CIMGUI_API void   ImRect_Floor(ImRect* self);
 CIMGUI_API bool   ImRect_IsInverted(const ImRect* self);
 CIMGUI_API ImVec4 ImRect_ToVec4(const ImRect* self);
 
@@ -950,7 +967,7 @@ struct ImPool_ImGuiTable_t
 // Maintain a line index for a text buffer. This is a strong candidate to be moved into the public API.
 struct ImGuiTextIndex_t
 {
-    ImVector_int LineOffsets;
+    ImVector_int Offsets;
     int          EndOffset /* = 0 */;  // Because we don't own text buffer we need to maintain EndOffset (may bake in LineOffsets?)
 };
 typedef struct ImGuiTextIndex_t ImGuiTextIndex;  // Maintain a line index for a text buffer.
@@ -962,7 +979,6 @@ typedef struct ImGuiTextIndex_t ImGuiTextIndex;  // Maintain a line index for a 
 typedef enum
 {
     // Controlled by user
-    ImGuiItemFlags_Disabled               = 1<<10,                           // false     // Disable interactions (DOES NOT affect visuals. DO NOT mix direct use of this with BeginDisabled(). See BeginDisabled()/EndDisabled() for full disable feature, and github #211).
     ImGuiItemFlags_ReadOnly               = 1<<11,                           // false     // [ALPHA] Allow hovering interactions but underlying value is not changed.
     ImGuiItemFlags_MixedValue             = 1<<12,                           // false     // [BETA] Represent a mixed/indeterminate value, generally multi-selection where values differ. Currently only supported by Checkbox() (later should support all sorts of widgets)
     ImGuiItemFlags_NoWindowHoverableCheck = 1<<13,                           // false     // Disable hoverable check in ItemHoverable()
@@ -999,6 +1015,7 @@ typedef enum
     ImGuiItemStatusFlags_HasClipRect      = 1<<9,   // g.LastItemData.ClipRect is valid.
     ImGuiItemStatusFlags_HasShortcut      = 1<<10,  // g.LastItemData.Shortcut valid. Set by SetNextItemShortcut() -> ItemAdd().
     //ImGuiItemStatusFlags_FocusedByTabbing = 1 << 8,   // Removed IN 1.90.1 (Dec 2023). The trigger is part of g.NavActivateId. See commit 54c1bdeceb.
+    ImGuiItemStatusFlags_EditedInternal   = 1<<11,  // Similar to ImGuiItemStatusFlags_Edited but bypassing ImGuiItemFlags_NoMarkEdited.
 
     // Additional status + semantic for ImGuiTestEngine
 #ifdef IMGUI_ENABLE_TEST_ENGINE
@@ -1021,18 +1038,9 @@ typedef enum
 // Extend ImGuiInputTextFlags_
 typedef enum
 {
-    // [Experimental]
-    // Word-wrapping caveats:
-    // - Not well tested yet. Please report any incorrect cursor movement, selection behavior etc. bug to https://github.com/ocornut/imgui/issues/3237.
-    // - With our current design it is _much_ slower than a regular text field. Editing a <50K buffer will generally be ok, but editing a 1MB buffer will waste meaningful amount of CPU.
-    //   We are likely to not make the feature public until this is fixed (which requires bigger changes to InputText will be be generally desirable for this and other features)
-    // - Wrapping of long words/sections (e.g. words that are larger than available width) is currently visually not pleasing.
-    // - Vertical scrollbar is currently always visible.
-    ImGuiInputTextFlags_WordWrap             = 1<<24,  // InputTextMultine(): wrap lines that are too long. (Ref #3237, #952, #1062)
-
     // [Internal]
     ImGuiInputTextFlags_Multiline            = 1<<26,  // For internal use by InputTextMultiline()
-    ImGuiInputTextFlags_MergedItem           = 1<<27,  // For internal use by TempInputText(), will skip calling ItemAdd(). Require bounding-box to strictly match.
+    ImGuiInputTextFlags_TempInput            = 1<<27,  // For internal use by TempInputText(), will skip calling ItemAdd(). Require bounding-box to strictly match.
     ImGuiInputTextFlags_LocalizeDecimalPoint = 1<<28,  // For internal use by InputScalar() and TempInputScalar()
 } ImGuiInputTextFlagsPrivate_;
 
@@ -1042,12 +1050,11 @@ typedef enum
     ImGuiButtonFlags_PressedOnClick                = 1<<4,   // return true on click (mouse down event)
     ImGuiButtonFlags_PressedOnClickRelease         = 1<<5,   // [Default] return true on click + release on same item <-- this is what the majority of Button are using
     ImGuiButtonFlags_PressedOnClickReleaseAnywhere = 1<<6,   // return true on click + release even if the release event is not done while hovering the item
-    ImGuiButtonFlags_PressedOnRelease              = 1<<7,   // return true on release (default requires click+release)
+    ImGuiButtonFlags_PressedOnRelease              = 1<<7,   // return true on release (default requires click+release). Prior to 2026/03/20 this implied ImGuiButtonFlags_NoHoldingActiveId but they are separate now.
     ImGuiButtonFlags_PressedOnDoubleClick          = 1<<8,   // return true on double-click (default requires click+release)
     ImGuiButtonFlags_PressedOnDragDropHold         = 1<<9,   // return true when held into while we are drag and dropping another item (used by e.g. tree nodes, collapsing headers)
     //ImGuiButtonFlags_Repeat               = 1 << 10,  // hold to repeat -> use ImGuiItemFlags_ButtonRepeat instead.
     ImGuiButtonFlags_FlattenChildren               = 1<<11,  // allow interactions even if a child window is overlapping
-    ImGuiButtonFlags_AllowOverlap                  = 1<<12,  // require previous frame HoveredId to either match id or be null before being usable.
     //ImGuiButtonFlags_DontClosePopups      = 1 << 13,  // disable automatically closing parent popup on press
     //ImGuiButtonFlags_Disabled             = 1 << 14,  // disable interactions -> use BeginDisabled() or ImGuiItemFlags_Disabled
     ImGuiButtonFlags_AlignTextBaseLine             = 1<<15,  // vertically align button to match text baseline - ButtonEx() only // FIXME: Should be removed and handled by SmallButton(), not possible currently because of DC.CursorPosPrevLine
@@ -1081,7 +1088,6 @@ typedef enum
 {
     // NB: need to be in sync with last value of ImGuiSelectableFlags_
     ImGuiSelectableFlags_NoHoldingActiveID    = 1<<20,
-    ImGuiSelectableFlags_SelectOnNav          = 1<<21,  // (WIP) Auto-select when moved into. This is not exposed in public API as to handle multi-select and modifiers we will need user to explicitly control focus scope. May be replaced with a BeginSelection() API.
     ImGuiSelectableFlags_SelectOnClick        = 1<<22,  // Override button behavior to react on Click (default is Click+Release)
     ImGuiSelectableFlags_SelectOnRelease      = 1<<23,  // Override button behavior to react on Release (default is Click+Release)
     ImGuiSelectableFlags_SpanAvailWidth       = 1<<24,  // Span all avail width even if we declared less for layout purpose. FIXME: We may be able to remove this (added in 6251d379, 2bcafc86 for menus)
@@ -1187,6 +1193,7 @@ struct ImGuiGroupData_t
     ImVec2  BackupCurrLineSize;
     float   BackupCurrLineTextBaseOffset;
     ImGuiID BackupActiveIdIsAlive;
+    bool    BackupActiveIdHasBeenEditedThisFrame;
     bool    BackupDeactivatedIdIsAlive;
     bool    BackupHoveredIdIsAlive;
     bool    BackupIsSameLine;
@@ -1210,6 +1217,7 @@ CIMGUI_API float ImGuiMenuColumns_DeclColumns(ImGuiMenuColumns* self, float w_ic
 CIMGUI_API void  ImGuiMenuColumns_CalcNextTotalWidth(ImGuiMenuColumns* self, bool update_offsets);
 
 // Internal temporary state for deactivating InputText() instances.
+// Store as part of ImGuiDeactivatedItemData?
 struct ImGuiInputTextDeactivatedState_t
 {
     ImGuiID       ID;     // widget id owning the text state (which just got deactivated)
@@ -1236,7 +1244,7 @@ struct ImGuiInputTextState_t
     ImGuiInputTextFlags Flags;                 // copy of InputText() flags. may be used to check if e.g. ImGuiInputTextFlags_Password is set.
     ImGuiID             ID;                    // widget id owning the text state
     int                 TextLen;               // UTF-8 length of the string in TextA (in bytes)
-    const char*         TextSrc;               // == TextA.Data unless read-only, in which case == buf passed to InputText(). Field only set and valid _inside_ the call InputText() call.
+    const char*         TextSrc;               // == TextA.Data unless read-only, in which case == buf passed to InputText(). For _ReadOnly fields, pointer will be null outside the InputText() call.
     ImVector_char       TextA;                 // main UTF8 buffer. TextA.Size is a buffer size! Should always be >= buf_size passed by user (and of course >= CurLenA + 1).
     ImVector_char       TextToRevertTo;        // value to revert to when pressing Escape = backup of end-user buffer at the time of focus (in UTF-8, unaltered)
     ImVector_char       CallbackTextBackup;    // temporary storage for callback to support automatic reconcile of undo-stack
@@ -1248,34 +1256,37 @@ struct ImGuiInputTextState_t
     bool                CursorFollow;          // set when we want scrolling to follow the current cursor position (not always!)
     bool                CursorCenterY;         // set when we want scrolling to be centered over the cursor position (while resizing a word-wrapping field)
     bool                SelectedAllMouseLock;  // after a double-click to select all, we ignore further mouse drags to update selection
-    bool                Edited;                // edited this frame
+    bool                EditedBefore;          // edited since activated
+    bool                EditedThisFrame;       // edited this frame
     bool                WantReloadUserBuf;     // force a reload of user buf so it may be modified externally. may be automatic in future version.
     ImS8                LastMoveDirectionLR;   // ImGuiDir_Left or ImGuiDir_Right. track last movement direction so when cursor cross over a word-wrapping boundaries we can display it on either line depending on last move.s
     int                 ReloadSelectionStart;
     int                 ReloadSelectionEnd;
 };
-CIMGUI_API void  ImGuiInputTextState_ClearText(ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_ClearFreeMemory(ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_OnKeyPressed(ImGuiInputTextState* self, int key);          // Cannot be inline because we call in code in stb_textedit.h implementation
-CIMGUI_API void  ImGuiInputTextState_OnCharPressed(ImGuiInputTextState* self, unsigned int c);
-CIMGUI_API float ImGuiInputTextState_GetPreferredOffsetX(const ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_ClearText(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_ClearFreeMemory(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_OnKeyPressed(ImGuiInputTextState* self, int key);             // Cannot be inline because we call in code in stb_textedit.h implementation
+CIMGUI_API void        ImGuiInputTextState_OnCharPressed(ImGuiInputTextState* self, unsigned int c);
+CIMGUI_API float       ImGuiInputTextState_GetPreferredOffsetX(const ImGuiInputTextState* self);
+CIMGUI_API const char* ImGuiInputTextState_GetText(ImGuiInputTextState* self);
 // Cursor & Selection
-CIMGUI_API void  ImGuiInputTextState_CursorAnimReset(ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_CursorClamp(ImGuiInputTextState* self);
-CIMGUI_API bool  ImGuiInputTextState_HasSelection(const ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_ClearSelection(ImGuiInputTextState* self);
-CIMGUI_API int   ImGuiInputTextState_GetCursorPos(const ImGuiInputTextState* self);
-CIMGUI_API int   ImGuiInputTextState_GetSelectionStart(const ImGuiInputTextState* self);
-CIMGUI_API int   ImGuiInputTextState_GetSelectionEnd(const ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_SelectAll(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_CursorAnimReset(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_CursorClamp(ImGuiInputTextState* self);
+CIMGUI_API bool        ImGuiInputTextState_HasSelection(const ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_ClearSelection(ImGuiInputTextState* self);
+CIMGUI_API int         ImGuiInputTextState_GetCursorPos(const ImGuiInputTextState* self);
+CIMGUI_API int         ImGuiInputTextState_GetSelectionStart(const ImGuiInputTextState* self);
+CIMGUI_API int         ImGuiInputTextState_GetSelectionEnd(const ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_SetSelection(ImGuiInputTextState* self, int start, int end);
+CIMGUI_API void        ImGuiInputTextState_SelectAll(ImGuiInputTextState* self);
 // Reload user buf (WIP #2890)
 // If you modify underlying user-passed const char* while active you need to call this (InputText V2 may lift this)
 //   strcpy(my_buf, "hello");
 //   if (ImGuiInputTextState* state = ImGui::GetInputTextState(id)) // id may be ImGui::GetItemID() is last item
 //       state->ReloadUserBufAndSelectAll();
-CIMGUI_API void  ImGuiInputTextState_ReloadUserBufAndSelectAll(ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_ReloadUserBufAndKeepSelection(ImGuiInputTextState* self);
-CIMGUI_API void  ImGuiInputTextState_ReloadUserBufAndMoveToEnd(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_ReloadUserBufAndSelectAll(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_ReloadUserBufAndKeepSelection(ImGuiInputTextState* self);
+CIMGUI_API void        ImGuiInputTextState_ReloadUserBufAndMoveToEnd(ImGuiInputTextState* self);
 
 typedef enum
 {
@@ -1285,6 +1296,12 @@ typedef enum
     ImGuiWindowRefreshFlags_RefreshOnFocus    = 1<<2,  // [EXPERIMENTAL] Always refresh on focus
     // Refresh policy/frequency, Load Balancing etc.
 } ImGuiWindowRefreshFlags_;
+
+typedef enum
+{
+    ImGuiWindowBgClickFlags_None = 0,
+    ImGuiWindowBgClickFlags_Move = 1<<0,  // Click on bg/void + drag to move window. Cleared by default when using io.ConfigWindowsMoveFromTitleBarOnly.
+} ImGuiWindowBgClickFlags_;
 
 typedef enum
 {
@@ -1338,12 +1355,13 @@ CIMGUI_API void ImGuiNextWindowData_ClearFlags(ImGuiNextWindowData* self);
 
 typedef enum
 {
-    ImGuiNextItemDataFlags_None         = 0,
-    ImGuiNextItemDataFlags_HasWidth     = 1<<0,
-    ImGuiNextItemDataFlags_HasOpen      = 1<<1,
-    ImGuiNextItemDataFlags_HasShortcut  = 1<<2,
-    ImGuiNextItemDataFlags_HasRefVal    = 1<<3,
-    ImGuiNextItemDataFlags_HasStorageID = 1<<4,
+    ImGuiNextItemDataFlags_None           = 0,
+    ImGuiNextItemDataFlags_HasWidth       = 1<<0,
+    ImGuiNextItemDataFlags_HasOpen        = 1<<1,
+    ImGuiNextItemDataFlags_HasShortcut    = 1<<2,
+    ImGuiNextItemDataFlags_HasRefVal      = 1<<3,
+    ImGuiNextItemDataFlags_HasStorageID   = 1<<4,
+    ImGuiNextItemDataFlags_HasColorMarker = 1<<5,
 } ImGuiNextItemDataFlags_;
 
 struct ImGuiNextItemData_t
@@ -1361,6 +1379,7 @@ struct ImGuiNextItemData_t
     ImU8                   OpenCond;           // Set by SetNextItemOpen()
     ImGuiDataTypeStorage   RefVal;             // Not exposed yet, for ImGuiInputTextFlags_ParseEmptyAsRefVal
     ImGuiID                StorageId;          // Set by SetNextItemStorageID()
+    ImU32                  ColorMarker;        // Set by SetNextItemColorMarker(). Not exposed yet, supported by DragScalar,SliderScalar and for ImGuiSliderFlags_ColorMarkers.
 };
 CIMGUI_API void ImGuiNextItemData_ClearFlags(ImGuiNextItemData* self);  // Also cleared manually by ItemAdd()!
 
@@ -1433,6 +1452,7 @@ struct ImGuiPtrOrIndex_t
 };
 
 // Data used by IsItemDeactivated()/IsItemDeactivatedAfterEdit() functions
+// Also see ImGuiInputTextDeactivatedState which is an extension for this for InputText()
 struct ImGuiDeactivatedItemData_t
 {
     ImGuiID ID;
@@ -1493,8 +1513,8 @@ typedef struct ImBitArrayForNamedKeys_t
 #define ImGuiKey_NavGamepadTweakFast    ImGuiKey_GamepadR1
 #define ImGuiKey_NavGamepadActivate     (g.IO.ConfigNavSwapGamepadButtons ? ImGuiKey_GamepadFaceRight : ImGuiKey_GamepadFaceDown)
 #define ImGuiKey_NavGamepadCancel       (g.IO.ConfigNavSwapGamepadButtons ? ImGuiKey_GamepadFaceDown : ImGuiKey_GamepadFaceRight)
-#define ImGuiKey_NavGamepadMenu         ImGuiKey_GamepadFaceLeft
-#define ImGuiKey_NavGamepadInput        ImGuiKey_GamepadFaceUp
+#define ImGuiKey_NavGamepadMenu         ImGuiKey_GamepadFaceLeft     // Toggle menu layer. Hold to enable Windowing.
+#define ImGuiKey_NavGamepadContextMenu  ImGuiKey_GamepadFaceUp       // Open context menu (same as Shift+F10)
 
 typedef enum
 {
@@ -1585,8 +1605,8 @@ struct ImGuiKeyRoutingData_t
 {
     ImGuiKeyRoutingIndex NextEntryIndex;
     ImU16                Mods;              // Technically we'd only need 4-bits but for simplify we store ImGuiMod_ values which need 16-bits.
-    ImU8                 RoutingCurrScore;  // [DEBUG] For debug display
-    ImU8                 RoutingNextScore;  // Lower is better (0: perfect score)
+    ImU16                RoutingCurrScore;  // [DEBUG] For debug display
+    ImU16                RoutingNextScore;  // Lower is better (0: perfect score)
     ImGuiID              RoutingCurr;
     ImGuiID              RoutingNext;
 };
@@ -1690,8 +1710,9 @@ typedef enum
     ImGuiActivateFlags_PreferInput        = 1<<0,  // Favor activation that requires keyboard text input (e.g. for Slider/Drag). Default for Enter key.
     ImGuiActivateFlags_PreferTweak        = 1<<1,  // Favor activation for tweaking with arrows or gamepad (e.g. for Slider/Drag). Default for Space key and if keyboard is not used.
     ImGuiActivateFlags_TryToPreserveState = 1<<2,  // Request widget to preserve state if it can (e.g. InputText will try to preserve cursor/selection)
-    ImGuiActivateFlags_FromTabbing        = 1<<3,  // Activation requested by a tabbing request
+    ImGuiActivateFlags_FromTabbing        = 1<<3,  // Activation requested by a tabbing request (ImGuiNavMoveFlags_IsTabbing)
     ImGuiActivateFlags_FromShortcut       = 1<<4,  // Activation requested by an item shortcut via SetNextItemShortcut() function.
+    ImGuiActivateFlags_FromFocusApi       = 1<<5,  // Activation requested by an api request (ImGuiNavMoveFlags_FocusApi)
 } ImGuiActivateFlags_;
 
 // Early work-in-progress API for ScrollToItem()
@@ -1734,7 +1755,7 @@ typedef enum
     ImGuiNavMoveFlags_WrapMask_             = ImGuiNavMoveFlags_LoopX | ImGuiNavMoveFlags_LoopY | ImGuiNavMoveFlags_WrapX | ImGuiNavMoveFlags_WrapY,
     ImGuiNavMoveFlags_AllowCurrentNavId     = 1<<4,   // Allow scoring and considering the current NavId as a move target candidate. This is used when the move source is offset (e.g. pressing PageDown actually needs to send a Up move request, if we are pressing PageDown from the bottom-most item we need to stay in place)
     ImGuiNavMoveFlags_AlsoScoreVisibleSet   = 1<<5,   // Store alternate result in NavMoveResultLocalVisible that only comprise elements that are already fully visible (used by PageUp/PageDown)
-    ImGuiNavMoveFlags_ScrollToEdgeY         = 1<<6,   // Force scrolling to min/max (used by Home/End) // FIXME-NAV: Aim to remove or reword, probably unnecessary
+    ImGuiNavMoveFlags_ScrollToEdgeY         = 1<<6,   // Force scrolling to min/max (used by Home/End) // FIXME-NAV: Aim to remove or reword as ImGuiScrollFlags
     ImGuiNavMoveFlags_Forwarded             = 1<<7,
     ImGuiNavMoveFlags_DebugNoResult         = 1<<8,   // Dummy scoring for debug purpose, don't apply result
     ImGuiNavMoveFlags_FocusApi              = 1<<9,   // Requests from focus API can land/focus/activate items even if they are marked with _NoTabStop (see NavProcessItemForTabbingRequest() for details)
@@ -1874,6 +1895,7 @@ struct ImGuiBoxSelectState_t
     // Temporary/Transient data
     bool          UnclipMode;         // (Temp/Transient, here in hot area). Set/cleared by the BeginMultiSelect()/EndMultiSelect() owning active box-select.
     ImRect        UnclipRect;         // Rectangle where ItemAdd() clipping may be temporarily disabled. Need support by multi-select supporting widgets.
+    ImRect        UnclipRects[2];     // Per-axis versions.
     ImRect        BoxSelectRectPrev;  // Selection rectangle in absolute coordinates (derived every frame from BoxSelectStartPosRel and MousePos)
     ImRect        BoxSelectRectCurr;
 };
@@ -1894,7 +1916,8 @@ struct ImGuiMultiSelectTempData_t
     ImGuiMultiSelectFlags  Flags;
     ImVec2                 ScopeRectMin;
     ImVec2                 BackupCursorMaxPos;
-    ImGuiSelectionUserData LastSubmittedItem;   // Copy of last submitted item data, used to merge output ranges.
+    //ImGuiSelectionUserData CurrSubmittedItem; // Copy of last submitted item data, used to merge output ranges.
+    //ImGuiSelectionUserData PrevSubmittedItem; // Copy of previous submitted item data, used to merge output ranges.
     ImGuiID                BoxSelectId;
     ImGuiKeyChord          KeyMods;
     ImS8                   LoopRequestSetAll;   // -1: no operation, 0: clear all, 1: select all.
@@ -1977,7 +2000,7 @@ typedef enum
     ImGuiDockNodeState_HostWindowVisible,
 } ImGuiDockNodeState;
 
-// sizeof() 156~192
+// sizeof() 176~216
 struct ImGuiDockNode_t
 {
     ImGuiID                 ID;
@@ -1994,8 +2017,8 @@ struct ImGuiDockNode_t
     ImVec2                  Size;                  // Current size
     ImVec2                  SizeRef;               // [Split node only] Last explicitly written-to size (overridden when using a splitter affecting the node), used to calculate Size.
     ImGuiAxis               SplitAxis;             // [Split node only] Split axis (X or Y)
-    ImGuiWindowClass        WindowClass;           // [Root node only]
     ImU32                   LastBgColor;
+    ImGuiWindowClass        WindowClass;           // [Root node only]
 
     ImGuiWindow*            HostWindow;
     ImGuiWindow*            VisibleWindow;         // Generally point to window which is ID is == SelectedTabID, but when CTRL+Tabbing this can be a different window.
@@ -2051,6 +2074,7 @@ typedef enum
     ImGuiWindowDockStyleCol_TabDimmed,
     ImGuiWindowDockStyleCol_TabDimmedSelected,
     ImGuiWindowDockStyleCol_TabDimmedSelectedOverline,
+    ImGuiWindowDockStyleCol_UnsavedMarker,
     ImGuiWindowDockStyleCol_COUNT,
 } ImGuiWindowDockStyleCol;
 
@@ -2077,45 +2101,47 @@ struct ImGuiDockContext_t
 struct ImGuiViewportP_t
 {
     // Appended from parent type ImGuiViewport
-    ImGuiID            ID;                         // Unique identifier for the viewport
-    ImGuiViewportFlags Flags;                      // See ImGuiViewportFlags_
-    ImVec2             Pos;                        // Main Area: Position of the viewport (Dear ImGui coordinates are the same as OS desktop/native coordinates)
-    ImVec2             Size;                       // Main Area: Size of the viewport.
-    ImVec2             FramebufferScale;           // Density of the viewport for Retina display (always 1,1 on Windows, may be 2,2 etc on macOS/iOS). This will affect font rasterizer density.
-    ImVec2             WorkPos;                    // Work Area: Position of the viewport minus task bars, menus bars, status bars (>= Pos)
-    ImVec2             WorkSize;                   // Work Area: Size of the viewport minus task bars, menu bars, status bars (<= Size)
-    float              DpiScale;                   // 1.0f = 96 DPI = No extra scale.
-    ImGuiID            ParentViewportId;           // (Advanced) 0: no parent. Instruct the platform backend to setup a parent/child relationship between platform windows.
-    ImDrawData*        DrawData;                   // The ImDrawData corresponding to this viewport. Valid after Render() and until the next call to NewFrame().
+    ImGuiID            ID;                              // Unique identifier for the viewport
+    ImGuiViewportFlags Flags;                           // See ImGuiViewportFlags_
+    ImVec2             Pos;                             // Main Area: Position of the viewport (Dear ImGui coordinates are the same as OS desktop/native coordinates)
+    ImVec2             Size;                            // Main Area: Size of the viewport.
+    ImVec2             FramebufferScale;                // Density of the viewport for Retina display (always 1,1 on Windows, may be 2,2 etc on macOS/iOS). This will affect font rasterizer density.
+    ImVec2             WorkPos;                         // Work Area: Position of the viewport minus task bars, menus bars, status bars (>= Pos)
+    ImVec2             WorkSize;                        // Work Area: Size of the viewport minus task bars, menu bars, status bars (<= Size)
+    float              DpiScale;                        // 1.0f = 96 DPI = No extra scale.
+    ImGuiID            ParentViewportId;                // (Advanced) 0: no parent. Instruct the platform backend to setup a parent/child relationship between platform windows.
+    ImGuiViewport*     ParentViewport;                  // (Advanced) Direct shortcut to ImGui::FindViewportByID(ParentViewportId). NULL: no parent.
+    ImDrawData*        DrawData;                        // The ImDrawData corresponding to this viewport. Valid after Render() and until the next call to NewFrame().
     // Platform/Backend Dependent Data
     // Our design separate the Renderer and Platform backends to facilitate combining default backends with each others.
     // When our create your own backend for a custom engine, it is possible that both Renderer and Platform will be handled
     // by the same system and you may not need to use all the UserData/Handle fields.
     // The library never uses those fields, they are merely storage to facilitate backend implementation.
-    void*              RendererUserData;           // void* to hold custom data structure for the renderer (e.g. swap chain, framebuffers etc.). generally set by your Renderer_CreateWindow function.
-    void*              PlatformUserData;           // void* to hold custom data structure for the OS / platform (e.g. windowing info, render context). generally set by your Platform_CreateWindow function.
-    void*              PlatformHandle;             // void* to hold higher-level, platform window handle (e.g. HWND for Win32 backend, Uint32 WindowID for SDL, GLFWWindow* for GLFW), for FindViewportByPlatformHandle().
-    void*              PlatformHandleRaw;          // void* to hold lower-level, platform-native window handle (always HWND on Win32 platform, unused for other platforms).
-    bool               PlatformWindowCreated;      // Platform window has been created (Platform_CreateWindow() has been called). This is false during the first frame where a viewport is being created.
-    bool               PlatformRequestMove;        // Platform window requested move (e.g. window was moved by the OS / host window manager, authoritative position will be OS window position)
-    bool               PlatformRequestResize;      // Platform window requested resize (e.g. window was resized by the OS / host window manager, authoritative size will be OS window size)
-    bool               PlatformRequestClose;       // Platform window requested closure (e.g. window was moved by the OS / host window manager, e.g. pressing ALT-F4)
+    void*              RendererUserData;                // void* to hold custom data structure for the renderer (e.g. swap chain, framebuffers etc.). generally set by your Renderer_CreateWindow function.
+    void*              PlatformUserData;                // void* to hold custom data structure for the OS / platform (e.g. windowing info, render context). generally set by your Platform_CreateWindow function.
+    void*              PlatformIconData;                // void* to hold custom data structure for the OS / platform to specify an icon. Currently unused for exposed to allow experiments.
+    void*              PlatformHandle;                  // void* to hold higher-level, platform window handle (e.g. HWND for Win32 backend, Uint32 WindowID for SDL, GLFWWindow* for GLFW), for FindViewportByPlatformHandle().
+    void*              PlatformHandleRaw;               // void* to hold lower-level, platform-native window handle (always HWND on Win32 platform, unused for other platforms).
+    bool               PlatformWindowCreated;           // Platform window has been created (Platform_CreateWindow() has been called). This is false during the first frame where a viewport is being created.
+    bool               PlatformRequestMove;             // Platform window requested move (e.g. window was moved by the OS / host window manager, authoritative position will be OS window position)
+    bool               PlatformRequestResize;           // Platform window requested resize (e.g. window was resized by the OS / host window manager, authoritative size will be OS window size)
+    bool               PlatformRequestClose;            // Platform window requested closure (e.g. window was moved by the OS / host window manager, e.g. pressing ALT-F4)
 
-    ImGuiWindow*       Window;                     // Set when the viewport is owned by a window (and ImGuiViewportFlags_CanHostOtherWindows is NOT set)
+    ImGuiWindow*       Window;                          // Set when the viewport is owned by a window (and ImGuiViewportFlags_CanHostOtherWindows is NOT set)
     int                Idx;
-    int                LastFrameActive;            // Last frame number this viewport was activated by a window
-    int                LastFocusedStampCount;      // Last stamp number from when a window hosted by this viewport was focused (by comparing this value between two viewport we have an implicit viewport z-order we use as fallback)
+    int                LastFrameActive;                 // Last frame number this viewport was activated by a window
+    int                LastFocusedStampCount;           // Last stamp number from when a window hosted by this viewport was focused (by comparing this value between two viewport we have an implicit viewport z-order we use as fallback)
     ImGuiID            LastNameHash;
     ImVec2             LastPos;
     ImVec2             LastSize;
-    float              Alpha;                      // Window opacity (when dragging dockable windows/viewports we make them transparent)
+    float              Alpha;                           // Window opacity (when dragging dockable windows/viewports we make them transparent)
     float              LastAlpha;
-    bool               LastFocusedHadNavWindow;    // Instead of maintaining a LastFocusedWindow (which may harder to correctly maintain), we merely store weither NavWindow != NULL last time the viewport was focused.
+    bool               LastFocusedHadNavWindow;         // Instead of maintaining a LastFocusedWindow (which may harder to correctly maintain), we merely store weither NavWindow != NULL last time the viewport was focused.
     short              PlatformMonitor;
-    int                BgFgDrawListsLastFrame[2];  // Last frame number the background (0) and foreground (1) draw lists were used
-    ImDrawList*        BgFgDrawLists[2];           // Convenience background (0) and foreground (1) draw lists. We use them to draw software mouser cursor when io.MouseDrawCursor is set and to draw most debug overlays.
+    float              BgFgDrawListsLastTimeActive[2];  // Last frame number the background (0) and foreground (1) draw lists were used
+    ImDrawList*        BgFgDrawLists[2];                // Convenience background (0) and foreground (1) draw lists. We use them to draw software mouser cursor when io.MouseDrawCursor is set and to draw most debug overlays.
     ImDrawData         DrawDataP;
-    ImDrawDataBuilder  DrawDataBuilder;            // Temporary data while building final ImDrawData
+    ImDrawDataBuilder  DrawDataBuilder;                 // Temporary data while building final ImDrawData
     ImVec2             LastPlatformPos;
     ImVec2             LastPlatformSize;
     ImVec2             LastRendererSize;
@@ -2124,10 +2150,10 @@ struct ImGuiViewportP_t
     // - Insets are >= 0.0f values, distance from viewport corners to work area.
     // - BeginMainMenuBar() and DockspaceOverViewport() tend to use work area to avoid stepping over existing contents.
     // - Generally 'safeAreaInsets' in iOS land, 'DisplayCutout' in Android land.
-    ImVec2             WorkInsetMin;               // Work Area inset locked for the frame. GetWorkRect() always fits within GetMainRect().
-    ImVec2             WorkInsetMax;               // "
-    ImVec2             BuildWorkInsetMin;          // Work Area inset accumulator for current frame, to become next frame's WorkInset
-    ImVec2             BuildWorkInsetMax;          // "
+    ImVec2             WorkInsetMin;                    // Work Area inset locked for the frame. GetWorkRect() always fits within GetMainRect().
+    ImVec2             WorkInsetMax;                    // "
+    ImVec2             BuildWorkInsetMin;               // Work Area inset accumulator for current frame, to become next frame's WorkInset
+    ImVec2             BuildWorkInsetMax;               // "
 };
 CIMGUI_API void   ImGuiViewportP_ClearRequestFlags(ImGuiViewportP* self);
 // Calculate work rect pos/size given a set of offset (we have 1 pair of offset for rect locked from last frame data, and 1 pair for currently building rect)
@@ -2215,7 +2241,9 @@ struct ImGuiLocEntry_t
 // - See 'Demo->Configuration->Error Handling' and ImGuiIO definitions for details on error handling.
 // - Read https://github.com/ocornut/imgui/wiki/Error-Handling for details on error handling.
 #ifndef IM_ASSERT_USER_ERROR
-#define IM_ASSERT_USER_ERROR(_EXPR,_MSG)    do { if (!(_EXPR) && ImGui::ErrorLog(_MSG)) { IM_ASSERT((_EXPR) && _MSG); } } while (0)     // Recoverable User Error
+#define IM_ASSERT_USER_ERROR(_EXPR,_MSG)            do { if (!(_EXPR)) { if (ImGui::ErrorLog(_MSG)) { IM_ASSERT((_EXPR) && _MSG); } } } while (0)                // Recoverable User Error
+#define IM_ASSERT_USER_ERROR_RET(_EXPR,_MSG)        do { if (!(_EXPR)) { if (ImGui::ErrorLog(_MSG)) { IM_ASSERT((_EXPR) && _MSG); } return; } } while (0)        // Recoverable User Error
+#define IM_ASSERT_USER_ERROR_RETV(_EXPR,_RETV,_MSG) do { if (!(_EXPR)) { if (ImGui::ErrorLog(_MSG)) { IM_ASSERT((_EXPR) && _MSG); } return _RETV; } } while (0)  // Recoverable User Error
 #endif // #ifndef IM_ASSERT_USER_ERROR
 // The error callback is currently not public, as it is expected that only advanced users will rely on it.
 typedef void (*ImGuiErrorCallback)(ImGuiContext* ctx, void* user_data, const char* msg);  // Function signature for g.ErrorCallback
@@ -2244,7 +2272,8 @@ typedef enum
 
     ImGuiDebugLogFlags_EventMask_         = ImGuiDebugLogFlags_EventError | ImGuiDebugLogFlags_EventActiveId | ImGuiDebugLogFlags_EventFocus | ImGuiDebugLogFlags_EventPopup | ImGuiDebugLogFlags_EventNav | ImGuiDebugLogFlags_EventClipper | ImGuiDebugLogFlags_EventSelection | ImGuiDebugLogFlags_EventIO | ImGuiDebugLogFlags_EventFont | ImGuiDebugLogFlags_EventInputRouting | ImGuiDebugLogFlags_EventDocking | ImGuiDebugLogFlags_EventViewport,
     ImGuiDebugLogFlags_OutputToTTY        = 1<<20,  // Also send output to TTY
-    ImGuiDebugLogFlags_OutputToTestEngine = 1<<21,  // Also send output to Test Engine
+    ImGuiDebugLogFlags_OutputToDebugger   = 1<<21,  // Also send output to Debugger Console [Windows only]
+    ImGuiDebugLogFlags_OutputToTestEngine = 1<<22,  // Also send output to Dear ImGui Test Engine
 } ImGuiDebugLogFlags_;
 
 struct ImGuiDebugAllocEntry_t
@@ -2284,24 +2313,30 @@ struct ImGuiMetricsConfig_t
 struct ImGuiStackLevelInfo_t
 {
     ImGuiID ID;
-    ImS8    QueryFrameCount;  // >= 1: Query in progress
-    bool    QuerySuccess;     // Obtained result from DebugHookIdInfo()
+    ImS8    QueryFrameCount;  // >= 1: Sub-query in progress
+    bool    QuerySuccess;     // Sub-query obtained result from DebugHookIdInfo()
     ImS8    DataType;         // ImGuiDataType
-    int     DescOffset;       // -1 or offset into parent's ResultPathsBuf
+    int     DescOffset;       // -1 or offset into parent's ResultsPathsBuf
+};
+
+struct ImGuiDebugItemPathQuery_t
+{
+    ImGuiID                      MainID;    // ID to query details for.
+    bool                         Active;    // Used to disambiguate the case when ID == 0 and e.g. some code calls PushOverrideID(0).
+    bool                         Complete;  // All sub-queries are finished (some may have failed).
+    ImS8                         Step;      // -1: query stack + init Results, >= 0: filling individual stack level.
+    ImVector_ImGuiStackLevelInfo Results;
+    ImGuiTextBuffer              ResultsDescBuf;
+    ImGuiTextBuffer              ResultPathBuf;
 };
 
 // State for ID Stack tool queries
 struct ImGuiIDStackTool_t
 {
-    int                          LastActiveFrame;
-    int                          StackLevel;  // -1: query stack and resize Results, >= 0: individual stack level
-    ImGuiID                      QueryId;     // ID to query details for
-    ImVector_ImGuiStackLevelInfo Results;
-    bool                         OptHexEncodeNonAsciiChars;
-    bool                         OptCopyToClipboardOnCtrlC;
-    float                        CopyToClipboardLastTime;
-    ImGuiTextBuffer              ResultPathsBuf;
-    ImGuiTextBuffer              ResultTempBuf;
+    bool  OptHexEncodeNonAsciiChars;
+    bool  OptCopyToClipboardOnCtrlC;
+    int   LastActiveFrame;
+    float CopyToClipboardLastTime;
 };
 
 //-----------------------------------------------------------------------------
@@ -2330,6 +2365,8 @@ struct ImGuiContextHook_t
     void*                    UserData;
 };
 
+typedef void (*ImGuiDemoMarkerCallback)(const char* file, int line, const char* section);
+
 //-----------------------------------------------------------------------------
 // [SECTION] ImGuiContext (main Dear ImGui context)
 //-----------------------------------------------------------------------------
@@ -2337,6 +2374,15 @@ struct ImGuiContextHook_t
 struct ImGuiContext_t
 {
     bool                           Initialized;
+    bool                           WithinFrameScope;                    // Set by NewFrame(), cleared by EndFrame()
+    bool                           WithinFrameScopeWithImplicitWindow;  // Set by NewFrame(), cleared by EndFrame() when the implicit debug window has been pushed
+    bool                           TestEngineHookItems;                 // Will call test engine hooks: ImGuiTestEngineHook_ItemAdd(), ImGuiTestEngineHook_ItemInfo(), ImGuiTestEngineHook_Log()
+    int                            FrameCount;
+    int                            FrameCountEnded;
+    int                            FrameCountPlatformEnded;
+    int                            FrameCountRendered;
+    double                         Time;
+    char                           ContextName[16];                     // Storage for a context name (to facilitate debugging multi-context setups)
     ImGuiIO                        IO;
     ImGuiPlatformIO                PlatformIO;
     ImGuiStyle                     Style;
@@ -2351,18 +2397,9 @@ struct ImGuiContext_t
     float                          FontRasterizerDensity;               // Current font density. Used by all calls to GetFontBaked().
     float                          CurrentDpiScale;                     // Current window/viewport DpiScale == CurrentViewport->DpiScale
     ImDrawListSharedData           DrawListSharedData;
-    double                         Time;
-    int                            FrameCount;
-    int                            FrameCountEnded;
-    int                            FrameCountPlatformEnded;
-    int                            FrameCountRendered;
     ImGuiID                        WithinEndChildID;                    // Set within EndChild()
-    bool                           WithinFrameScope;                    // Set by NewFrame(), cleared by EndFrame()
-    bool                           WithinFrameScopeWithImplicitWindow;  // Set by NewFrame(), cleared by EndFrame() when the implicit debug window has been pushed
-    bool                           GcCompactAll;                        // Request full GC
-    bool                           TestEngineHookItems;                 // Will call test engine hooks: ImGuiTestEngineHook_ItemAdd(), ImGuiTestEngineHook_ItemInfo(), ImGuiTestEngineHook_Log()
+    ImGuiID                        WithinEndPopupID;                    // Set within EndPopup()
     void*                          TestEngine;                          // Test engine user data
-    char                           ContextName[16];                     // Storage for a context name (to facilitate debugging multi-context setups)
 
     // Inputs
     ImVector_ImGuiInputEvent       InputEventsQueue;                    // Input events which will be trickled/written into IO structure.
@@ -2394,7 +2431,7 @@ struct ImGuiContext_t
 
     // Item/widgets state and tracking information
     ImGuiID                        DebugDrawIdConflictsId;              // Set when we detect multiple items with the same identifier
-    ImGuiID                        DebugHookIdInfo;                     // Will call core hooks: DebugHookIdInfo() from GetID functions, used by ID Stack Tool [next HoveredId/ActiveId to not pull in an extra cache-line]
+    ImGuiID                        DebugHookIdInfoId;                   // Will call core hooks: DebugHookIdInfo() from GetID functions, used by ID Stack Tool [next HoveredId/ActiveId to not pull in an extra cache-line]
     ImGuiID                        HoveredId;                           // Hovered widget, filled during the frame
     ImGuiID                        HoveredIdPreviousFrame;
     int                            HoveredIdPreviousFrameItemCount;     // Count numbers of items using the same ID as last frame's hovered id
@@ -2413,11 +2450,11 @@ struct ImGuiContext_t
     bool                           ActiveIdHasBeenEditedBefore;         // Was the value associated to the widget Edited over the course of the Active state.
     bool                           ActiveIdHasBeenEditedThisFrame;
     bool                           ActiveIdFromShortcut;
+    ImS8                           ActiveIdMouseButton;
     ImGuiID                        ActiveIdDisabledId;                  // When clicking a disabled item we set ActiveId=window->MoveId to avoid interference with widget code. Actual item ID is stored here.
-    int                            ActiveIdMouseButton : 8;
     ImVec2                         ActiveIdClickOffset;                 // Clicked offset from upper-left corner, if applicable (currently only set by ButtonBehavior)
-    ImGuiWindow*                   ActiveIdWindow;
     ImGuiInputSource               ActiveIdSource;                      // Activating source: ImGuiInputSource_Mouse OR ImGuiInputSource_Keyboard OR ImGuiInputSource_Gamepad
+    ImGuiWindow*                   ActiveIdWindow;
     ImGuiID                        ActiveIdPreviousFrame;
     ImGuiDeactivatedItemData       DeactivatedItemData;
     ImGuiDataTypeStorage           ActiveIdValueOnActivation;           // Backup of initial value at the time of activation. ONLY SET BY SPECIFIC WIDGETS: DragXXX and SliderXXX.
@@ -2447,6 +2484,7 @@ struct ImGuiContext_t
     ImGuiLastItemData              LastItemData;                        // Storage for last submitted item (setup by ItemAdd)
     ImGuiNextWindowData            NextWindowData;                      // Storage for SetNextWindow** functions
     bool                           DebugShowGroupRects;
+    bool                           GcCompactAll;                        // Request full GC
 
     // Shared stacks
     ImGuiCol                       DebugFlashStyleColorIdx;             // (Keep close to ColorStack to share cache line)
@@ -2483,6 +2521,7 @@ struct ImGuiContext_t
     ImGuiWindow*                   NavWindow;                           // Focused window for navigation. Could be called 'FocusedWindow'
     ImGuiID                        NavFocusScopeId;                     // Focused focus scope (e.g. selection code often wants to "clear other items" when landing on an item of the same scope)
     ImGuiNavLayer                  NavLayer;                            // Focused layer (main scrolling layer, or menu/title bar layer)
+    ImGuiItemFlags                 NavIdItemFlags;
     ImGuiID                        NavActivateId;                       // ~~ (g.ActiveId == 0) && (IsKeyPressed(ImGuiKey_Space) || IsKeyDown(ImGuiKey_Enter) || IsKeyPressed(ImGuiKey_NavGamepadActivate)) ? NavId : 0, also set when calling ActivateItemByID()
     ImGuiID                        NavActivateDownId;                   // ~~ IsKeyDown(ImGuiKey_Space) || IsKeyDown(ImGuiKey_Enter) || IsKeyDown(ImGuiKey_NavGamepadActivate) ? NavId : 0
     ImGuiID                        NavActivatePressedId;                // ~~ IsKeyPressed(ImGuiKey_Space) || IsKeyPressed(ImGuiKey_Enter) || IsKeyPressed(ImGuiKey_NavGamepadActivate) ? NavId : 0 (no repeat)
@@ -2490,9 +2529,11 @@ struct ImGuiContext_t
     ImVector_ImGuiFocusScopeData   NavFocusRoute;                       // Reversed copy focus scope stack for NavId (should contains NavFocusScopeId). This essentially follow the window->ParentWindowForFocusRoute chain.
     ImGuiID                        NavHighlightActivatedId;
     float                          NavHighlightActivatedTimer;
+    ImGuiID                        NavOpenContextMenuItemId;
+    ImGuiID                        NavOpenContextMenuWindowId;
     ImGuiID                        NavNextActivateId;                   // Set by ActivateItemByID(), queued until next frame.
     ImGuiActivateFlags             NavNextActivateFlags;
-    ImGuiInputSource               NavInputSource;                      // Keyboard or Gamepad mode? THIS CAN ONLY BE ImGuiInputSource_Keyboard or ImGuiInputSource_Mouse
+    ImGuiInputSource               NavInputSource;                      // Keyboard or Gamepad mode? THIS CAN ONLY BE ImGuiInputSource_Keyboard or ImGuiInputSource_Gamepad
     ImGuiSelectionUserData         NavLastValidSelectionUserData;       // Last valid data passed to SetNextItemSelectionUser(), or -1. For current window. Not reset when focusing an item that doesn't have selection data.
     ImS8                           NavCursorHideFrames;
     //ImGuiID               NavActivateInputId;                 // Removed in 1.89.4 (July 2023). This is now part of g.NavActivateId and sets g.NavActivateFlags |= ImGuiActivateFlags_PreferInput. See commit c9a53aa74, issue #5606.
@@ -2512,7 +2553,7 @@ struct ImGuiContext_t
     ImGuiDir                       NavMoveDirForDebug;
     ImGuiDir                       NavMoveClipDir;                      // FIXME-NAV: Describe the purpose of this better. Might want to rename?
     ImRect                         NavScoringRect;                      // Rectangle used for scoring, in screen space. Based of window->NavRectRel[], modified for directional navigation scoring.
-    ImRect                         NavScoringNoClipRect;                // Some nav operations (such as PageUp/PageDown) enforce a region which clipper will attempt to always keep submitted
+    ImRect                         NavScoringNoClipRect;                // Some nav operations (such as PageUp/PageDown) enforce a region which clipper will attempt to always keep submitted. Unset/invalid if inverted.
     int                            NavScoringDebugCount;                // Metrics for debugging
     int                            NavTabbingDir;                       // Generally -1 or +1, 0 when tabbing without a nav id
     int                            NavTabbingCounter;                   // >0 when counting items for tabbing
@@ -2529,13 +2570,18 @@ struct ImGuiContext_t
     bool                           NavJustMovedToIsTabbing;             // Copy of ImGuiNavMoveFlags_IsTabbing. Maybe we should store whole flags.
     bool                           NavJustMovedToHasSelectionData;      // Copy of move result's ItemFlags & ImGuiItemFlags_HasSelectionUserData). Maybe we should just store ImGuiNavItemData.
 
-    // Navigation: Windowing (CTRL+TAB for list, or Menu button + keys or directional pads to move/resize)
-    bool                           ConfigNavWindowingWithGamepad;       // = true. Enable CTRL+TAB by holding ImGuiKey_GamepadFaceLeft (== ImGuiKey_NavGamepadMenu). When false, the button may still be used to toggle Menu layer.
-    ImGuiKeyChord                  ConfigNavWindowingKeyNext;           // = ImGuiMod_Ctrl | ImGuiKey_Tab (or ImGuiMod_Super | ImGuiKey_Tab on OS X). For reconfiguration (see #4828)
+    // Navigation: extra config options (will be made public eventually)
+    // - Tabbing (Tab, Shift+Tab) and Windowing (Ctrl+Tab, Ctrl+Shift+Tab) are enabled REGARDLESS of ImGuiConfigFlags_NavEnableKeyboard being set.
+    // - Ctrl+Tab is reconfigurable because it is the only shortcut that may be polled when no window are focused. It also doesn't work e.g. Web platforms.
+    bool                           ConfigNavEnableTabbing;              // = true. Enable tabbing (Tab, Shift+Tab). PLEASE LET ME KNOW IF YOU USE THIS.
+    bool                           ConfigNavWindowingWithGamepad;       // = true. Enable Ctrl+Tab by holding ImGuiKey_GamepadFaceLeft (== ImGuiKey_NavGamepadMenu). When false, the button may still be used to toggle Menu layer.
+    ImGuiKeyChord                  ConfigNavWindowingKeyNext;           // = ImGuiMod_Ctrl | ImGuiKey_Tab (or ImGuiMod_Super | ImGuiKey_Tab on OS X). Set to 0 to disable. For reconfiguration (see #4828)
     ImGuiKeyChord                  ConfigNavWindowingKeyPrev;           // = ImGuiMod_Ctrl | ImGuiMod_Shift | ImGuiKey_Tab (or ImGuiMod_Super | ImGuiMod_Shift | ImGuiKey_Tab on OS X)
-    ImGuiWindow*                   NavWindowingTarget;                  // Target window when doing CTRL+Tab (or Pad Menu + FocusPrev/Next), this window is temporarily displayed top-most!
+
+    // Navigation: Windowing (Ctrl+Tab for list, or Menu button + keys or directional pads to move/resize)
+    ImGuiWindow*                   NavWindowingTarget;                  // Target window when doing Ctrl+Tab (or Pad Menu + FocusPrev/Next), this window is temporarily displayed top-most!
     ImGuiWindow*                   NavWindowingTargetAnim;              // Record of last valid NavWindowingTarget until DimBgRatio and NavWindowingHighlightAlpha becomes 0.0f, so the fade-out can stay on it.
-    ImGuiWindow*                   NavWindowingListWindow;              // Internal window actually listing the CTRL+Tab contents
+    ImGuiWindow*                   NavWindowingListWindow;              // Internal window actually listing the Ctrl+Tab contents
     float                          NavWindowingTimer;
     float                          NavWindowingHighlightAlpha;
     ImGuiInputSource               NavWindowingInputSource;
@@ -2545,7 +2591,7 @@ struct ImGuiContext_t
     ImVec2                         NavWindowingAccumDeltaSize;
 
     // Render
-    float                          DimBgRatio;                          // 0.0..1.0 animation when fading in a dimming background (for modal window and CTRL+TAB list)
+    float                          DimBgRatio;                          // 0.0..1.0 animation when fading in a dimming background (for modal window and Ctrl+Tab list)
 
     // Drag and Drop
     bool                           DragDropActive;
@@ -2558,7 +2604,9 @@ struct ImGuiContext_t
     ImRect                         DragDropTargetRect;                  // Store rectangle of current target candidate (we favor small targets when overlapping)
     ImRect                         DragDropTargetClipRect;              // Store ClipRect at the time of item's drawing
     ImGuiID                        DragDropTargetId;
-    ImGuiDragDropFlags             DragDropAcceptFlags;
+    ImGuiID                        DragDropTargetFullViewport;
+    ImGuiDragDropFlags             DragDropAcceptFlagsCurr;
+    ImGuiDragDropFlags             DragDropAcceptFlagsPrev;
     float                          DragDropAcceptIdCurrRectSurface;     // Target item surface (we resolve overlapping targets by prioritizing the smaller surface)
     ImGuiID                        DragDropAcceptIdCurr;                // Target item id (set at the time of accepting the payload)
     ImGuiID                        DragDropAcceptIdPrev;                // Target item id from previous frame (we need to store this to allow for overlapping drag and drop targets)
@@ -2608,10 +2656,12 @@ struct ImGuiContext_t
 
     // Widget state
     ImGuiInputTextState            InputTextState;
+    ImGuiTextIndex                 InputTextLineIndex;                  // Temporary storage
     ImGuiInputTextDeactivatedState InputTextDeactivatedState;
     ImFontBaked                    InputTextPasswordFontBackupBaked;
     ImFontFlags                    InputTextPasswordFontBackupFlags;
-    ImGuiID                        TempInputId;                         // Temporary text input when CTRL+clicking on a slider, etc.
+    ImGuiID                        InputTextReactivateId;               // ID of InputText to reactivate on next frame (for io.ConfigInputTextEnterKeepActive behavior)
+    ImGuiID                        TempInputId;                         // Temporary text input when using Ctrl+Click on a slider, etc.
     ImGuiDataTypeStorage           DataTypeZeroValue;                   // 0 for all data types
     int                            BeginMenuDepth;
     int                            BeginComboDepth;
@@ -2658,22 +2708,25 @@ struct ImGuiContext_t
     ImVector_ImGuiSettingsHandler  SettingsHandlers;                    // List of .ini settings handlers
     ImChunkStream_ImGuiWindowSettings SettingsWindows;                  // ImGuiWindow .ini settings entries
     ImChunkStream_ImGuiTableSettings SettingsTables;                    // ImGuiTable .ini settings entries
+
+    // Hooks
     ImVector_ImGuiContextHook      Hooks;                               // Hooks for extensions (e.g. test engine)
     ImGuiID                        HookIdNext;                          // Next available HookId
+    ImGuiDemoMarkerCallback        DemoMarkerCallback;
 
     // Localization
     const char*                    LocalizationTable[ImGuiLocKey_COUNT];
 
     // Capture/Logging
     bool                           LogEnabled;                          // Currently capturing
+    bool                           LogLineFirstItem;
     ImGuiLogFlags                  LogFlags;                            // Capture flags/type
     ImGuiWindow*                   LogWindow;
     ImFileHandle                   LogFile;                             // If != NULL log to stdout/ file
     ImGuiTextBuffer                LogBuffer;                           // Accumulation buffer when log to clipboard. This is pointer so our GImGui static constructor doesn't call heap allocators.
-    const char*                    LogNextPrefix;
+    const char*                    LogNextPrefix;                       // See comment in LogSetNextTextDecoration(): doesn't copy underlying data, use carefully!
     const char*                    LogNextSuffix;
     float                          LogLinePosY;
-    bool                           LogLineFirstItem;
     int                            LogDepthRef;
     int                            LogDepthToExpand;
     int                            LogDepthToExpandDefault;             // Default/stored value for LogDepthMaxExpand if not specified in the LogXXX function call.
@@ -2689,7 +2742,7 @@ struct ImGuiContext_t
 
     // Debug Tools
     // (some of the highly frequently used data are interleaved in other structures above: DebugBreakXXX fields, DebugHookIdInfo, DebugLocateId etc.)
-    int                            DebugDrawIdConflictsCount;           // Locked count (preserved when holding CTRL)
+    int                            DebugDrawIdConflictsCount;           // Locked count (preserved when holding Ctrl)
     ImGuiDebugLogFlags             DebugLogFlags;
     ImGuiTextBuffer                DebugLogBuf;
     ImGuiTextIndex                 DebugLogIndex;
@@ -2706,6 +2759,7 @@ struct ImGuiContext_t
     float                          DebugFlashStyleColorTime;
     ImVec4                         DebugFlashStyleColorBackup;
     ImGuiMetricsConfig             DebugMetricsConfig;
+    ImGuiDebugItemPathQuery        DebugItemPathQuery;
     ImGuiIDStackTool               DebugIDStackTool;
     ImGuiDebugAllocInfo            DebugAllocInfo;
     ImGuiDockNode*                 DebugHoveredDockNode;                // Hovered dock node.
@@ -2728,6 +2782,8 @@ struct ImGuiContext_t
 //-----------------------------------------------------------------------------
 // [SECTION] ImGuiWindowTempData, ImGuiWindow
 //-----------------------------------------------------------------------------
+
+#define IMGUI_WINDOW_HARD_MIN_SIZE 4.0f
 
 // Transient per-window data, reset at the beginning of the frame. This used to be called ImGuiDrawContext, hence the DC variable name in ImGuiWindow.
 // (That's theory, in practice the delimitation between ImGuiWindow and ImGuiWindowTempData is quite tenuous and could be reconsidered..)
@@ -2783,6 +2839,7 @@ struct ImGuiWindowTempData_t
     // Local parameters stacks
     // We store the current settings outside of the vectors to increase memory locality (reduce cache misses). The vectors are rarely modified. Also it allows us to not heap allocate for short-lived windows which are not using those settings.
     float                   ItemWidth;                      // Current item width (>0.0: width in pixels, <0.0: align xx pixels to the right of window).
+    float                   ItemWidthDefault;
     float                   TextWrapPos;                    // Current text wrap pos.
     ImVector_float          ItemWidthStack;                 // Store item widths to restore (attention: .back() is not == ItemWidth)
     ImVector_float          TextWrapPosStack;               // Store text wrap pos to restore (attention: .back() is not == TextWrapPos)
@@ -2848,13 +2905,14 @@ struct ImGuiWindow_t
     short                    BeginOrderWithinParent;                          // Begin() order within immediate parent window, if we are a child window. Otherwise 0.
     short                    BeginOrderWithinContext;                         // Begin() order within entire imgui context. This is mostly used for debugging submission order related issues.
     short                    FocusOrder;                                      // Order within WindowsFocusOrder[], altered when windows are focused.
+    ImGuiDir                 AutoPosLastDirection;
     ImS8                     AutoFitFramesX, AutoFitFramesY;
     bool                     AutoFitOnlyGrows;
-    ImGuiDir                 AutoPosLastDirection;
     ImS8                     HiddenFramesCanSkipItems;                        // Hide the window for N frames
     ImS8                     HiddenFramesCannotSkipItems;                     // Hide the window for N frames while allowing items to be submitted so we can measure their size
     ImS8                     HiddenFramesForRenderOnly;                       // Hide the window until frame N at Render() time only
     ImS8                     DisableInputsFrames;                             // Disable window interactions for N frames
+    ImGuiWindowBgClickFlags  BgClickFlags : 8;                                // Configure behavior of click+dragging on window bg/void or over items. Default sets by io.ConfigWindowsMoveFromTitleBarOnly. If you use this please report in #3379.
     ImGuiCond                SetWindowPosAllowFlags : 8;                      // store acceptable condition flags for SetNextWindowPos() use.
     ImGuiCond                SetWindowSizeAllowFlags : 8;                     // store acceptable condition flags for SetNextWindowSize() use.
     ImGuiCond                SetWindowCollapsedAllowFlags : 8;                // store acceptable condition flags for SetNextWindowCollapsed() use.
@@ -2880,7 +2938,6 @@ struct ImGuiWindow_t
     int                      LastFrameActive;                                 // Last frame number the window was Active.
     int                      LastFrameJustFocused;                            // Last frame number the window was made Focused.
     float                    LastTimeActive;                                  // Last timestamp the window was Active (using float as we don't need high precision there)
-    float                    ItemWidthDefault;
     ImGuiStorage             StateStorage;
     ImVector_ImGuiOldColumns ColumnsStorage;
     float                    FontWindowScale;                                 // User scale multiplier per-window, via SetWindowFontScale()
@@ -2897,7 +2954,7 @@ struct ImGuiWindow_t
     ImGuiWindow*             RootWindowDockTree;                              // Point to ourself or first ancestor that is not a child window. Cross through dock nodes.
     ImGuiWindow*             RootWindowForTitleBarHighlight;                  // Point to ourself or first ancestor which will display TitleBgActive color when this window is active.
     ImGuiWindow*             RootWindowForNav;                                // Point to ourself or first ancestor which doesn't have the NavFlattened flag.
-    ImGuiWindow*             ParentWindowForFocusRoute;                       // Set to manual link a window to its logical parent so that Shortcut() chain are honoerd (e.g. Tool linked to Document)
+    ImGuiWindow*             ParentWindowForFocusRoute;                       // Set to manual link a window to its logical parent so that Shortcut() chain are honored (e.g. Tool linked to Document)
 
     ImGuiWindow*             NavLastChildNavWindow;                           // When going to the menu bar, we remember the child window we came from. (This could probably be made implicit if we kept g.Windows sorted by last focused including child window.)
     ImGuiID                  NavLastIds[ImGuiNavLayer_COUNT];                 // Last known NavId for this window, per layer (0/1)
@@ -2920,7 +2977,7 @@ struct ImGuiWindow_t
     ImGuiDockNode*           DockNodeAsHost;                                  // Which node are we owning (for parent windows)
     ImGuiID                  DockId;                                          // Backup of last valid DockNode->ID, so single window remember their dock node id even when they are not bound any more
 
-    // [Obsolete] ImGuiWindow::CalcFontSize() was removed in 1.92.x because error-prone/misleading. You can use window->FontRefSize for a copy of g.FontSize at the time of the last Begin() call for this window.
+    // [OBSOLETE] ImGuiWindow::CalcFontSize() was removed in 1.92.0 because error-prone/misleading. You can use window->FontRefSize for a copy of g.FontSize at the time of the last Begin() call for this window.
     //float     CalcFontSize() const    { ImGuiContext& g = *Ctx; return g.FontSizeBase * FontWindowScale * FontDpiScale * FontWindowScaleParents;
 };
 CIMGUI_API ImGuiID ImGuiWindow_GetIDStr(ImGuiWindow* self, const char* str);                                      // Implied str_end = NULL
@@ -2964,7 +3021,7 @@ struct ImGuiTabItem_t
     ImGuiWindow*      Window;             // When TabItem is part of a DockNode's TabBar, we hold on to a window.
     int               LastFrameVisible;
     int               LastFrameSelected;  // This allows us to infer an ordered list of the last activated tabs with little maintenance
-    float             Offset;             // Position relative to beginning of tab
+    float             Offset;             // Position relative to beginning of tab bar
     float             Width;              // Width currently displayed
     float             ContentWidth;       // Width of label + padding, stored during BeginTabItem() call (misnamed as "Content" would normally imply width of label only)
     float             RequestedWidth;     // Width optionally requested by caller, -1.0f is unused
@@ -2983,7 +3040,8 @@ struct ImGuiTabBar_t
     ImGuiID               ID;                      // Zero for tab-bars used by docking
     ImGuiID               SelectedTabId;           // Selected tab/window
     ImGuiID               NextSelectedTabId;       // Next selected tab/window. Will also trigger a scrolling animation
-    ImGuiID               VisibleTabId;            // Can occasionally be != SelectedTabId (e.g. when previewing contents for CTRL+TAB preview)
+    ImGuiID               NextScrollToTabId;
+    ImGuiID               VisibleTabId;            // Can occasionally be != SelectedTabId (e.g. when previewing contents for Ctrl+Tab preview)
     int                   CurrFrameVisible;
     int                   PrevFrameVisible;
     ImRect                BarRect;
@@ -3183,8 +3241,9 @@ struct ImGuiTable_t
     ImGuiTableColumnIdx        ResizedColumn;              // Index of column being resized. Reset when InstanceCurrent==0.
     ImGuiTableColumnIdx        LastResizedColumn;          // Index of column being resized from previous frame.
     ImGuiTableColumnIdx        HeldHeaderColumn;           // Index of column header being held.
+    ImGuiTableColumnIdx        LastHeldHeaderColumn;       // Index of column header being held from previous frame.
     ImGuiTableColumnIdx        ReorderColumn;              // Index of column being reordered. (not cleared)
-    ImGuiTableColumnIdx        ReorderColumnDir;           // -1 or +1
+    ImGuiTableColumnIdx        ReorderColumnDstOrder;      // Requested display order of column being reordered.
     ImGuiTableColumnIdx        LeftMostEnabledColumn;      // Index of left-most non-hidden column.
     ImGuiTableColumnIdx        RightMostEnabledColumn;     // Index of right-most non-hidden column.
     ImGuiTableColumnIdx        LeftMostStretchedColumn;    // Index of left-most stretched column.
@@ -3207,7 +3266,7 @@ struct ImGuiTable_t
     bool                       IsContextPopupOpen;         // Set when default context menu is open (also see: ContextPopupColumn, InstanceInteracted).
     bool                       DisableDefaultContextMenu;  // Disable default context menu. You may submit your own using TableBeginContextMenuPopup()/EndPopup()
     bool                       IsSettingsRequestLoad;
-    bool                       IsSettingsDirty;            // Set when table settings have changed and needs to be reported into ImGuiTableSetttings data.
+    bool                       IsSettingsDirty;            // Set when table settings have changed and needs to be reported into ImGuiTableSettings data.
     bool                       IsDefaultDisplayOrder;      // Set when display order is unchanged from default (DisplayOrder contains 0...Count-1)
     bool                       IsResetAllRequest;
     bool                       IsResetDisplayOrderRequest;
@@ -3228,6 +3287,7 @@ struct ImGuiTable_t
 // sizeof() ~ 136 bytes.
 struct ImGuiTableTempData_t
 {
+    ImGuiID            WindowID;                          // Shortcut to g.Tables[TableIndex]->OuterWindow->ID.
     int                TableIndex;                        // Index in g.Tables.Buf[] pool
     float              LastTimeActive;                    // Last timestamp this structure was used
     float              AngledHeadersExtraWidth;           // Used in EndTable()
@@ -3283,6 +3343,7 @@ CIMGUI_API ImGuiTableColumnSettings* ImGuiTableSettings_GetColumnSettings(ImGuiT
 // - You are calling ImGui functions after ImGui::EndFrame()/ImGui::Render() and before the next ImGui::NewFrame(), which is also illegal.
 CIMGUI_API ImGuiIO*         ImGui_GetIOImGuiContextPtr(ImGuiContext* ctx);
 CIMGUI_API ImGuiPlatformIO* ImGui_GetPlatformIOImGuiContextPtr(ImGuiContext* ctx);
+CIMGUI_API float            ImGui_GetScale(void);                                                                                   // FIXME-DPI: I don't want to formalize this just yet. Because reasons. Please don't use.
 CIMGUI_API ImGuiWindow*     ImGui_GetCurrentWindowRead(void);
 CIMGUI_API ImGuiWindow*     ImGui_GetCurrentWindow(void);
 CIMGUI_API ImGuiWindow*     ImGui_FindWindowByID(ImGuiID id);
@@ -3291,6 +3352,7 @@ CIMGUI_API void             ImGui_UpdateWindowParentAndRootLinks(ImGuiWindow* wi
 CIMGUI_API void             ImGui_UpdateWindowSkipRefresh(ImGuiWindow* window);
 CIMGUI_API ImVec2           ImGui_CalcWindowNextAutoFitSize(ImGuiWindow* window);
 CIMGUI_API bool             ImGui_IsWindowChildOf(ImGuiWindow* window, ImGuiWindow* potential_parent, bool popup_hierarchy, bool dock_hierarchy);
+CIMGUI_API bool             ImGui_IsWindowInBeginStack(ImGuiWindow* window);
 CIMGUI_API bool             ImGui_IsWindowWithinBeginStackOf(ImGuiWindow* window, ImGuiWindow* potential_parent);
 CIMGUI_API bool             ImGui_IsWindowAbove(ImGuiWindow* potential_above, ImGuiWindow* potential_below);
 CIMGUI_API bool             ImGui_IsWindowNavFocusable(ImGuiWindow* window);
@@ -3299,7 +3361,7 @@ CIMGUI_API void             ImGui_SetWindowSizeImGuiWindowPtr(ImGuiWindow* windo
 CIMGUI_API void             ImGui_SetWindowCollapsedImGuiWindowPtr(ImGuiWindow* window, bool collapsed, ImGuiCond cond /* = 0 */);
 CIMGUI_API void             ImGui_SetWindowHitTestHole(ImGuiWindow* window, ImVec2 pos, ImVec2 size);
 CIMGUI_API void             ImGui_SetWindowHiddenAndSkipItemsForCurrentFrame(ImGuiWindow* window);
-CIMGUI_API void             ImGui_SetWindowParentWindowForFocusRoute(ImGuiWindow* window, ImGuiWindow* parent_window);  // You may also use SetNextWindowClass()'s FocusRouteParentWindowId field.
+CIMGUI_API void             ImGui_SetWindowParentWindowForFocusRoute(ImGuiWindow* window, ImGuiWindow* parent_window);              // You may also use SetNextWindowClass()'s FocusRouteParentWindowId field.
 CIMGUI_API ImRect           ImGui_WindowRectAbsToRel(ImGuiWindow* window, ImRect r);
 CIMGUI_API ImRect           ImGui_WindowRectRelToAbs(ImGuiWindow* window, ImRect r);
 CIMGUI_API ImVec2           ImGui_WindowPosAbsToRel(ImGuiWindow* window, ImVec2 p);
@@ -3319,7 +3381,7 @@ CIMGUI_API ImGuiWindow* ImGui_FindBottomMostVisibleWindowWithinBeginStack(ImGuiW
 CIMGUI_API void ImGui_SetNextWindowRefreshPolicy(ImGuiWindowRefreshFlags flags);
 
 // Fonts, drawing
-CIMGUI_API void        ImGui_RegisterUserTexture(ImTextureData* tex);                       // Register external texture. EXPERIMENTAL: DO NOT USE YET.
+CIMGUI_API void        ImGui_RegisterUserTexture(ImTextureData* tex);                       // Register external texture. EXPERIMENTAL.
 CIMGUI_API void        ImGui_UnregisterUserTexture(ImTextureData* tex);
 CIMGUI_API void        ImGui_RegisterFontAtlas(ImFontAtlas* atlas);
 CIMGUI_API void        ImGui_UnregisterFontAtlas(ImFontAtlas* atlas);
@@ -3338,6 +3400,12 @@ CIMGUI_API void        ImGui_AddDrawListToDrawDataEx(ImDrawData* draw_data, ImVe
 CIMGUI_API void ImGui_Initialize(void);
 CIMGUI_API void ImGui_Shutdown(void);  // Since 1.60 this is a _private_ function. You can call DestroyContext() to destroy the context created by CreateContext().
 
+// Context name & generic context hooks
+CIMGUI_API void    ImGui_SetContextName(ImGuiContext* ctx, const char* name);
+CIMGUI_API ImGuiID ImGui_AddContextHook(ImGuiContext* ctx, const ImGuiContextHook* hook);
+CIMGUI_API void    ImGui_RemoveContextHook(ImGuiContext* ctx, ImGuiID hook_to_remove);
+CIMGUI_API void    ImGui_CallContextHooks(ImGuiContext* ctx, ImGuiContextHookType type);
+
 // NewFrame
 CIMGUI_API void ImGui_UpdateInputEvents(bool trickle_fast_inputs);
 CIMGUI_API void ImGui_UpdateHoveredWindowAndCaptureFlags(ImVec2 mouse_pos);
@@ -3347,11 +3415,6 @@ CIMGUI_API void ImGui_StartMouseMovingWindowOrNode(ImGuiWindow* window, ImGuiDoc
 CIMGUI_API void ImGui_StopMouseMovingWindow(void);
 CIMGUI_API void ImGui_UpdateMouseMovingWindowNewFrame(void);
 CIMGUI_API void ImGui_UpdateMouseMovingWindowEndFrame(void);
-
-// Generic context hooks
-CIMGUI_API ImGuiID ImGui_AddContextHook(ImGuiContext* context, const ImGuiContextHook* hook);
-CIMGUI_API void    ImGui_RemoveContextHook(ImGuiContext* context, ImGuiID hook_to_remove);
-CIMGUI_API void    ImGui_CallContextHooks(ImGuiContext* context, ImGuiContextHookType type);
 
 // Viewports
 CIMGUI_API void                        ImGui_TranslateWindowsInViewport(ImGuiViewportP* viewport, ImVec2 old_pos, ImVec2 new_pos, ImVec2 old_size, ImVec2 new_size);
@@ -3396,7 +3459,6 @@ CIMGUI_API void   ImGui_ScrollToBringRectIntoView(ImGuiWindow* window, ImRect re
 
 // Basic Accessors
 CIMGUI_API ImGuiItemStatusFlags ImGui_GetItemStatusFlags(void);
-CIMGUI_API ImGuiItemFlags       ImGui_GetItemFlags(void);
 CIMGUI_API ImGuiID              ImGui_GetActiveID(void);
 CIMGUI_API ImGuiID              ImGui_GetFocusID(void);
 CIMGUI_API void                 ImGui_SetActiveID(ImGuiID id, ImGuiWindow* window);
@@ -3425,6 +3487,7 @@ CIMGUI_API ImVec2 ImGui_CalcItemSize(ImVec2 size, float default_w, float default
 CIMGUI_API float  ImGui_CalcWrapWidthForPos(ImVec2 pos, float wrap_pos_x);
 CIMGUI_API void   ImGui_PushMultiItemsWidths(int components, float width_full);
 CIMGUI_API void   ImGui_ShrinkWidths(ImGuiShrinkWidthItem* items, int count, float width_excess, float width_min);
+CIMGUI_API void   ImGui_CalcClipRectVisibleItemsY(ImRect clip_rect, ImVec2 pos, float items_height, int* out_visible_start, int* out_visible_end);
 
 // Parameter stacks (shared)
 CIMGUI_API const ImGuiStyleVarInfo* ImGui_GetStyleVarInfo(ImGuiStyleVar idx);
@@ -3440,23 +3503,27 @@ CIMGUI_API void ImGui_LogRenderedTextEx(const ImVec2* ref_pos, const char* text,
 CIMGUI_API void ImGui_LogSetNextTextDecoration(const char* prefix, const char* suffix);
 
 // Childs
-CIMGUI_API bool ImGui_BeginChildEx(const char* name, ImGuiID id, ImVec2 size_arg, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags);
+CIMGUI_API bool         ImGui_BeginChildEx(const char* name, ImGuiID id, ImVec2 size_arg, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags);
+CIMGUI_API ImGuiWindow* ImGui_FindFrontMostVisibleChildWindow(ImGuiWindow* window);
 
 // Popups, Modals
-CIMGUI_API bool         ImGui_BeginPopupEx(ImGuiID id, ImGuiWindowFlags extra_window_flags);
-CIMGUI_API bool         ImGui_BeginPopupMenuEx(ImGuiID id, const char* label, ImGuiWindowFlags extra_window_flags);
-CIMGUI_API void         ImGui_OpenPopupEx(ImGuiID id);                                                                   // Implied popup_flags = ImGuiPopupFlags_None
-CIMGUI_API void         ImGui_OpenPopupExEx(ImGuiID id, ImGuiPopupFlags popup_flags /* = ImGuiPopupFlags_None */);
-CIMGUI_API void         ImGui_ClosePopupToLevel(int remaining, bool restore_focus_to_window_under_popup);
-CIMGUI_API void         ImGui_ClosePopupsOverWindow(ImGuiWindow* ref_window, bool restore_focus_to_window_under_popup);
-CIMGUI_API void         ImGui_ClosePopupsExceptModals(void);
-CIMGUI_API bool         ImGui_IsPopupOpenID(ImGuiID id, ImGuiPopupFlags popup_flags);
-CIMGUI_API ImRect       ImGui_GetPopupAllowedExtentRect(ImGuiWindow* window);
-CIMGUI_API ImGuiWindow* ImGui_GetTopMostPopupModal(void);
-CIMGUI_API ImGuiWindow* ImGui_GetTopMostAndVisiblePopupModal(void);
-CIMGUI_API ImGuiWindow* ImGui_FindBlockingModal(ImGuiWindow* window);
-CIMGUI_API ImVec2       ImGui_FindBestWindowPosForPopup(ImGuiWindow* window);
-CIMGUI_API ImVec2       ImGui_FindBestWindowPosForPopupEx(ImVec2 ref_pos, ImVec2 size, ImGuiDir* last_dir, ImRect r_outer, ImRect r_avoid, ImGuiPopupPositionPolicy policy);
+CIMGUI_API bool             ImGui_BeginPopupEx(ImGuiID id, ImGuiWindowFlags extra_window_flags);
+CIMGUI_API bool             ImGui_BeginPopupMenuEx(ImGuiID id, const char* label, ImGuiWindowFlags extra_window_flags);
+CIMGUI_API void             ImGui_OpenPopupEx(ImGuiID id);                                                                   // Implied popup_flags = ImGuiPopupFlags_None
+CIMGUI_API void             ImGui_OpenPopupExEx(ImGuiID id, ImGuiPopupFlags popup_flags /* = ImGuiPopupFlags_None */);
+CIMGUI_API void             ImGui_ClosePopupToLevel(int remaining, bool restore_focus_to_window_under_popup);
+CIMGUI_API void             ImGui_ClosePopupsOverWindow(ImGuiWindow* ref_window, bool restore_focus_to_window_under_popup);
+CIMGUI_API void             ImGui_ClosePopupsExceptModals(void);
+CIMGUI_API bool             ImGui_IsPopupOpenID(ImGuiID id, ImGuiPopupFlags popup_flags);
+CIMGUI_API ImRect           ImGui_GetPopupAllowedExtentRect(ImGuiWindow* window);
+CIMGUI_API ImGuiWindow*     ImGui_GetTopMostPopupModal(void);
+CIMGUI_API ImGuiWindow*     ImGui_GetTopMostAndVisiblePopupModal(void);
+CIMGUI_API ImGuiWindow*     ImGui_FindBlockingModal(ImGuiWindow* window);
+CIMGUI_API ImVec2           ImGui_FindBestWindowPosForPopup(ImGuiWindow* window);
+CIMGUI_API ImVec2           ImGui_FindBestWindowPosForPopupEx(ImVec2 ref_pos, ImVec2 size, ImGuiDir* last_dir, ImRect r_outer, ImRect r_avoid, ImGuiPopupPositionPolicy policy);
+CIMGUI_API ImGuiMouseButton ImGui_GetMouseButtonFromPopupFlags(ImGuiPopupFlags flags);
+CIMGUI_API bool             ImGui_IsPopupOpenRequestForItem(ImGuiPopupFlags flags, ImGuiID id);
+CIMGUI_API bool             ImGui_IsPopupOpenRequestForWindow(ImGuiPopupFlags flags);
 
 // Tooltips
 CIMGUI_API bool ImGui_BeginTooltipEx(ImGuiTooltipFlags tooltip_flags, ImGuiWindowFlags extra_window_flags);
@@ -3540,8 +3607,8 @@ CIMGUI_API bool          ImGui_IsActiveIdUsingNavDir(ImGuiDir dir);
 CIMGUI_API ImGuiID            ImGui_GetKeyOwner(ImGuiKey key);
 CIMGUI_API void               ImGui_SetKeyOwner(ImGuiKey key, ImGuiID owner_id, ImGuiInputFlags flags /* = 0 */);
 CIMGUI_API void               ImGui_SetKeyOwnersForKeyChord(ImGuiKeyChord key, ImGuiID owner_id, ImGuiInputFlags flags /* = 0 */);
-CIMGUI_API void               ImGui_SetItemKeyOwnerImGuiInputFlags(ImGuiKey key, ImGuiInputFlags flags);  // Set key owner to last item if it is hovered or active. Equivalent to 'if (IsItemHovered() || IsItemActive()) { SetKeyOwner(key, GetItemID());'.
-CIMGUI_API bool               ImGui_TestKeyOwner(ImGuiKey key, ImGuiID owner_id);                         // Test that key is either not owned, either owned by 'owner_id'
+CIMGUI_API bool               ImGui_SetItemKeyOwnerImGuiInputFlags(ImGuiKey key, ImGuiInputFlags flags);
+CIMGUI_API bool               ImGui_TestKeyOwner(ImGuiKey key, ImGuiID owner_id);      // Test that key is either not owned, either owned by 'owner_id'
 CIMGUI_API ImGuiKeyOwnerData* ImGui_GetKeyOwnerData(ImGuiContext* ctx, ImGuiKey key);
 
 // [EXPERIMENTAL] High-Level: Input Access functions w/ support for Key/Input Ownership
@@ -3552,7 +3619,7 @@ CIMGUI_API ImGuiKeyOwnerData* ImGui_GetKeyOwnerData(ImGuiContext* ctx, ImGuiKey 
 // - Binding generators may want to ignore those for now, or suffix them with Ex() until we decide if this gets moved into public API.
 CIMGUI_API bool ImGui_IsKeyDownID(ImGuiKey key, ImGuiID owner_id);
 CIMGUI_API bool ImGui_IsKeyPressedImGuiInputFlags(ImGuiKey key, ImGuiInputFlags flags);                                                // Implied owner_id = 0
-CIMGUI_API bool ImGui_IsKeyPressedImGuiInputFlagsEx(ImGuiKey key, ImGuiInputFlags flags, ImGuiID owner_id /* = 0 */);                  // Important: when transitioning from old to new IsKeyPressed(): old API has "bool repeat = true", so would default to repeat. New API requiress explicit ImGuiInputFlags_Repeat.
+CIMGUI_API bool ImGui_IsKeyPressedImGuiInputFlagsEx(ImGuiKey key, ImGuiInputFlags flags, ImGuiID owner_id /* = 0 */);                  // Important: when transitioning from old to new IsKeyPressed(): old API has "bool repeat = true", so would default to repeat. New API requires explicit ImGuiInputFlags_Repeat.
 CIMGUI_API bool ImGui_IsKeyReleasedID(ImGuiKey key, ImGuiID owner_id);
 CIMGUI_API bool ImGui_IsKeyChordPressedImGuiInputFlags(ImGuiKeyChord key_chord, ImGuiInputFlags flags);                                // Implied owner_id = 0
 CIMGUI_API bool ImGui_IsKeyChordPressedImGuiInputFlagsEx(ImGuiKeyChord key_chord, ImGuiInputFlags flags, ImGuiID owner_id /* = 0 */);
@@ -3649,14 +3716,18 @@ CIMGUI_API void           ImGui_DockBuilderFinish(ImGuiID node_id);
 // We don't use the ID Stack for this as it is common to want them separate.
 CIMGUI_API void    ImGui_PushFocusScope(ImGuiID id);
 CIMGUI_API void    ImGui_PopFocusScope(void);
+CIMGUI_API bool    ImGui_IsInNavFocusRoute(ImGuiID focus_scope_id);
 CIMGUI_API ImGuiID ImGui_GetCurrentFocusScope(void);  // Focus scope we are outputting into, set by PushFocusScope()
 
 // Drag and Drop
 CIMGUI_API bool ImGui_IsDragDropActive(void);
 CIMGUI_API bool ImGui_BeginDragDropTargetCustom(ImRect bb, ImGuiID id);
+CIMGUI_API bool ImGui_BeginDragDropTargetViewport(ImGuiViewport* viewport);                                     // Implied p_bb = NULL
+CIMGUI_API bool ImGui_BeginDragDropTargetViewportEx(ImGuiViewport* viewport, const ImRect* p_bb /* = NULL */);
 CIMGUI_API void ImGui_ClearDragDrop(void);
 CIMGUI_API bool ImGui_IsDragDropPayloadBeingAccepted(void);
-CIMGUI_API void ImGui_RenderDragDropTargetRect(ImRect bb, ImRect item_clip_rect);
+CIMGUI_API void ImGui_RenderDragDropTargetRectForItem(ImRect bb);
+CIMGUI_API void ImGui_RenderDragDropTargetRectEx(ImDrawList* draw_list, ImRect bb, float rounding);
 
 // Typing-Select API
 // (provide Windows Explorer style "select items by typing partial name" + "cycle through items by typing same letter" feature)
@@ -3716,12 +3787,14 @@ CIMGUI_API void                    ImGui_TableSetupDrawChannels(ImGuiTable* tabl
 CIMGUI_API void                    ImGui_TableUpdateLayout(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableUpdateBorders(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableUpdateColumnsWeightFromWidth(ImGuiTable* table);
+CIMGUI_API void                    ImGui_TableApplyExternalUnclipRect(ImGuiTable* table, ImRect* rect);
 CIMGUI_API void                    ImGui_TableDrawBorders(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableDrawDefaultContextMenu(ImGuiTable* table, ImGuiTableFlags flags_for_section_to_display);
 CIMGUI_API bool                    ImGui_TableBeginContextMenuPopup(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableMergeDrawChannels(ImGuiTable* table);
 CIMGUI_API ImGuiTableInstanceData* ImGui_TableGetInstanceData(ImGuiTable* table, int instance_no);
 CIMGUI_API ImGuiID                 ImGui_TableGetInstanceID(ImGuiTable* table, int instance_no);
+CIMGUI_API void                    ImGui_TableFixDisplayOrder(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableSortSpecsSanitize(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableSortSpecsBuild(ImGuiTable* table);
 CIMGUI_API ImGuiSortDirection      ImGui_TableGetColumnNextSortDirection(ImGuiTableColumn* column);
@@ -3738,6 +3811,8 @@ CIMGUI_API ImGuiID                 ImGui_TableGetColumnResizeIDEx(ImGuiTable* ta
 CIMGUI_API float                   ImGui_TableCalcMaxColumnWidth(const ImGuiTable* table, int column_n);
 CIMGUI_API void                    ImGui_TableSetColumnWidthAutoSingle(ImGuiTable* table, int column_n);
 CIMGUI_API void                    ImGui_TableSetColumnWidthAutoAll(ImGuiTable* table);
+CIMGUI_API void                    ImGui_TableSetColumnDisplayOrder(ImGuiTable* table, int column_n, int dst_order);
+CIMGUI_API void                    ImGui_TableQueueSetColumnDisplayOrder(ImGuiTable* table, int column_n, int dst_order);
 CIMGUI_API void                    ImGui_TableRemove(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableGcCompactTransientBuffers(ImGuiTable* table);
 CIMGUI_API void                    ImGui_TableGcCompactTransientBuffersImGuiTableTempDataPtr(ImGuiTableTempData* table);
@@ -3754,6 +3829,8 @@ CIMGUI_API ImGuiTableSettings* ImGui_TableSettingsFindByID(ImGuiID id);
 
 // Tab Bars
 CIMGUI_API ImGuiTabBar*  ImGui_GetCurrentTabBar(void);
+CIMGUI_API ImGuiTabBar*  ImGui_TabBarFindByID(ImGuiID id);
+CIMGUI_API void          ImGui_TabBarRemove(ImGuiTabBar* tab_bar);
 CIMGUI_API bool          ImGui_BeginTabBarEx(ImGuiTabBar* tab_bar, ImRect bb, ImGuiTabBarFlags flags);
 CIMGUI_API ImGuiTabItem* ImGui_TabBarFindTabByID(ImGuiTabBar* tab_bar, ImGuiID tab_id);
 CIMGUI_API ImGuiTabItem* ImGui_TabBarFindTabByOrder(ImGuiTabBar* tab_bar, int order);
@@ -3791,6 +3868,7 @@ CIMGUI_API void        ImGui_RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_
 CIMGUI_API void        ImGui_RenderFrameEx(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool borders /* = true */, float rounding /* = 0.0f */);
 CIMGUI_API void        ImGui_RenderFrameBorder(ImVec2 p_min, ImVec2 p_max);                                                                                              // Implied rounding = 0.0f
 CIMGUI_API void        ImGui_RenderFrameBorderEx(ImVec2 p_min, ImVec2 p_max, float rounding /* = 0.0f */);
+CIMGUI_API void        ImGui_RenderColorComponentMarker(ImRect bb, ImU32 col, float rounding);
 CIMGUI_API void        ImGui_RenderColorRectWithAlphaCheckerboard(ImDrawList* draw_list, ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, float grid_step, ImVec2 grid_off);  // Implied rounding = 0.0f, flags = 0
 CIMGUI_API void        ImGui_RenderColorRectWithAlphaCheckerboardEx(ImDrawList* draw_list, ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, float grid_step, ImVec2 grid_off, float rounding /* = 0.0f */, ImDrawFlags flags /* = 0 */);
 CIMGUI_API void        ImGui_RenderNavCursor(ImRect bb, ImGuiID id);                                                                                                     // Implied flags = ImGuiNavRenderCursorFlags_None
@@ -3804,13 +3882,13 @@ CIMGUI_API const char* ImGui_FindRenderedTextEndEx(const char* text, const char*
 CIMGUI_API void        ImGui_RenderMouseCursor(ImVec2 pos, float scale, ImGuiMouseCursor mouse_cursor, ImU32 col_fill, ImU32 col_border, ImU32 col_shadow);
 
 // Render helpers (those functions don't access any ImGui state!)
-CIMGUI_API void        ImGui_RenderArrow(ImDrawList* draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir);                                                      // Implied scale = 1.0f
+CIMGUI_API void        ImGui_RenderArrow(ImDrawList* draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir);                                                // Implied scale = 1.0f
 CIMGUI_API void        ImGui_RenderArrowEx(ImDrawList* draw_list, ImVec2 pos, ImU32 col, ImGuiDir dir, float scale /* = 1.0f */);
 CIMGUI_API void        ImGui_RenderBullet(ImDrawList* draw_list, ImVec2 pos, ImU32 col);
 CIMGUI_API void        ImGui_RenderCheckMark(ImDrawList* draw_list, ImVec2 pos, ImU32 col, float sz);
 CIMGUI_API void        ImGui_RenderArrowPointingAt(ImDrawList* draw_list, ImVec2 pos, ImVec2 half_sz, ImGuiDir direction, ImU32 col);
 CIMGUI_API void        ImGui_RenderArrowDockMenu(ImDrawList* draw_list, ImVec2 p_min, float sz, ImU32 col);
-CIMGUI_API void        ImGui_RenderRectFilledRangeH(ImDrawList* draw_list, ImRect rect, ImU32 col, float x_start_norm, float x_end_norm, float rounding);
+CIMGUI_API void        ImGui_RenderRectFilledInRangeH(ImDrawList* draw_list, ImRect rect, ImU32 col, float fill_x0, float fill_x1, float rounding);
 CIMGUI_API void        ImGui_RenderRectFilledWithHole(ImDrawList* draw_list, ImRect outer, ImRect inner, ImU32 col, float rounding);
 CIMGUI_API ImDrawFlags ImGui_CalcRoundingFlagsForRectInRect(ImRect r_in, ImRect r_outer, float threshold);
 
@@ -3841,6 +3919,7 @@ CIMGUI_API ImRect  ImGui_GetWindowScrollbarRect(ImGuiWindow* window, ImGuiAxis a
 CIMGUI_API ImGuiID ImGui_GetWindowScrollbarID(ImGuiWindow* window, ImGuiAxis axis);
 CIMGUI_API ImGuiID ImGui_GetWindowResizeCornerID(ImGuiWindow* window, int n);                                                     // 0..3: corners
 CIMGUI_API ImGuiID ImGui_GetWindowResizeBorderID(ImGuiWindow* window, ImGuiDir dir);
+CIMGUI_API void    ImGui_ExtendHitBoxWhenNearViewportEdge(ImGuiWindow* window, ImRect* bb, float threshold, ImGuiAxis axis);
 
 // Widgets low-level behaviors
 CIMGUI_API bool ImGui_ButtonBehavior(ImRect bb, ImGuiID id, bool* out_hovered, bool* out_held, ImGuiButtonFlags flags /* = 0 */);
@@ -3855,7 +3934,6 @@ CIMGUI_API bool ImGui_TreeNodeBehaviorEx(ImGuiID id, ImGuiTreeNodeFlags flags, c
 CIMGUI_API void ImGui_TreeNodeDrawLineToChildNode(ImVec2 target_pos);
 CIMGUI_API void ImGui_TreeNodeDrawLineToTreePop(const ImGuiTreeNodeStackData* data);
 CIMGUI_API void ImGui_TreePushOverrideID(ImGuiID id);
-CIMGUI_API bool ImGui_TreeNodeGetOpen(ImGuiID storage_id);
 CIMGUI_API void ImGui_TreeNodeSetOpen(ImGuiID storage_id, bool open);
 CIMGUI_API bool ImGui_TreeNodeUpdateNextOpen(ImGuiID storage_id, ImGuiTreeNodeFlags flags);       // Return open state. Consume previous SetNextItemOpen() data, if any. May return true when logging.
 
@@ -3870,20 +3948,23 @@ CIMGUI_API bool                     ImGui_DataTypeClamp(ImGuiDataType data_type,
 CIMGUI_API bool                     ImGui_DataTypeIsZero(ImGuiDataType data_type, const void* p_data);
 
 // InputText
-CIMGUI_API bool ImGui_InputTextWithHintAndSize(const char* label, const char* hint, char* buf, int buf_size, ImVec2 size_arg, ImGuiInputTextFlags flags);  // Implied callback = NULL, user_data = NULL
-CIMGUI_API bool ImGui_InputTextWithHintAndSizeEx(const char* label, const char* hint, char* buf, int buf_size, ImVec2 size_arg, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback /* = NULL */, void* user_data /* = NULL */);
-CIMGUI_API void ImGui_InputTextDeactivateHook(ImGuiID id);
-CIMGUI_API bool ImGui_TempInputText(ImRect bb, ImGuiID id, const char* label, char* buf, int buf_size, ImGuiInputTextFlags flags);
-CIMGUI_API bool ImGui_TempInputScalar(ImRect bb, ImGuiID id, const char* label, ImGuiDataType data_type, void* p_data, const char* format);                // Implied p_clamp_min = NULL, p_clamp_max = NULL
-CIMGUI_API bool ImGui_TempInputScalarEx(ImRect bb, ImGuiID id, const char* label, ImGuiDataType data_type, void* p_data, const char* format, const void* p_clamp_min /* = NULL */, const void* p_clamp_max /* = NULL */);
-CIMGUI_API bool ImGui_TempInputIsActive(ImGuiID id);
-CIMGUI_API void ImGui_SetNextItemRefVal(ImGuiDataType data_type, void* p_data);
-CIMGUI_API bool ImGui_IsItemActiveAsInputText(void);                                                                                                       // This may be useful to apply workaround that a based on distinguish whenever an item is active as a text input field.
+CIMGUI_API bool                 ImGui_InputTextWithHintAndSize(const char* label, const char* hint, char* buf, int buf_size, ImVec2 size_arg, ImGuiInputTextFlags flags);  // Implied callback = NULL, user_data = NULL
+CIMGUI_API bool                 ImGui_InputTextWithHintAndSizeEx(const char* label, const char* hint, char* buf, int buf_size, ImVec2 size_arg, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback /* = NULL */, void* user_data /* = NULL */);
+CIMGUI_API void                 ImGui_InputTextDeactivateHook(ImGuiID id);
+CIMGUI_API bool                 ImGui_TempInputText(ImRect bb, ImGuiID id, const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags /* = 0 */);            // Implied callback = NULL, user_data = NULL
+CIMGUI_API bool                 ImGui_TempInputTextEx(ImRect bb, ImGuiID id, const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags /* = 0 */, ImGuiInputTextCallback callback /* = NULL */, void* user_data /* = NULL */);
+CIMGUI_API bool                 ImGui_TempInputScalar(ImRect bb, ImGuiID id, const char* label, ImGuiDataType data_type, void* p_data, const char* format);                // Implied p_clamp_min = NULL, p_clamp_max = NULL
+CIMGUI_API bool                 ImGui_TempInputScalarEx(ImRect bb, ImGuiID id, const char* label, ImGuiDataType data_type, void* p_data, const char* format, const void* p_clamp_min /* = NULL */, const void* p_clamp_max /* = NULL */);
+CIMGUI_API bool                 ImGui_TempInputIsActive(ImGuiID id);
+CIMGUI_API ImGuiInputTextState* ImGui_GetInputTextState(ImGuiID id);                                                                                                       // Get input text state if active
+CIMGUI_API void                 ImGui_SetNextItemRefVal(ImGuiDataType data_type, void* p_data);
+CIMGUI_API bool                 ImGui_IsItemActiveAsInputText(void);                                                                                                       // This may be useful to apply workaround that a based on distinguish whenever an item is active as a text input field.
 
 // Color
 CIMGUI_API void ImGui_ColorTooltip(const char* text, const float* col, ImGuiColorEditFlags flags);
 CIMGUI_API void ImGui_ColorEditOptionsPopup(const float* col, ImGuiColorEditFlags flags);
 CIMGUI_API void ImGui_ColorPickerOptionsPopup(const float* ref_col, ImGuiColorEditFlags flags);
+CIMGUI_API void ImGui_SetNextItemColorMarker(ImU32 col);
 
 // Plot
 CIMGUI_API int ImGui_PlotEx(ImGuiPlotType plot_type, const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 size_arg);
@@ -3908,46 +3989,51 @@ CIMGUI_API void ImGui_ErrorCheckEndFrameFinalizeErrorTooltip(void);
 CIMGUI_API bool ImGui_BeginErrorTooltip(void);
 CIMGUI_API void ImGui_EndErrorTooltip(void);
 
+// Demo Doc Marker for e.g. imgui_explorer
+CIMGUI_API void ImGui_DemoMarker(const char* file, int line, const char* section);
+
 // Debug Tools
-CIMGUI_API void ImGui_DebugAllocHook(ImGuiDebugAllocInfo* info, int frame_count, void* ptr, size_t size);                  // size >= 0 : alloc, size = -1 : free
-CIMGUI_API void ImGui_DebugDrawCursorPos(void);                                                                            // Implied col = IM_COL32(255, 0, 0, 255)
-CIMGUI_API void ImGui_DebugDrawCursorPosEx(ImU32 col /* = IM_COL32(255, 0, 0, 255) */);
-CIMGUI_API void ImGui_DebugDrawLineExtents(void);                                                                          // Implied col = IM_COL32(255, 0, 0, 255)
-CIMGUI_API void ImGui_DebugDrawLineExtentsEx(ImU32 col /* = IM_COL32(255, 0, 0, 255) */);
-CIMGUI_API void ImGui_DebugDrawItemRect(void);                                                                             // Implied col = IM_COL32(255, 0, 0, 255)
-CIMGUI_API void ImGui_DebugDrawItemRectEx(ImU32 col /* = IM_COL32(255, 0, 0, 255) */);
-CIMGUI_API void ImGui_DebugTextUnformattedWithLocateItem(const char* line_begin, const char* line_end);
-CIMGUI_API void ImGui_DebugLocateItem(ImGuiID target_id);                                                                  // Call sparingly: only 1 at the same time!
-CIMGUI_API void ImGui_DebugLocateItemOnHover(ImGuiID target_id);                                                           // Only call on reaction to a mouse Hover: because only 1 at the same time!
-CIMGUI_API void ImGui_DebugLocateItemResolveWithLastItem(void);
-CIMGUI_API void ImGui_DebugBreakClearData(void);
-CIMGUI_API bool ImGui_DebugBreakButton(const char* label, const char* description_of_location);
-CIMGUI_API void ImGui_DebugBreakButtonTooltip(bool keyboard_only, const char* description_of_location);
-CIMGUI_API void ImGui_ShowFontAtlas(ImFontAtlas* atlas);
-CIMGUI_API void ImGui_DebugHookIdInfo(ImGuiID id, ImGuiDataType data_type, const void* data_id, const void* data_id_end);
-CIMGUI_API void ImGui_DebugNodeColumns(ImGuiOldColumns* columns);
-CIMGUI_API void ImGui_DebugNodeDockNode(ImGuiDockNode* node, const char* label);
-CIMGUI_API void ImGui_DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, const ImDrawList* draw_list, const char* label);
-CIMGUI_API void ImGui_DebugNodeDrawCmdShowMeshAndBoundingBox(ImDrawList* out_draw_list, const ImDrawList* draw_list, const ImDrawCmd* draw_cmd, bool show_mesh, bool show_aabb);
-CIMGUI_API void ImGui_DebugNodeFont(ImFont* font);
-CIMGUI_API void ImGui_DebugNodeFontGlyphesForSrcMask(ImFont* font, ImFontBaked* baked, int src_mask);
-CIMGUI_API void ImGui_DebugNodeFontGlyph(ImFont* font, const ImFontGlyph* glyph);
-CIMGUI_API void ImGui_DebugNodeTexture(ImTextureData* tex, int int_id);                                                    // Implied highlight_rect = NULL
-CIMGUI_API void ImGui_DebugNodeTextureEx(ImTextureData* tex, int int_id, const ImFontAtlasRect* highlight_rect /* = NULL */); // ID used to facilitate persisting the "current" texture.
-CIMGUI_API void ImGui_DebugNodeStorage(ImGuiStorage* storage, const char* label);
-CIMGUI_API void ImGui_DebugNodeTabBar(ImGuiTabBar* tab_bar, const char* label);
-CIMGUI_API void ImGui_DebugNodeTable(ImGuiTable* table);
-CIMGUI_API void ImGui_DebugNodeTableSettings(ImGuiTableSettings* settings);
-CIMGUI_API void ImGui_DebugNodeTypingSelectState(ImGuiTypingSelectState* state);
-CIMGUI_API void ImGui_DebugNodeMultiSelectState(ImGuiMultiSelectState* state);
-CIMGUI_API void ImGui_DebugNodeWindow(ImGuiWindow* window, const char* label);
-CIMGUI_API void ImGui_DebugNodeWindowSettings(ImGuiWindowSettings* settings);
-CIMGUI_API void ImGui_DebugNodeWindowsList(ImVector_ImGuiWindowPtr* windows, const char* label);
-CIMGUI_API void ImGui_DebugNodeWindowsListByBeginStackParent(ImGuiWindow** windows, int windows_size, ImGuiWindow* parent_in_begin_stack);
-CIMGUI_API void ImGui_DebugNodeViewport(ImGuiViewportP* viewport);
-CIMGUI_API void ImGui_DebugNodePlatformMonitor(ImGuiPlatformMonitor* monitor, const char* label, int idx);
-CIMGUI_API void ImGui_DebugRenderKeyboardPreview(ImDrawList* draw_list);
-CIMGUI_API void ImGui_DebugRenderViewportThumbnail(ImDrawList* draw_list, ImGuiViewportP* viewport, ImRect bb);
+CIMGUI_API void  ImGui_DebugAllocHook(ImGuiDebugAllocInfo* info, int frame_count, void* ptr, size_t size);                  // size >= 0 : alloc, size = -1 : free
+CIMGUI_API void  ImGui_DebugDrawCursorPos(void);                                                                            // Implied col = IM_COL32(255, 0, 0, 255)
+CIMGUI_API void  ImGui_DebugDrawCursorPosEx(ImU32 col /* = IM_COL32(255, 0, 0, 255) */);
+CIMGUI_API void  ImGui_DebugDrawLineExtents(void);                                                                          // Implied col = IM_COL32(255, 0, 0, 255)
+CIMGUI_API void  ImGui_DebugDrawLineExtentsEx(ImU32 col /* = IM_COL32(255, 0, 0, 255) */);
+CIMGUI_API void  ImGui_DebugDrawItemRect(void);                                                                             // Implied col = IM_COL32(255, 0, 0, 255)
+CIMGUI_API void  ImGui_DebugDrawItemRectEx(ImU32 col /* = IM_COL32(255, 0, 0, 255) */);
+CIMGUI_API void  ImGui_DebugTextUnformattedWithLocateItem(const char* line_begin, const char* line_end);
+CIMGUI_API void  ImGui_DebugLocateItem(ImGuiID target_id);                                                                  // Call sparingly: only 1 at the same time!
+CIMGUI_API void  ImGui_DebugLocateItemOnHover(ImGuiID target_id);                                                           // Only call on reaction to a mouse Hover: because only 1 at the same time!
+CIMGUI_API void  ImGui_DebugLocateItemResolveWithLastItem(void);
+CIMGUI_API void  ImGui_DebugBreakClearData(void);
+CIMGUI_API bool  ImGui_DebugBreakButton(const char* label, const char* description_of_location);
+CIMGUI_API void  ImGui_DebugBreakButtonTooltip(bool keyboard_only, const char* description_of_location);
+CIMGUI_API void  ImGui_ShowFontAtlas(ImFontAtlas* atlas);
+CIMGUI_API ImU64 ImGui_DebugTextureIDToU64(ImTextureID tex_id);
+CIMGUI_API void  ImGui_DebugHookIdInfo(ImGuiID id, ImGuiDataType data_type, const void* data_id, const void* data_id_end);
+CIMGUI_API void  ImGui_DebugNodeColumns(ImGuiOldColumns* columns);
+CIMGUI_API void  ImGui_DebugNodeDockNode(ImGuiDockNode* node, const char* label);
+CIMGUI_API void  ImGui_DebugNodeDrawList(ImGuiWindow* window, ImGuiViewportP* viewport, const ImDrawList* draw_list, const char* label);
+CIMGUI_API void  ImGui_DebugNodeDrawCmdShowMeshAndBoundingBox(ImDrawList* out_draw_list, const ImDrawList* draw_list, const ImDrawCmd* draw_cmd, bool show_mesh, bool show_aabb);
+CIMGUI_API void  ImGui_DebugNodeFont(ImFont* font);
+CIMGUI_API void  ImGui_DebugNodeFontGlyphsForSrcMask(ImFont* font, ImFontBaked* baked, int src_mask);
+CIMGUI_API void  ImGui_DebugNodeFontGlyph(ImFont* font, const ImFontGlyph* glyph);
+CIMGUI_API void  ImGui_DebugNodeTexture(ImTextureData* tex, int int_id);                                                    // Implied highlight_rect = NULL
+CIMGUI_API void  ImGui_DebugNodeTextureEx(ImTextureData* tex, int int_id, const ImFontAtlasRect* highlight_rect /* = NULL */); // ID used to facilitate persisting the "current" texture.
+CIMGUI_API void  ImGui_DebugNodeStorage(ImGuiStorage* storage, const char* label);
+CIMGUI_API void  ImGui_DebugNodeTabBar(ImGuiTabBar* tab_bar, const char* label);
+CIMGUI_API void  ImGui_DebugNodeTable(ImGuiTable* table);
+CIMGUI_API void  ImGui_DebugNodeTableSettings(ImGuiTableSettings* settings);
+CIMGUI_API void  ImGui_DebugNodeInputTextState(ImGuiInputTextState* state);
+CIMGUI_API void  ImGui_DebugNodeTypingSelectState(ImGuiTypingSelectState* state);
+CIMGUI_API void  ImGui_DebugNodeMultiSelectState(ImGuiMultiSelectState* state);
+CIMGUI_API void  ImGui_DebugNodeWindow(ImGuiWindow* window, const char* label);
+CIMGUI_API void  ImGui_DebugNodeWindowSettings(ImGuiWindowSettings* settings);
+CIMGUI_API void  ImGui_DebugNodeWindowsList(ImVector_ImGuiWindowPtr* windows, const char* label);
+CIMGUI_API void  ImGui_DebugNodeWindowsListByBeginStackParent(ImGuiWindow** windows, int windows_size, ImGuiWindow* parent_in_begin_stack);
+CIMGUI_API void  ImGui_DebugNodeViewport(ImGuiViewportP* viewport);
+CIMGUI_API void  ImGui_DebugNodePlatformMonitor(ImGuiPlatformMonitor* monitor, const char* label, int idx);
+CIMGUI_API void  ImGui_DebugRenderKeyboardPreview(ImDrawList* draw_list);
+CIMGUI_API void  ImGui_DebugRenderViewportThumbnail(ImDrawList* draw_list, ImGuiViewportP* viewport, ImRect bb);
 
 //-----------------------------------------------------------------------------
 // [SECTION] ImFontLoader
@@ -3977,7 +4063,7 @@ struct ImFontLoader_t
 CIMGUI_API const ImFontLoader* cImFontAtlasGetFontLoaderForStbTruetype(void);
 #endif // #ifdef IMGUI_ENABLE_STB_TRUETYPE
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-typedef ImFontLoader ImFontBuilderIO;  // [renamed/changed in 1.92] The types are not actually compatible but we provide this as a compile-time error report helper.
+typedef ImFontLoader ImFontBuilderIO;  // [renamed/changed in 1.92.0] The types are not actually compatible but we provide this as a compile-time error report helper.
 #endif // #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 //-----------------------------------------------------------------------------
 // [SECTION] ImFontAtlas internal API
@@ -4071,6 +4157,7 @@ CIMGUI_API void cImFontAtlasBuildInit(ImFontAtlas* atlas);
 CIMGUI_API void cImFontAtlasBuildDestroy(ImFontAtlas* atlas);
 CIMGUI_API void cImFontAtlasBuildMain(ImFontAtlas* atlas);
 CIMGUI_API void cImFontAtlasBuildSetupFontLoader(ImFontAtlas* atlas, const ImFontLoader* font_loader);
+CIMGUI_API void cImFontAtlasBuildNotifySetFont(ImFontAtlas* atlas, ImFont* old_font, ImFont* new_font);
 CIMGUI_API void cImFontAtlasBuildUpdatePointers(ImFontAtlas* atlas);
 CIMGUI_API void cImFontAtlasBuildRenderBitmapFromString(ImFontAtlas* atlas, int x, int y, int w, int h, const char* in_str, char in_marker_char);
 CIMGUI_API void cImFontAtlasBuildClear(ImFontAtlas* atlas);  // Clear output and custom rects
@@ -4093,6 +4180,7 @@ CIMGUI_API void cImFontAtlasFontSourceAddToFont(ImFontAtlas* atlas, ImFont* font
 CIMGUI_API void cImFontAtlasFontDestroySourceData(ImFontAtlas* atlas, ImFontConfig* src);
 CIMGUI_API bool cImFontAtlasFontInitOutput(ImFontAtlas* atlas, ImFont* font);                       // Using FontDestroyOutput/FontInitOutput sequence useful notably if font loader params have changed
 CIMGUI_API void cImFontAtlasFontDestroyOutput(ImFontAtlas* atlas, ImFont* font);
+CIMGUI_API void cImFontAtlasFontRebuildOutput(ImFontAtlas* atlas, ImFont* font);
 CIMGUI_API void cImFontAtlasFontDiscardBakes(ImFontAtlas* atlas, ImFont* font, int unused_frames);
 
 CIMGUI_API ImGuiID      cImFontAtlasBakedGetId(ImGuiID font_id, float baked_size, float rasterizer_density);
@@ -4125,6 +4213,7 @@ CIMGUI_API void cImFontAtlasTextureBlockFill(ImTextureData* dst_tex, int dst_x, 
 CIMGUI_API void cImFontAtlasTextureBlockCopy(ImTextureData* src_tex, int src_x, int src_y, ImTextureData* dst_tex, int dst_x, int dst_y, int w, int h);
 CIMGUI_API void cImFontAtlasTextureBlockQueueUpload(ImFontAtlas* atlas, ImTextureData* tex, int x, int y, int w, int h);
 
+CIMGUI_API void        cImTextureDataQueueUpload(ImTextureData* tex, int x, int y, int w, int h);
 CIMGUI_API int         cImTextureDataGetFormatBytesPerPixel(ImTextureFormat format);
 CIMGUI_API const char* cImTextureDataGetStatusName(ImTextureStatus status);
 CIMGUI_API const char* cImTextureDataGetFormatName(ImTextureFormat format);
@@ -4153,7 +4242,7 @@ CIMGUI_API const char* cImGuiTestEngine_FindItemDebugLabel(ImGuiContext* ctx, Im
 #define IMGUI_TEST_ENGINE_ITEM_INFO(_ID,_LABEL,_FLAGS)      if (g.TestEngineHookItems) ImGuiTestEngineHook_ItemInfo(&g, _ID, _LABEL, _FLAGS)     // Register item label and status flags (optional)
 #define IMGUI_TEST_ENGINE_LOG(_FMT,...)                     ImGuiTestEngineHook_Log(&g, _FMT, __VA_ARGS__)                                       // Custom log entry from user land into test log
 #else
-#define IMGUI_TEST_ENGINE_ITEM_ADD(_BB,_ID)                 ((void)0)
+#define IMGUI_TEST_ENGINE_ITEM_ADD(_ID,_BB,_ITEM_DATA)      ((void)0)
 #define IMGUI_TEST_ENGINE_ITEM_INFO(_ID,_LABEL,_FLAGS)      ((void)g)
 #endif // #ifdef IMGUI_ENABLE_TEST_ENGINE
 //-----------------------------------------------------------------------------

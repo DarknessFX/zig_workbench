@@ -8,10 +8,14 @@
 #include <stdio.h>
 
 // Wrap this in a namespace to keep it separate from the C++ API
+// This define prevents #defines in the header getting defined again (as they are already in the normal header above),
+// and thus generating redefinition warnings
+#define DEAR_BINDINGS_INTERNAL_GLUE_CODE
 namespace cimgui
 {
 #include "dcimgui_impl_sdl3.h"
 }
+#undef DEAR_BINDINGS_INTERNAL_GLUE_CODE
 
 // By-value struct conversions
 
@@ -149,6 +153,11 @@ CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL3_SetGamepadMode(cimgui::ImGui_ImplSD
 CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL3_SetGamepadModeEx(cimgui::ImGui_ImplSDL3_GamepadMode mode, cimgui::SDL_Gamepad** manual_gamepads_array, int manual_gamepads_count)
 {
     ::ImGui_ImplSDL3_SetGamepadMode(static_cast<::ImGui_ImplSDL3_GamepadMode>(mode), reinterpret_cast<::SDL_Gamepad**>(manual_gamepads_array), manual_gamepads_count);
+}
+
+CIMGUI_IMPL_API void cimgui::cImGui_ImplSDL3_SetMouseCaptureMode(cimgui::ImGui_ImplSDL3_MouseCaptureMode mode)
+{
+    ::ImGui_ImplSDL3_SetMouseCaptureMode(static_cast<::ImGui_ImplSDL3_MouseCaptureMode>(mode));
 }
 
 #endif // #ifndef IMGUI_DISABLE

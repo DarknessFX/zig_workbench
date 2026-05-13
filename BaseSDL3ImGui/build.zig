@@ -32,19 +32,28 @@ pub fn build(b: *std.Build) void {
     .flags = &.{"/c65001"}, // UTF-8 codepage
   });
 
+  exe.root_module.addIncludePath( b.path("lib") );
   exe.root_module.addIncludePath( b.path("lib/imgui") );
-  exe.root_module.addIncludePath( b.path("lib/SDL3/include") );
+  exe.root_module.addIncludePath( b.path("lib/SDL3") );
 
-  exe.root_module.addLibraryPath( b.path("lib/SDL3") );
+  const use_shared = b.option(bool, "shared", "Use shared/dynamic library linking (.DLL)") orelse true;
+  if (use_shared) {
+    exe.root_module.addLibraryPath( b.path("lib/SDL3/shared") );
+    exe.root_module.linkSystemLibrary("SDL3", .{ .preferred_link_mode = .dynamic });
+    exe.root_module.linkSystemLibrary("SDL3_ttf", .{ .preferred_link_mode = .dynamic });
+    exe.root_module.linkSystemLibrary("SDL3_image", .{ .preferred_link_mode = .dynamic });
 
-  exe.root_module.linkSystemLibrary("SDL3", .{});
-  exe.root_module.linkSystemLibrary("SDL3_ttf", .{});
-  exe.root_module.linkSystemLibrary("SDL3_image", .{});
+    b.installBinFile("lib/SDL3/shared/SDL3.dll", "SDL3.dll");
+    b.installBinFile("lib/SDL3/shared/SDL3_ttf.dll", "SDL3_ttf.dll");
+    b.installBinFile("lib/SDL3/shared/SDL3_image.dll", "SDL3_image.dll");
+  } else {
+    exe.root_module.addLibraryPath( b.path("lib/SDL3/static") );
+    exe.root_module.linkSystemLibrary("SDL3", .{ .preferred_link_mode = .static });
+    exe.root_module.linkSystemLibrary("SDL3_ttf", .{ .preferred_link_mode = .static });
+    exe.root_module.linkSystemLibrary("SDL3_image", .{ .preferred_link_mode = .static });
+  }
+
   exe.root_module.linkSystemLibrary("opengl32", .{});
-
-  b.installBinFile("lib/SDL3/SDL3.dll", "SDL3.dll");
-  b.installBinFile("lib/SDL3/SDL3_ttf.dll", "SDL3_ttf.dll");
-  b.installBinFile("lib/SDL3/SDL3_image.dll", "SDL3_image.dll");
 
   const c_srcs = .{
     "lib/imgui/dcimgui.cpp",
@@ -66,8 +75,6 @@ pub fn build(b: *std.Build) void {
     });
   }
   
-  b.installBinFile("lib/SDL3/SDL3.dll", "SDL3.dll");
-
   switch (optimize) {
     .Debug =>  b.exe_dir = "bin/Debug",
     .ReleaseSafe =>  b.exe_dir = "bin/ReleaseSafe",
