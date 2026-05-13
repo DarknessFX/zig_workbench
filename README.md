@@ -30,6 +30,7 @@ Using Windows 10, Zig x86_64 Version : **0.16.0**
 | **[BaseWinEx](/BaseWinEx/)** | Template for a Windows program, Windows API as submodule. | Windows |
 | **[BaseImGui](/BaseImGui/)** | Template with [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings). Extra: [ImGui_Memory_Editor](https://github.com/ocornut/imgui_club/tree/main#imgui_memory_editor). Renderers: OpenGL2, OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer | Both |
 | **[BaseRayLib](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui). | Console + Web |
+| **[BaseRayLibImGui](/BaseRayLib/)** | Template with [RayLib](https://www.raylib.com/) and [RayGUI](https://github.com/raysan5/raygui) and [Dear ImGui](https://github.com/ocornut/imgui) via [Dear Bindings](https://github.com/dearimgui/dear_bindings) and [rlImGui](https://github.com/raylib-extras/rlImGui). | Console |
 | **[BaseSDL2](/BaseSDL2/)** | Template with [SDL2](https://libsdl.org/). | Windows |
 | **[BaseSDL3](/BaseSDL3/)** | Template with [SDL3](https://libsdl.org/). | Windows |
 | **[BaseSDL3ImGui](/BaseSDL3ImGui/)** | Template with [SDL3](https://libsdl.org/) and [Dear ImGui](https://github.com/ocornut/imgui), because BaseImGui grew in complexity with multiple renderers and BaseSDL3 has examples, this is a clean and ready-to-use template that I use as default for new applications/projects. | Windows |
@@ -84,7 +85,7 @@ Zig have a useful built in feature: *zig init* that creates a basic project. I c
  
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
-<pre>Using Dear ImGui Docking 1.92.3 WIP and Dear Bindings (20250908)
+<pre>Using Dear ImGui Docking 1.92.8 Docking and Dear Bindings v0.21 (20260513)
 All necessary libraries are inside the template.
 <br/>
 Note:
@@ -143,7 +144,7 @@ it failed with duplicate symbols (added inline) and later missing functions (rem
 
 <details>
   <summary><ins>About SDL3</ins></summary>
-<pre>Built from source in 202500908, version 3.2.22.</pre>
+<pre>Using SDL3 version 3.4.8 from https://github.com/libsdl-org/SDL/releases/tag/release-3.4.8.</pre>
 </details>
 
 <details>
