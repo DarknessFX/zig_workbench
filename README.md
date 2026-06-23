@@ -59,6 +59,7 @@ Using Windows 10, Zig x86_64 Version : **0.16.0**
 | **[BaseODE](/BaseODE/)** | Template with [ODE](https://www.ode.org/) Open Dynamics Engine physics. | Console |
 | **[BaseChipmunk2D](/BaseChipmunk2D/)** | Template with [Chipmunk2D](https://chipmunk-physics.net/) physics. | Console |
 | **[BaseBox2D](/BaseBox2D/)** | Template with [Box2D](https://box2d.org/) physics. | Console |
+| **[BaseJolt](/BaseJolt/)** | Template with [Jolt](https://github.com/jrouwe/JoltPhysics) physics. | Console |
 | **[BaseLibpng](/BaseLibpng/)** | Template with [libpng](https://www.libpng.org) image format. | Console |
 | **[BaseZlib](/BaseZlib/)** | Template with [zlib](https://zlib.net) compression. | Console |
 | **[BaseZstd](/BaseZstd/)** | Template with [Zstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
@@ -202,6 +203,15 @@ If you get an error while installing CUDA SDK, use Custom Installation and disab
 &nbsp;&nbsp;Driver components
 
 If you want, you can install Nsight with its own installer.</pre>
+</details>
+
+<details>
+  <summary><ins>About Jolt</ins></summary>
+<pre>Using Jolt 5.3 from https://github.com/jrouwe/JoltPhysics/tree/0373ec0dd762e4bc2f6acdb08371ee84fa23c6db .
+And JoltC from https://github.com/SecondHalfGames/JoltC/
+
+All necessary libraries are inside the template.
+</pre>
 </details>
 
 ## Programs
@@ -461,6 +471,8 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [zlib](https://zlib.net) from Jean-loup Gailly and Mark Adler.<br/>
 [freeglut](https://freeglut.sourceforge.net) from Pawel W. Olszta.<br/>
 [FLTK](https://www.fltk.org/) from Bill Spitzak and others.<br/>
+[Jolt](https://github.com/jrouwe/JoltPhysics) from jrouwe.<br/>
+[JoltC](https://github.com/SecondHalfGames/JoltC/) from SecondHalfGames.<br/>
 
 <br/>
 
@@ -498,6 +510,7 @@ LMDB        = Zig LMDB transactional database program template sample example.
 ODE         = Zig ODE Open Dynamics Engine physics program template sample example.
 Chipmunk2D  = Zig Chipmunk2D physics program template sample example.
 Box2D       = Zig Box2D physics program template sample example.
+Jolt        = Zig Jolt physics program template sample example.
 zstd        = Zig Zstd fast lossless compression program template sample example.
 CUDA        = Zig NVIDIA CUDA program template sample example.
 Clay        = Zig Clay UI program template sample example.
