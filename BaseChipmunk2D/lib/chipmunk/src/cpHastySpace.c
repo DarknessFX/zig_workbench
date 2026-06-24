@@ -12,9 +12,6 @@
 #include <sys/sysctl.h>
 #endif
 
-#define _WIN32
-#undef __MINGW32__
-
 #ifndef _WIN32
 #include <pthread.h>
 #elif defined(__MINGW32__)
@@ -219,8 +216,8 @@ int pthread_join(pthread_t thread, void **value_ptr)
 
 #endif
 
-#include "chipmunk_private.h"
-#include "cpHastySpace.h"
+#include "chipmunk/chipmunk_private.h"
+#include "chipmunk/cpHastySpace.h"
 
 
 //MARK: ARM NEON Solver

@@ -192,8 +192,7 @@
     "files.associations": {
       "raylib.h": "c",
       "rcamera.h": "c",
-      "raymath.h": "c",
-      "cpmarch.h": "c"
+      "raymath.h": "c"
     },
   },
   "extensions": {

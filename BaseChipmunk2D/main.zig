@@ -1,6 +1,6 @@
 //!zig-autodoc-section: BaseChipmunk2D\\main.zig
 //! main.zig :
-//!  Template for Chipmunk2D physics.
+//!  Template for Chipmunk2D physics project.
 // Build using Zig 0.16.0
 
 //=============================================================================
@@ -12,7 +12,7 @@ const std = @import("std");
 // Use full path for all cIncludes:
 //   @cInclude("C:/zig_workbench/BaseChipmunk/lib/chipmunk/include/chipmunk.h");
 const cp = @cImport({
-  @cInclude("lib/chipmunk/include/chipmunk.h");
+  @cInclude("lib/chipmunk/include/chipmunk/chipmunk.h");
 });
 
 // Define custom collision types
@@ -71,14 +71,14 @@ pub fn main() !u8 {
     std.debug.print("Ball position: x={d:.2}, y={d:.2}\n", .{pos.x, pos.y});
 
     if (collision_detected) {
-      if (@abs(collision_pos.y - pos.y) > collision_tolerance) { 
+      if (@abs(collision_pos.y - pos.y) > collision_tolerance) {
         collision_pos = pos;
         collision_detected = false;
       } else {
         std.debug.print("Ball has settled at position: x={d:.2}, y={d:.2}\n", .{pos.x, pos.y});
         break;
       }
-    }    
+    }
   }
 
   return 0;
@@ -103,7 +103,7 @@ const win = std.os.windows;
 fn HideConsoleWindow() void {
   const BUF_TITLE = 1024;
   var hwndFound: win.HWND = undefined;
-  var pszWindowTitle: [BUF_TITLE:0]win.CHAR = std.mem.zeroes([BUF_TITLE:0]win.CHAR); 
+  var pszWindowTitle: [BUF_TITLE:0]win.CHAR = std.mem.zeroes([BUF_TITLE:0]win.CHAR);
 
   _ = GetConsoleTitleA(&pszWindowTitle, BUF_TITLE);
   hwndFound=FindWindowA(null, &pszWindowTitle);

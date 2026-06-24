@@ -20,7 +20,7 @@ REM
 REM Full extra_args sample of a project that use SDL3 + OpenGL :
 REM  SET extra_args=-lSDL3 -lOpenGL32 -L "%CD%\lib\SDL3" -I"%CD%" -I"%CD%\lib" -I"%CD%\lib\SDL3"
 
-SET extra_args=-I"%CD%" -I"%CD%\lib\chipmunk\include"
+SET extra_args=-I"%CD%" -I"%CD%\lib\chipmunk" -I"%CD%\lib\chipmunk\include" -DNDEBUG
 
 REM AddCSource
 REM ==========
@@ -47,13 +47,12 @@ IF EXIST "*.rc" (
 
 SET singlethread=-fsingle-threaded
 SET libc=
-FINDSTR /L linkLibC build.zig > NUL && (
+FINDSTR /L link_libc build.zig > NUL && (
   SET libc=-lc
 )
 SET libcpp=
-FINDSTR /L linkLibCpp build.zig > NUL && (
+FINDSTR /L link_libcpp build.zig > NUL && (
   SET libcpp=-lc++
-  SET singlethread=
 )
 
 REM OUTPUT TO ZIG_REPORT.TXT

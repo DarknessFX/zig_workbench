@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) void {
       .root_source_file = b.path(mainfile),
       .target = target,
       .optimize = optimize,
-      .link_libc = true,      
+      .link_libc = true,
     }),
   });
   exe.root_module.addWin32ResourceFile(.{
@@ -71,8 +71,8 @@ pub fn build(b: *std.Build) void {
   };
   inline for (c_srcs) |c_cpp| {
     exe.root_module.addCSourceFile(.{
-      .file = b.path(c_cpp), 
-      .flags = &.{ }
+      .file = b.path(c_cpp),
+      .flags = &.{ "-DNDEBUG" }
     });
   }
 
