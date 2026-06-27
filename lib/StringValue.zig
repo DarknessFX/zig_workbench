@@ -40,7 +40,7 @@ pub fn StringValue(comptime capacity: usize) type {
 
     pub fn setC(self: *Self, value: []const u8, length: usize) void {
       self.update(value, length + 1);
-      if (self.len == self.buffer.len) { @constCast(self).buffer[self.len - 1] = 0; }
+      if (self.len == self.buffer.len) { self.buffer[self.len - 1] = 0; }
     }
 
     pub fn get(self: *const Self) []const u8 {
@@ -50,7 +50,7 @@ pub fn StringValue(comptime capacity: usize) type {
     /// Ensure you have enough capacity for the sentinel as the last byte,
     /// or you will lose the last character of the string.
     pub fn getC(self: *const Self) [:0]const u8 {
-      if (self.len == self.buffer.len and self.buffer[self.len - 1] != 0) { self.buffer[self.len - 1] = 0; }
+      if (self.len == self.buffer.len and self.buffer[self.len - 1] != 0) { @constCast(self).buffer[self.len - 1] = 0; }
       return self.buffer[0..self.len :0];
     }
   };
