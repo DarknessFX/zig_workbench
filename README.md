@@ -1,4 +1,4 @@
-     .----------------.  .----------------.  .----------------. 
+     .----------------.  .----------------.  .----------------.
     | .--------------. || .--------------. || .--------------. |
     | |  ________    | || |  _________   | || |  ____  ____  | |
     | | |_   ___ `.  | || | |_   ___  |  | || | |_  _||_  _| | |
@@ -8,7 +8,7 @@
     | | |________.'  | || | |_____|      | || | |____||____| | |
     | |              | || |              | || |              | |
     | '--------------' || '--------------' || '--------------' |
-     '----------------'  '----------------'  '----------------' 
+     '----------------'  '----------------'  '----------------'
 
            DarknessFX @ https://dfx.lv | Twitter: @DrkFX
 
@@ -67,7 +67,7 @@ Using Windows 10, Zig x86_64 Version : **0.16.0**
 
 <details>
    <summary><ins>Usage</ins></summary>
-     
+
 | Steps | Path example |
 | ------------- | ------------- |
 | Duplicate the template folder. | C:\zig_workbench\BaseWin Copy\ |
@@ -76,14 +76,14 @@ Using Windows 10, Zig x86_64 Version : **0.16.0**
 | Run *updateProjectName.bat*. | C:\zig_workbench\MyZigProgram\Tools\updateProjectName.bat |
 | Open *YourProject VSCode Workspace*. | C:\zig_workbench\MyZigProgram\MyZigProgram VSCode Workspace.lnk |
 
-> [!WARNING]  
+> [!WARNING]
 > Current VSCode + ZLS extension do not accept **@cInclude** relative to project folder and will break builds.<br/>
 > After open your new project, remember to edit **.zig** files **@cInclude** including your full path and using / folder separator.
 
 Zig have a useful built in feature: *zig init* that creates a basic project. I customized this basic project to fit my use cases, mostly to output to **bin** folder instead of **zig-out\bin**, have main.zig in the project root instead of src folder and use my [VSCode Setup](#about-vscode-tips-and-tricks).
 
-</details> 
- 
+</details>
+
  <details>
   <summary><ins>About Dear ImGui</ins></summary>
 <pre>Using Dear ImGui Docking 1.92.8 Docking and Dear Bindings v0.21 (20260513)
@@ -109,18 +109,18 @@ Download Demos and Examples folders from the GitHub source<br/>
 <details>
   <summary><ins>About microui</ins></summary>
 <pre>microui.c and microui.h are inside the project folder.
-Normally I would recommend to download from the official repository 
-but sadly microui is outdated (last update 3 years ago) and I applied 
+Normally I would recommend to download from the official repository
+but sadly microui is outdated (last update 3 years ago) and I applied
 <a href="https://github.com/rxi/microui/pulls" target="_blank">community pull requests</a> to the source code.
-It was necessary because the original code crashed with <i>runtime 
-error: member access within misaligned address</i> and without the 
+It was necessary because the original code crashed with <i>runtime
+error: member access within misaligned address</i> and without the
 <a href="https://github.com/rxi/microui/issues/19#issuecomment-979063923" target="_blank">fix</a> this project would not work.</pre>
 </details>
 
  <details>
   <summary><ins>About Nuklear</ins></summary>
 <pre>Using Nuklear <a href="https://github.com/Immediate-Mode-UI/Nuklear/releases/tag/v4.13.3" target="_blank">4.13.3</a> from source (20260504).
-I had to make some changes to the nuklear_gdi.h header to fix cImport errors, 
+I had to make some changes to the nuklear_gdi.h header to fix cImport errors,
 it failed with duplicate symbols (added inline) and later missing functions (removed static).</pre>
 </details>
 
@@ -139,7 +139,7 @@ it failed with duplicate symbols (added inline) and later missing functions (rem
 <pre>Using SDL2 v2.32.10.
 &nbsp;&nbsp;Download SDL2 from: <a href="https://github.com/libsdl-org/SDL/releases/tag/release-2.28.4" target="_blank">GitHub SDL2 Releases Page</a>.
 &nbsp;&nbsp;For Windows devs: <a href="https://github.com/libsdl-org/SDL/releases/download/release-2.28.4/SDL2-devel-2.28.4-VC.zip" target="_blank">SDL2-devel-2.28.4-VC.zip 2.57 MB</a>.
-&nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description 
+&nbsp;&nbsp;Check <a href="https://github.com/DarknessFX/zig_workbench/blob/main/BaseSDL2/lib/SDL2/filelist.txt" target="_blank">BaseSDL2/lib/SDL2/filelist.txt</a> for a description
 &nbsp;&nbsp;of the folder structure and expected files path location.</pre>
 </details>
 
@@ -165,7 +165,7 @@ it failed with duplicate symbols (added inline) and later missing functions (rem
 
 <details>
   <summary><ins>About FLTK</ins></summary>
-<pre>Using FLTK 1.5.0 from https://github.com/fltk/fltk/tree/f05ee883595b910038e49963af6dbaba9081b49f 
+<pre>Using FLTK 1.5.0 from https://github.com/fltk/fltk/tree/f05ee883595b910038e49963af6dbaba9081b49f
 and cFLTK 0.1.5 from https://github.com/MoAlyousef/cfltk .</pre>
 </details>
 
@@ -189,7 +189,7 @@ Requirements:
 <details>
   <summary><ins>About Nvidia Cuda</ins></summary>
 <pre>Requirements:
-- Visual Studio from https://visualstudio.microsoft.com/downloads/ 
+- Visual Studio from https://visualstudio.microsoft.com/downloads/
 - Nvidia CUDA SDK from https://developer.nvidia.com/cuda-downloads
  (I'm using Nvidia CUDA SDK 12.6.3)
 
@@ -237,7 +237,7 @@ ToSystray.exe "C:\Windows\System32\Notepad.exe" "Notepad"</pre>
 &nbsp;&nbsp;&nbsp;&nbsp;C:\>zTime dir
 &nbsp;&nbsp;&nbsp;&nbsp;C:\>zTime bin\ReleaseFast\YourProject.exe<br/>
 &nbsp;&nbsp;Suggestion:
-&nbsp;&nbsp;Copy zTime.exe to your Zig folder, this way the application will 
+&nbsp;&nbsp;Copy zTime.exe to your Zig folder, this way the application will
 &nbsp;&nbsp;share the Environment Path and can be executed from anywhere.</pre>
 </details>
 
@@ -251,18 +251,18 @@ ToSystray.exe "C:\Windows\System32\Notepad.exe" "Notepad"</pre>
 
 <details>
   <summary><ins>ModernOpenGL Info</ins></summary>
-<pre>All files at Lib/SDL3 are the original ones from SDL Github, 
-GLAD generated for 4.6 Core. For this project I did not use any 
+<pre>All files at Lib/SDL3 are the original ones from SDL Github,
+GLAD generated for 4.6 Core. For this project I did not use any
 zig binds or wrappers, just plain cImport.
 A copy of SDL.h and glad.h exist at Lib root just replacing &lt;&gt; with "",
 this change made easier for VSCode and ZLS display auto-complete.
 I tried to @cImport GLM OpenGL Mathematics "C" version cGML, @import ziglm
-and glm-zig, but each have their own quirks and styles while I'm wanted to 
-keep the source code similar to the episodes, for this reason I built my 
+and glm-zig, but each have their own quirks and styles while I'm wanted to
+keep the source code similar to the episodes, for this reason I built my
 own GLM.ZIG library with just a handful of used functions.
-There are some small changes implemented from the original tutorial code, 
+There are some small changes implemented from the original tutorial code,
 mostly adding full Translate, Rotate, Scale, Keyboard and Mouse Movement.
-The Window Caption have a brief instruction of the keyboard settings and 
+The Window Caption have a brief instruction of the keyboard settings and
 also, as my default, I used SHIFT+ESC to close the program.</pre>
 </details>
 
@@ -270,8 +270,9 @@ also, as my default, I used SHIFT+ESC to close the program.</pre>
 
 | Folder | Description |
 | ------------- | ------------- |
-| **dos_color.zig** | Helper to output colors to console (std.debug.print) or debug console (OutputDebugString). |
-| **string.zig** | WIP String Type. |
+| **[dos_color.zig](lib/dos_color.zig)** | Helper to output colors to console (std.debug.print) or debug console (OutputDebugString). |
+| **[string.zig](lib/string.zig)** | WIP String Type. |
+| **[StringValue.zig](lib/StringValue.zig)** | A simple string type that owns its memory and length, and provides a couple of helper functions for C interoperability. |
 
 <details>
   <summary><ins>Libraries usage</ins></summary>
@@ -304,13 +305,13 @@ also, as my default, I used SHIFT+ESC to close the program.</pre>
 Tools to help setup Windows Explorer to apply icons to .ZIG files and add context menu short-cuts to Build, Run and Test.
 <details>
   <summary>📷<ins>zig_icon.reg - screenshot</ins></summary>
-     
+
 <pre>After run zig_icon.reg, Windows Explorer will look like:<br/>
 <img src="/.git_img/zig_icon_contextmenu.png" width="480" /></pre>
 </details>
 <details>
   <summary>📷<ins>zig_icon_cascade.reg - screenshot</ins></summary>
-     
+
 <pre>After run zig_icon_cascade.reg, Windows Explorer will look like:<br/>
 <img src="/.git_img/zig_icon_cascade_contextmenu.png" width="480" /></pre>
 </details>
@@ -365,7 +366,7 @@ Remember to fix the hard-coded paths (at miDebuggerPath) to reflect your local f
 
 I changed a few VSCode keybindings for better use, mostly because Zig offer multiple options for Build, Run, Test, Generate Docs, and I setup VSCode Tasks.json with all available options.
 
-The most important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last task. 
+The most important key binding change is **CTRL+T** to open TASKS menu, because VSCode keep the last task as first menu item, just pressing ENTER will: save current file and run the last task.
 
 Zig Build is fast and *Template/.vscode/launch.json* is already setup so VSCode **F5** key (Start with Debugger) will activate Zig Build and start debug, it works great and fast. But even better is **Zig Run Main**, the way zig run compile and start (without debugger) is a lot faster and helps a lot to iterate and productivity. **CTRL+T, Enter** became one of my most used keyboard shortcut inside VSCode and **CTRL+R** to repeat the last task.<br/>
 
@@ -427,7 +428,7 @@ When using libraries that have .DLL (for example SDL2_ttf.dll) the task Zig Run 
 
 ### Personal observation about VSCode
 
-I have a Love/Hate relationship with VSCode, I only used it to code for Arduino and ESP32 with [Platform.io](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and the hate is always when the editor try to be "smart and helpful". 
+I have a Love/Hate relationship with VSCode, I only used it to code for Arduino and ESP32 with [Platform.io](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide) and the hate is always when the editor try to be "smart and helpful".
 
 Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files organized to easier read key items are reordered because "that is how JSON should be ordered", at least 10% of keys typed are wasted deleting things that VSCode put there to help me. And my favorite gripe: You select a function name in the Intellisense combo, it prints at your source code "YourFunction([cursor here])" BUT it don't display the arguments list, you need to backspace to delete the ( opening parenthesis, type ( and now the tooltip show up with the arguments list.
 
