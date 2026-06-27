@@ -31,7 +31,6 @@ pub fn StringValue(comptime capacity: usize) type {
       @memset(&self.buffer, 0);
       @memcpy(self.buffer[0..copy_len], value[0..copy_len]);
       self.len = copy_len;
-      std.debug.print("buffer {s} | len {d}\n", .{ self.buffer, self.len });
     }
 
     pub fn set(self: *Self, value: []const u8) void {
