@@ -3,7 +3,7 @@
 //!   A simple string type that owns its memory and length, and provides a couple of helper functions for C interoperability.
 //!
 //! Usage:
-//!   var hello_world: StringValue(16) = .init("Hello?");
+//!   var hello_world: StringValue(16) = .init("Hello?");  // Or = .{};
 //!   std.debug.print("Say: {s} | buffer {s} | len {d}\n", .{ hello_world.get(), hello_world.buffer, hello_world.len });
 //!   hello_world.set("Hello, World!");
 //!   std.debug.print("Say: {s} | buffer {s} | len {d}\n", .{ hello_world.get(), hello_world.buffer, hello_world.len });
