@@ -3,10 +3,12 @@
 //!   A simple string type that owns its memory and length, and provides a couple of helper functions for C interoperability.
 //!
 //! Usage:
-//!   var hello_world: StringValue(16) = .init("Hello?");  // Or = .{};
+//!   const StringValue = @import("lib/StringValue.zig").StringValue;
+//!   var hello_world: StringValue(16) = .init("Hello?");  // Or empty with = .{};
 //!   std.debug.print("Say: {s} | buffer {s} | len {d}\n", .{ hello_world.get(), hello_world.buffer, hello_world.len });
 //!   hello_world.set("Hello, World!");
 //!   std.debug.print("Say: {s} | buffer {s} | len {d}\n", .{ hello_world.get(), hello_world.buffer, hello_world.len });
+
 // Build using Zig 0.16.0
 
 //=============================================================================
