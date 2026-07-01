@@ -59,6 +59,7 @@ Using Windows 10, Zig x86_64 Version : **0.16.0**
 | **[BaseODE](/BaseODE/)** | Template with [ODE](https://www.ode.org/) Open Dynamics Engine physics. | Console |
 | **[BaseChipmunk2D](/BaseChipmunk2D/)** | Template with [Chipmunk2D](https://chipmunk-physics.net/) physics. | Console |
 | **[BaseBox2D](/BaseBox2D/)** | Template with [Box2D](https://box2d.org/) physics. | Console |
+| **[BaseBox3D](/BaseBox3D/)** | Template with [Box3D](https://box2d.org/documentation3d/index.html/) physics. | Console |
 | **[BaseJolt](/BaseJolt/)** | Template with [Jolt](https://github.com/jrouwe/JoltPhysics) physics. | Console |
 | **[BaseLibpng](/BaseLibpng/)** | Template with [libpng](https://www.libpng.org) image format. | Console |
 | **[BaseZlib](/BaseZlib/)** | Template with [zlib](https://zlib.net) compression. | Console |
@@ -460,7 +461,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [DuckDB](https://duckdb.org/) from DuckDB Foundation.<br/>
 [ODE](https://www.ode.org/) from Russ L. Smith.<br/>
 [Chipmunk2D](https://chipmunk-physics.net/) from Howling Moon Software.<br/>
-[Box2D](https://box2d.org/) from Erin Catto.<br/>
+[Box2D](https://box2d.org/) and [Box3D](https://box2d.org/documentation3d/) from Erin Catto.<br/>
 [zstd](https://github.com/facebook/zstd) from Meta.<br/>
 [TinyRasterizer](https://github.com/lisyarus/tiny-rasterizer) from [Lisitsa Nikita](https://github.com/lisyarus).<br/>
 [Vulkan](https://www.vulkan.org/) from Khronos Group.<br/>
