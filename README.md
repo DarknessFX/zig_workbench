@@ -65,6 +65,7 @@ Using Windows 10, Zig x86_64 Version : **0.16.0**
 | **[BaseZlib](/BaseZlib/)** | Template with [zlib](https://zlib.net) compression. | Console |
 | **[BaseZstd](/BaseZstd/)** | Template with [Zstd](https://github.com/facebook/zstd) fast lossless compression. | Console |
 | **[BaseCUDA](/BaseCUDA/)** | Template with [Nvidia CUDA](https://developer.nvidia.com/cuda-toolkit) . | Console |
+| **[BaseFlecs](/BaseFlecs/)** | Template with [Flecs](https://github.com/SanderMertens/flecs), a fast entity component system. | Console |
 
 <details>
    <summary><ins>Usage</ins></summary>
@@ -475,6 +476,7 @@ Yellow lightbulbs sometimes show up to notify "There are no fix", JSON files org
 [FLTK](https://www.fltk.org/) from Bill Spitzak and others.<br/>
 [Jolt](https://github.com/jrouwe/JoltPhysics) from jrouwe.<br/>
 [JoltC](https://github.com/SecondHalfGames/JoltC/) from SecondHalfGames.<br/>
+[Flecs](https://github.com/SanderMertens/flecs) from SanderMertens.<br/>
 
 <br/>
 
@@ -483,40 +485,3 @@ MIT - Free for everyone and any use.
 
 DarknessFX @ https://dfx.lv | Twitter: @DrkFX<br/>
 https://github.com/DarknessFX/zig_workbench
-
-<details>
-  <summary><sub><sub>SEO Helper</sub></sub></summary>
-<pre>Giving Google a little help pairing Zig + LIB words, because it find my X (twitter) posts easier than this repo:
-WinEx       = Zig Windows program template with Windows API as submodule sample example.
-ImGui       = Zig ImGui Windows program template with renderers: OpenGL3, DirectX11, SDL3 OpenGL3, SDL2 OpenGL2, SDL3_Renderer, SDL2_Renderer sample example.
-LVGL        = Zig LVGL Windows program template sample example.
-microui     = Zig microui Windows program template with renderers: SDL2, Windows GDI sample example.
-RayLib      = Zig RayLib and RayGUI Windows program template sample example.
-SDL2        = Zig SDL2 Windows program template sample example.
-SDL3        = Zig SDL3 Windows program template sample example.
-OpenGL      = Zig OpenGL GL.h Windows program template sample example.
-DX11        = Zig DirectX Direct3D 11 DX11 Windows program template sample example.
-Vulkan      = Zig Vulkan Windows program template sample example.
-GLFW        = Zig GLFW GLAD Windows program template sample example.
-Wasm        = Zig WASM program template sample example.
-WebGPU      = Zig WebGPU WASM program template sample example.
-Sokol       = Zig Sokol Dear ImGui Nuklear UI program template sample example.
-Nuklear     = Zig Nuklear UI program template sample example.
-Clay        = Zig Clay UI program template sample example.
-Allegro     = Zig Allegro5 program template sample example.
-NanoVG      = Zig NanoVG program template sample example.
-Webview     = Zig Webview program template sample example.
-Lua         = Zig Lua scripting language program template sample example.
-SQLite      = Zig SQLite database program template sample example.
-LMDB        = Zig LMDB transactional database program template sample example.
-ODE         = Zig ODE Open Dynamics Engine physics program template sample example.
-Chipmunk2D  = Zig Chipmunk2D physics program template sample example.
-Box2D       = Zig Box2D physics program template sample example.
-Jolt        = Zig Jolt physics program template sample example.
-zstd        = Zig Zstd fast lossless compression program template sample example.
-CUDA        = Zig NVIDIA CUDA program template sample example.
-Clay        = Zig Clay UI program template sample example.
-GTK         = Zig GTK UI program template sample example.
-FLTK        = Zig FLTK UI program template sample example.
-</pre>
-</details>
