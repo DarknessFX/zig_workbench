@@ -17,6 +17,13 @@ I'm studying and learning [Zig Language](https://ziglearn.org/chapter-0/) (start
 
 Using Windows 10, Zig x86_64 Version : **0.16.0**
 
+> [!WARNING]
+> These templates and examples currently target **Zig 0.16**.
+>
+> Zig 0.17 replaced the previous Clang-based C translator with an external `translate-c` package powered by Aro. On Windows, Aro does not yet support the newer AVX-512 intrinsic headers that ship with Zig’s own libc. Any C library whose headers pull in those intrinsics (SDL2, SDL3, Allegro, ImGui, DirectX, and many others) fails to translate.
+>
+> Because the goal of this repository is pure C interop without hand-written bindings, the templates remain on 0.16 until the gap is closed. A future update will be made once Aro (or Zig 0.18) can handle these headers again.
+
 > [!NOTE]
 > This is a student project, code will run and build without errors (mostly because I just throw away errors), it is not a reference of "*best coding practices*". Suggestions or contributions changing the code to the "*right way and best practices*" are welcome.
 
